@@ -5,7 +5,8 @@ export const up: Migration = async ({ context: queryInterface }) => {
   await queryInterface.createTable('drivingSide', {
     id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
+      autoIncrement: true,
       primaryKey: true,
     },
     side: {
@@ -18,7 +19,8 @@ export const up: Migration = async ({ context: queryInterface }) => {
   await queryInterface.createTable('regions', {
     id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
+      autoIncrement: true,
       primaryKey: true,
     },
     regionName: {
@@ -31,7 +33,8 @@ export const up: Migration = async ({ context: queryInterface }) => {
   await queryInterface.createTable('subregions', {
     id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
+      autoIncrement: true,
       primaryKey: true,
     },
     subregionName: {
@@ -44,7 +47,8 @@ export const up: Migration = async ({ context: queryInterface }) => {
   await queryInterface.createTable('continents', {
     id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
+      autoIncrement: true,
       primaryKey: true,
     },
     continentName: {
@@ -57,7 +61,8 @@ export const up: Migration = async ({ context: queryInterface }) => {
   await queryInterface.createTable('languages', {
     id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
+      autoIncrement: true,
       primaryKey: true,
     },
     languageName: {
@@ -70,7 +75,8 @@ export const up: Migration = async ({ context: queryInterface }) => {
   await queryInterface.createTable('locations', {
     id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
+      autoIncrement: true,
       primaryKey: true,
     },
     latitude: {
@@ -86,7 +92,8 @@ export const up: Migration = async ({ context: queryInterface }) => {
   await queryInterface.createTable('countries', {
     id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
+      autoIncrement: true,
       primaryKey: true,
     },
     area: {
@@ -146,11 +153,11 @@ export const up: Migration = async ({ context: queryInterface }) => {
 };
 
 export const down: Migration = async ({ context: queryInterface }) => {
+  await queryInterface.dropTable('countries');
   await queryInterface.dropTable('drivingSide');
   await queryInterface.dropTable('regions');
   await queryInterface.dropTable('subregions');
   await queryInterface.dropTable('continents');
   await queryInterface.dropTable('languages');
   await queryInterface.dropTable('locations');
-  await queryInterface.dropTable('countries');
 };
