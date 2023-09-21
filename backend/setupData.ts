@@ -35,7 +35,7 @@ const setup = async () => {
   independentCountries.forEach((country) => {
     regions.add(country.region);
     subregions.add(country.subregion);
-    cars.add(country.carSide);
+    cars.add(country.drivingSide);
 
     country.continents.forEach((continent) => {
       continents.add(continent);
@@ -106,7 +106,7 @@ const toCountry = (item: unknown): Country | null => {
     return null;
   }
   const carData = item.car;
-  if (!carData || !('side' in carData) || !isString(carData.side)) {
+  if (!carData || !('side' in carData) || !isDrivingSide(carData.side)) {
     fieldMissing('car.side', countryName);
     return null;
   }
@@ -183,7 +183,7 @@ const toCountry = (item: unknown): Country | null => {
   return {
     area: item.area,
     capital: capital,
-    carSide: carData.side,
+    drivingSide: carData.side,
     continents: item.continents,
     countryCode: item.cca3,
     independent: item.independent,
@@ -201,7 +201,7 @@ const toCountry = (item: unknown): Country | null => {
 interface Country {
   area: number;
   capital: string;
-  carSide: string;
+  drivingSide: DrivingSide;
   continents: Array<string>;
   countryCode: string;
   independent: boolean;
@@ -220,6 +220,8 @@ interface LatLngPosition {
   lng: number;
 }
 
+type DrivingSide = 'left' | 'right';
+
 const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
 };
@@ -234,6 +236,14 @@ const isStringArray = (param: unknown): param is Array<string> => {
 
 const isNumberArray = (param: unknown): param is Array<number> => {
   return Array.isArray(param) && param.every((item) => isNumber(item));
+};
+
+const isDrivingSide = (param: unknown): param is DrivingSide => {
+  if (!param || !isString(param)) {
+    return false;
+  }
+
+  return param === 'left' || param === 'right';
 };
 
 const toLocation = (param: unknown): LatLngPosition | null => {
