@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { connectToDatabase } from './src/util/db';
+import { Region } from './src/models';
 
 const url = 'https://restcountries.com/v3.1/all';
 
@@ -26,13 +27,17 @@ const setup = async () => {
     (country) => country.independent
   );
 
-  const regions = new Set();
+  await saveData(independentCountries);
+};
+
+const saveData = async (countries: Array<Country>) => {
+  const regions = new Set<string>();
   const subregions = new Set();
   const cars = new Set();
   const continents = new Set();
   const languages = new Set();
 
-  independentCountries.forEach((country) => {
+  countries.forEach((country) => {
     regions.add(country.region);
     subregions.add(country.subregion);
     cars.add(country.drivingSide);
@@ -46,11 +51,11 @@ const setup = async () => {
     });
   });
 
-  console.log('All regions:', regions);
-  console.log('All subregions:', subregions);
-  console.log('All cars:', cars);
-  console.log('All continents:', continents);
-  console.log('# of languages:', languages.size);
+  for (const region of regions) {
+    await Region.upsert({
+      regionName: region,
+    });
+  }
 };
 
 const fetchData = async () => {

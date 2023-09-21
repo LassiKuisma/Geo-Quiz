@@ -6,17 +6,7 @@ import { Location } from './location';
 import { Region } from './region';
 import { Subregion } from './subregion';
 
-Country.hasMany(Continent);
-
-Country.hasOne(DrivingSide);
-
-Country.hasMany(Language);
-
-Country.hasOne(Location);
-Location.belongsTo(Country);
-
-Country.hasOne(Region);
-Country.hasOne(Subregion);
+Country.belongsTo(Region);
 
 export {
   Continent,
