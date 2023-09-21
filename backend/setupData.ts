@@ -20,13 +20,10 @@ const setup = async () => {
     return;
   }
 
-  const countries = dataToCountries(data);
-  console.log(countries.length, ' countries left');
-  const independentCountries = countries.filter(
+  const independentCountries = dataToCountries(data).filter(
     (country) => country.independent
   );
 
-  console.log(independentCountries.length, ' independent countries left');
   const regions = new Set();
   const subregions = new Set();
   const cars = new Set();
@@ -51,7 +48,7 @@ const setup = async () => {
   console.log('All subregions:', subregions);
   console.log('All cars:', cars);
   console.log('All continents:', continents);
-  console.log('All languages:', languages);
+  console.log('# of languages:', languages.size);
 };
 
 const fetchData = async () => {
@@ -91,44 +88,45 @@ const toCountry = (item: unknown): Country | null => {
   const countryName = nameObj.common;
 
   if (!('area' in item) || !isNumber(item.area)) {
-    console.log('area missing from', countryName);
+    fieldMissing('area', countryName);
     return null;
   }
 
   // some countries have multiple capitals, so in the api capitals are given as array
   if (!('capital' in item) || !isStringArray(item.capital)) {
-    console.log('capital missing from', countryName);
+    fieldMissing('capital', countryName);
     return null;
   }
   // to simplify things: join the names into one string for easier display
   const capital = item.capital.join(', ');
 
   if (!('car' in item) || typeof item.car !== 'object') {
-    console.log('car missing from', countryName);
+    fieldMissing('car', countryName);
     return null;
   }
   const carData = item.car;
   if (!carData || !('side' in carData) || !isString(carData.side)) {
-    console.log('car side missing from', countryName);
+    fieldMissing('car.side', countryName);
     return null;
   }
 
   if (!('continents' in item) || !isStringArray(item.continents)) {
-    console.log('no continents in', countryName);
+    fieldMissing('continents', countryName);
     return null;
   }
 
   if (!('independent' in item) || typeof item.independent !== 'boolean') {
+    fieldMissing('independent', countryName);
     return null;
   }
 
   if (!('landlocked' in item) || typeof item.landlocked !== 'boolean') {
-    console.log('no landlocked in', countryName);
+    fieldMissing('landlocked', countryName);
     return null;
   }
 
   if (!('languages' in item)) {
-    console.log('no official languages in', countryName);
+    fieldMissing('languages', countryName);
     return null;
   }
 
@@ -138,17 +136,20 @@ const toCountry = (item: unknown): Country | null => {
     if (isStringArray(langs)) {
       languages = langs;
     } else {
-      console.log('Invalid languages in', countryName);
+      console.log(`Error parsing languages in ${countryName}.`);
+      return null;
     }
   }
 
   if (!('latlng' in item)) {
-    console.log('location missing from', countryName);
+    fieldMissing('latlng', countryName);
     return null;
   }
   const location = toLocation(item.latlng);
   if (!location) {
-    console.log('invalid location in', countryName, ',', location);
+    console.log(
+      `Error parsing location in ${countryName}. Location object: ${location}`
+    );
     return null;
   }
 
@@ -159,22 +160,22 @@ const toCountry = (item: unknown): Country | null => {
   }
 
   if (!('population' in item) || !isNumber(item.population)) {
-    console.log('no population in', countryName);
+    fieldMissing('population', countryName);
     return null;
   }
 
   if (!('region' in item) || !isString(item.region)) {
-    console.log('no region in', countryName);
+    fieldMissing('region', countryName);
     return null;
   }
 
   if (!('subregion' in item) || !isString(item.subregion)) {
-    console.log(
-      'no subregion in',
-      countryName,
-      'is it independent:',
-      item.independent
-    );
+    fieldMissing('subregion', countryName);
+    return null;
+  }
+
+  if (!('cca3' in item) || !isString(item.cca3)) {
+    fieldMissing('cca3', countryName);
     return null;
   }
 
@@ -183,6 +184,7 @@ const toCountry = (item: unknown): Country | null => {
     capital: capital,
     carSide: carData.side,
     continents: item.continents,
+    countryCode: item.cca3,
     independent: item.independent,
     landlocked: item.landlocked,
     languages: languages,
@@ -200,6 +202,7 @@ interface Country {
   capital: string;
   carSide: string;
   continents: Array<string>;
+  countryCode: string;
   independent: boolean;
   landlocked: boolean;
   languages: Array<string>;
@@ -251,6 +254,12 @@ const toLocation = (param: unknown): LatLngPosition | null => {
   } else {
     return null;
   }
+};
+
+const fieldMissing = (fieldName: string, countryName: string) => {
+  console.log(
+    `'${fieldName}' field missing from ${countryName}, skipping this entry.`
+  );
 };
 
 void setup();
