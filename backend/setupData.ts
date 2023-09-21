@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { connectToDatabase } from './src/util/db';
-import { Region } from './src/models';
+import { DrivingSide, Region, Subregion } from './src/models';
 
 const url = 'https://restcountries.com/v3.1/all';
 
@@ -32,15 +32,15 @@ const setup = async () => {
 
 const saveData = async (countries: Array<Country>) => {
   const regions = new Set<string>();
-  const subregions = new Set();
-  const cars = new Set();
-  const continents = new Set();
-  const languages = new Set();
+  const subregions = new Set<string>();
+  const drivingSides = new Set<Side>();
+  const continents = new Set<string>();
+  const languages = new Set<string>();
 
   countries.forEach((country) => {
     regions.add(country.region);
     subregions.add(country.subregion);
-    cars.add(country.drivingSide);
+    drivingSides.add(country.drivingSide);
 
     country.continents.forEach((continent) => {
       continents.add(continent);
@@ -54,6 +54,18 @@ const saveData = async (countries: Array<Country>) => {
   for (const region of regions) {
     await Region.upsert({
       regionName: region,
+    });
+  }
+
+  for (const subregion of subregions) {
+    await Subregion.upsert({
+      subregionName: subregion,
+    });
+  }
+
+  for (const drivingSide of drivingSides) {
+    await DrivingSide.upsert({
+      side: drivingSide,
     });
   }
 };
@@ -111,7 +123,7 @@ const toCountry = (item: unknown): Country | null => {
     return null;
   }
   const carData = item.car;
-  if (!carData || !('side' in carData) || !isDrivingSide(carData.side)) {
+  if (!carData || !('side' in carData) || !isSide(carData.side)) {
     fieldMissing('car.side', countryName);
     return null;
   }
@@ -206,7 +218,7 @@ const toCountry = (item: unknown): Country | null => {
 interface Country {
   area: number;
   capital: string;
-  drivingSide: DrivingSide;
+  drivingSide: Side;
   continents: Array<string>;
   countryCode: string;
   independent: boolean;
@@ -225,7 +237,7 @@ interface LatLngPosition {
   lng: number;
 }
 
-type DrivingSide = 'left' | 'right';
+type Side = 'left' | 'right';
 
 const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -243,7 +255,7 @@ const isNumberArray = (param: unknown): param is Array<number> => {
   return Array.isArray(param) && param.every((item) => isNumber(item));
 };
 
-const isDrivingSide = (param: unknown): param is DrivingSide => {
+const isSide = (param: unknown): param is Side => {
   if (!param || !isString(param)) {
     return false;
   }

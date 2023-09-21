@@ -6,7 +6,9 @@ import { Location } from './location';
 import { Region } from './region';
 import { Subregion } from './subregion';
 
+Country.belongsTo(DrivingSide);
 Country.belongsTo(Region);
+Country.belongsTo(Subregion);
 
 export {
   Continent,
