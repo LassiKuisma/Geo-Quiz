@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
-const axios = require('axios');
+import axios from 'axios';
 
 const url = 'https://restcountries.com/v3.1/all';
 
@@ -53,7 +52,6 @@ const setup = async () => {
 
 const fetchData = async () => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
     return await axios.get(url);
   } catch (error) {
     console.log('Error fetching country data:', error);
