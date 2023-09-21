@@ -1,8 +1,11 @@
 import axios from 'axios';
+import { connectToDatabase } from './src/util/db';
 
 const url = 'https://restcountries.com/v3.1/all';
 
 const setup = async () => {
+  await connectToDatabase();
+
   console.log('Fetching country data');
 
   const response: unknown = await fetchData();
