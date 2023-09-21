@@ -18,10 +18,6 @@ DrivingSide.init(
   },
   {
     sequelize,
-    underscored: false,
-    timestamps: false,
-    createdAt: false,
-    updatedAt: false,
     modelName: 'drivingSide',
   }
 );

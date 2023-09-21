@@ -2,7 +2,14 @@ import { Sequelize } from 'sequelize';
 import { DATABASE_URL } from './config';
 import { Umzug, SequelizeStorage } from 'umzug';
 
-export const sequelize = new Sequelize(DATABASE_URL);
+export const sequelize = new Sequelize(DATABASE_URL, {
+  define: {
+    underscored: false,
+    timestamps: false,
+    createdAt: false,
+    updatedAt: false,
+  },
+});
 
 export const connectToDatabase = async () => {
   try {
