@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import { Migration } from '../src/util/db';
 
 export const up: Migration = async ({ context: queryInterface }) => {
-  await queryInterface.createTable('drivingSide', {
+  await queryInterface.createTable('driving_sides', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -108,7 +108,7 @@ export const up: Migration = async ({ context: queryInterface }) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'drivingSide',
+        model: 'driving_sides',
         key: 'id',
       },
     },
@@ -154,7 +154,7 @@ export const up: Migration = async ({ context: queryInterface }) => {
 
 export const down: Migration = async ({ context: queryInterface }) => {
   await queryInterface.dropTable('countries');
-  await queryInterface.dropTable('drivingSide');
+  await queryInterface.dropTable('driving_sides');
   await queryInterface.dropTable('regions');
   await queryInterface.dropTable('subregions');
   await queryInterface.dropTable('continents');

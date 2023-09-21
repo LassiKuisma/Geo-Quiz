@@ -18,7 +18,7 @@ DrivingSide.init(
   },
   {
     sequelize,
-    modelName: 'drivingSide',
+    modelName: 'driving_sides',
   }
 );
 
