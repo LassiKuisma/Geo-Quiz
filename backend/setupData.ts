@@ -1,6 +1,12 @@
 import axios from 'axios';
 import { connectToDatabase } from './src/util/db';
-import { DrivingSide, Region, Subregion } from './src/models';
+import {
+  Continent,
+  DrivingSide,
+  Language,
+  Region,
+  Subregion,
+} from './src/models';
 
 const url = 'https://restcountries.com/v3.1/all';
 
@@ -66,6 +72,18 @@ const saveData = async (countries: Array<Country>) => {
   for (const drivingSide of drivingSides) {
     await DrivingSide.upsert({
       side: drivingSide,
+    });
+  }
+
+  for (const continent of continents) {
+    await Continent.upsert({
+      continentName: continent,
+    });
+  }
+
+  for (const language of languages) {
+    await Language.upsert({
+      languageName: language,
     });
   }
 };
