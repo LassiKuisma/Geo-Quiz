@@ -1,7 +1,19 @@
-import { DataTypes, Model } from 'sequelize';
+import {
+  CreationOptional,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from 'sequelize';
 import { sequelize } from '../util/db';
 
-class Language extends Model {}
+class Language extends Model<
+  InferAttributes<Language>,
+  InferCreationAttributes<Language>
+> {
+  declare id: CreationOptional<number>;
+  declare languageName: string;
+}
 
 Language.init(
   {

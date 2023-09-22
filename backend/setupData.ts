@@ -1,11 +1,15 @@
 import axios from 'axios';
 import { connectToDatabase } from './src/util/db';
 import {
+  Continent,
   Country as CountryModel,
   DrivingSide,
+  Language,
   Region,
   Subregion,
 } from './src/models';
+import { CountryLanguage } from './src/models/countryLanguage';
+import { CountryContinent } from './src/models/countryContinent';
 
 const url = 'https://restcountries.com/v3.1/all';
 
@@ -49,7 +53,7 @@ const saveData = async (countries: Array<Country>) => {
       side: country.drivingSide,
     });
 
-    await CountryModel.upsert({
+    const countryModel = await CountryModel.upsert({
       area: country.area,
       countryCode: country.countryCode,
       landlocked: country.landlocked,
@@ -63,7 +67,29 @@ const saveData = async (countries: Array<Country>) => {
       drivingSideId: drivingSide[0].dataValues.id,
     });
 
-    // TODO: continents and languages
+    for (const language of country.languages) {
+      const languageModel = await Language.upsert({
+        languageName: language,
+      });
+
+      await CountryLanguage.upsert({
+        languageId: languageModel[0].dataValues.id,
+        countryId: countryModel[0].dataValues.id,
+      });
+    }
+
+    for (const continent of country.continents) {
+      const continentModel = await Continent.upsert({
+        continentName: continent,
+      });
+
+      await CountryContinent.upsert({
+        continentId: continentModel[0].dataValues.id,
+        countryId: countryModel[0].dataValues.id,
+      });
+    }
+
+    // TODO: add countries neighbours
   }
 };
 

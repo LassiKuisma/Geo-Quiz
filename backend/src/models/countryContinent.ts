@@ -1,7 +1,18 @@
-import { DataTypes, Model } from 'sequelize';
+import {
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from 'sequelize';
 import { sequelize } from '../util/db';
 
-class CountryContinent extends Model {}
+class CountryContinent extends Model<
+  InferAttributes<CountryContinent>,
+  InferCreationAttributes<CountryContinent>
+> {
+  declare countryId: number;
+  declare continentId: number;
+}
 
 CountryContinent.init(
   {
