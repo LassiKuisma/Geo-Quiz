@@ -1,7 +1,34 @@
-import { DataTypes, Model } from 'sequelize';
+import {
+  CreationOptional,
+  DataTypes,
+  ForeignKey,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from 'sequelize';
 import { sequelize } from '../util/db';
 
-class Country extends Model {}
+import { Region } from './region';
+import { Subregion } from './subregion';
+import { DrivingSide } from './drivingSide';
+
+class Country extends Model<
+  InferAttributes<Country>,
+  InferCreationAttributes<Country>
+> {
+  declare id: CreationOptional<number>;
+  declare area: number;
+  declare countryCode: string;
+  declare landlocked: boolean;
+  declare name: string;
+  declare population: number;
+  declare location_lat: number;
+  declare location_lng: number;
+
+  declare regionId: ForeignKey<Region['id']>;
+  declare subregionId: ForeignKey<Subregion['id']>;
+  declare drivingSideId: ForeignKey<DrivingSide['id']>;
+}
 
 Country.init(
   {
@@ -11,7 +38,7 @@ Country.init(
       autoIncrement: true,
     },
     area: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
     countryCode: {
@@ -32,11 +59,11 @@ Country.init(
       allowNull: false,
     },
     location_lat: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
     location_lng: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
   },

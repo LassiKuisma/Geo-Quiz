@@ -1,7 +1,19 @@
-import { DataTypes, Model } from 'sequelize';
+import {
+  CreationOptional,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from 'sequelize';
 import { sequelize } from '../util/db';
 
-class Region extends Model {}
+class Region extends Model<
+  InferAttributes<Region>,
+  InferCreationAttributes<Region>
+> {
+  declare id: CreationOptional<number>;
+  declare regionName: string;
+}
 
 Region.init(
   {

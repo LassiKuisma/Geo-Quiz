@@ -1,7 +1,19 @@
-import { DataTypes, Model } from 'sequelize';
+import {
+  CreationOptional,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from 'sequelize';
 import { sequelize } from '../util/db';
 
-class DrivingSide extends Model {}
+class DrivingSide extends Model<
+  InferAttributes<DrivingSide>,
+  InferCreationAttributes<DrivingSide>
+> {
+  declare id: CreationOptional<number>;
+  declare side: string;
+}
 
 DrivingSide.init(
   {

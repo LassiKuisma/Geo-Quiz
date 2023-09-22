@@ -1,9 +1,8 @@
 import axios from 'axios';
 import { connectToDatabase } from './src/util/db';
 import {
-  Continent,
+  Country as CountryModel,
   DrivingSide,
-  Language,
   Region,
   Subregion,
 } from './src/models';
@@ -37,54 +36,34 @@ const setup = async () => {
 };
 
 const saveData = async (countries: Array<Country>) => {
-  const regions = new Set<string>();
-  const subregions = new Set<string>();
-  const drivingSides = new Set<Side>();
-  const continents = new Set<string>();
-  const languages = new Set<string>();
-
-  countries.forEach((country) => {
-    regions.add(country.region);
-    subregions.add(country.subregion);
-    drivingSides.add(country.drivingSide);
-
-    country.continents.forEach((continent) => {
-      continents.add(continent);
+  for (const country of countries) {
+    const region = await Region.upsert({
+      regionName: country.region,
     });
 
-    country.languages.forEach((language) => {
-      languages.add(language);
+    const subregion = await Subregion.upsert({
+      subregionName: country.subregion,
     });
-  });
 
-  for (const region of regions) {
-    await Region.upsert({
-      regionName: region,
+    const drivingSide = await DrivingSide.upsert({
+      side: country.drivingSide,
     });
-  }
 
-  for (const subregion of subregions) {
-    await Subregion.upsert({
-      subregionName: subregion,
-    });
-  }
+    await CountryModel.upsert({
+      area: country.area,
+      countryCode: country.countryCode,
+      landlocked: country.landlocked,
+      name: country.name,
+      population: country.population,
+      location_lat: country.location.lat,
+      location_lng: country.location.lng,
 
-  for (const drivingSide of drivingSides) {
-    await DrivingSide.upsert({
-      side: drivingSide,
+      regionId: region[0].dataValues.id,
+      subregionId: subregion[0].dataValues.id,
+      drivingSideId: drivingSide[0].dataValues.id,
     });
-  }
 
-  for (const continent of continents) {
-    await Continent.upsert({
-      continentName: continent,
-    });
-  }
-
-  for (const language of languages) {
-    await Language.upsert({
-      languageName: language,
-    });
+    // TODO: continents and languages
   }
 };
 
