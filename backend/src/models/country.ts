@@ -31,6 +31,14 @@ Country.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    location_lat: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    location_lng: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
   {
     sequelize,
