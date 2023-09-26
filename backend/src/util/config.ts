@@ -10,4 +10,6 @@ if (!dbUrl) {
 // using a second variable seems to fix this
 const DATABASE_URL = dbUrl;
 
-export { DATABASE_URL };
+const PORT = process.env.PORT || 3003;
+
+export { DATABASE_URL, PORT };
