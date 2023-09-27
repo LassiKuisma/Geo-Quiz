@@ -2,7 +2,7 @@ import axios from 'axios';
 import { connectToDatabase } from './src/util/db';
 import {
   Continent,
-  Country as CountryModel,
+  CountryModel,
   DrivingSide,
   Language,
   Region,

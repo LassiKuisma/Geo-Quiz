@@ -1,7 +1,7 @@
 import express from 'express';
 import {
   Continent,
-  Country,
+  CountryModel,
   DrivingSide,
   Language,
   Region,
@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.get('/', async (_req, res, next) => {
   try {
-    const countries = await Country.findAll({
+    const countries = await CountryModel.findAll({
       attributes: {
         exclude: ['drivingSideId', 'regionId', 'subregionId'],
       },
@@ -43,7 +43,7 @@ router.get('/:id', async (req, res, next) => {
   try {
     const id = req.params.id;
 
-    const country = await Country.findByPk(id, {
+    const country = await CountryModel.findByPk(id, {
       attributes: {
         exclude: ['drivingSideId', 'regionId', 'subregionId'],
       },

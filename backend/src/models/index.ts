@@ -17,4 +17,4 @@ Country.belongsTo(DrivingSide);
 Country.belongsTo(Region);
 Country.belongsTo(Subregion);
 
-export { Continent, Country, DrivingSide, Language, Region, Subregion };
+export { Continent, Country as CountryModel, DrivingSide, Language, Region, Subregion };
