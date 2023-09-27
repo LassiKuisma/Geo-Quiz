@@ -7,9 +7,9 @@ import {
   Language,
   Region,
   Subregion,
+  CountryLanguage,
+  CountryContinent,
 } from './src/models';
-import { CountryLanguage } from './src/models/countryLanguage';
-import { CountryContinent } from './src/models/countryContinent';
 import {
   isNumber,
   isNumberArray,
