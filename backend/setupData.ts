@@ -10,6 +10,14 @@ import {
 } from './src/models';
 import { CountryLanguage } from './src/models/countryLanguage';
 import { CountryContinent } from './src/models/countryContinent';
+import {
+  isNumber,
+  isNumberArray,
+  isSide,
+  isString,
+  isStringArray,
+} from './src/util/utils';
+import { Country } from './src/util/types';
 
 const url = 'https://restcountries.com/v3.1/all';
 
@@ -39,7 +47,7 @@ const setup = async () => {
   await saveData(independentCountries);
 };
 
-const saveData = async (countries: Array<Country>) => {
+const saveData = async (countries: Array<CountryInfo>) => {
   for (const country of countries) {
     const region = await Region.upsert({
       regionName: country.region,
@@ -59,8 +67,8 @@ const saveData = async (countries: Array<Country>) => {
       landlocked: country.landlocked,
       name: country.name,
       population: country.population,
-      location_lat: country.location.lat,
-      location_lng: country.location.lng,
+      location_lat: country.location_lat,
+      location_lng: country.location_lng,
 
       regionId: region[0].dataValues.id,
       subregionId: subregion[0].dataValues.id,
@@ -102,13 +110,13 @@ const fetchData = async () => {
   }
 };
 
-const dataToCountries = (data: Array<unknown>): Array<Country> => {
+const dataToCountries = (data: Array<unknown>): Array<CountryInfo> => {
   return data
     .map((item) => toCountry(item))
-    .filter((item): item is Country => !!item);
+    .filter((item): item is CountryInfo => !!item);
 };
 
-const toCountry = (item: unknown): Country | null => {
+const toCountry = (item: unknown): CountryInfo | null => {
   if (!item || typeof item !== 'object') {
     return null;
   }
@@ -229,7 +237,8 @@ const toCountry = (item: unknown): Country | null => {
     independent: item.independent,
     landlocked: item.landlocked,
     languages: languages,
-    location: location,
+    location_lat: location.lat,
+    location_lng: location.lng,
     name: countryName,
     neighbours: neighbours,
     population: item.population,
@@ -238,53 +247,14 @@ const toCountry = (item: unknown): Country | null => {
   };
 };
 
-interface Country {
-  area: number;
-  capital: string;
-  drivingSide: Side;
-  continents: Array<string>;
-  countryCode: string;
+interface CountryInfo extends Omit<Country, 'id'> {
   independent: boolean;
-  landlocked: boolean;
-  languages: Array<string>;
-  location: LatLngPosition;
-  name: string;
-  neighbours: Array<string>;
-  population: number;
-  region: string;
-  subregion: string;
 }
 
 interface LatLngPosition {
   lat: number;
   lng: number;
 }
-
-type Side = 'left' | 'right';
-
-const isString = (text: unknown): text is string => {
-  return typeof text === 'string' || text instanceof String;
-};
-
-const isNumber = (param: unknown): param is number => {
-  return typeof param === 'number' || param instanceof Number;
-};
-
-const isStringArray = (param: unknown): param is Array<string> => {
-  return Array.isArray(param) && param.every((item) => isString(item));
-};
-
-const isNumberArray = (param: unknown): param is Array<number> => {
-  return Array.isArray(param) && param.every((item) => isNumber(item));
-};
-
-const isSide = (param: unknown): param is Side => {
-  if (!param || !isString(param)) {
-    return false;
-  }
-
-  return param === 'left' || param === 'right';
-};
 
 const toLocation = (param: unknown): LatLngPosition | null => {
   if (!param || !isNumberArray(param)) {
