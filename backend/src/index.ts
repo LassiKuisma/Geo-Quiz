@@ -3,6 +3,7 @@ import 'dotenv/config';
 import cors from 'cors';
 
 import countryRouter from './routes/countryRouter';
+import gameRouter from './routes/gameRouter';
 
 import { PORT } from './util/config';
 import { connectToDatabase } from './util/db';
@@ -13,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/countries', countryRouter);
+app.use('/api/game', gameRouter);
 
 const start = async () => {
   await connectToDatabase();

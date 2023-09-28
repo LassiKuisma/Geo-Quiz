@@ -23,3 +23,25 @@ export interface Country {
 }
 
 export type Side = 'left' | 'right';
+
+export type Difference = 'more' | 'less' | 'equal';
+
+export interface Comparison {
+  areaDifference: Difference;
+  landlockedEquality: boolean;
+  populationDifference: Difference;
+  locationLatDifference: Difference;
+  locationLngDifference: Difference;
+  drivingSideEqual: boolean;
+  regionEqual: boolean;
+  subregionEqual: boolean;
+
+  sameContinents: Array<string>;
+  sameLanguages: Array<string>;
+  sameNeighbours: Array<string>;
+}
+
+export interface MoveResult {
+  correct: boolean;
+  comparison: Comparison;
+}
