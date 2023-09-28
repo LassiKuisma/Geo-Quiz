@@ -4,29 +4,30 @@ import NavigationBar from './components/NavigationBar';
 import HomePage from './components/HomePage';
 import GameView from './components/GameView';
 import { useState } from 'react';
+import { startNewGame } from './services/gameService';
+import { GameObject } from './types';
 
 const App = () => {
-  const [gameId, setGameId] = useState<undefined | number>(undefined);
+  const [game, setGame] = useState<undefined | GameObject>(undefined);
   const navigate = useNavigate();
 
-  const generateGameId = async () => {
-    console.log('starting new game');
-    setTimeout(() => {
-      const id = Math.floor(Math.random() * 10);
-      console.log('new id set');
-
-      setGameId(id);
-    }, 1000);
-  };
-
-  const startNewGameClicked = () => {
-    setGameId(undefined);
+  const startNewGameClicked = async () => {
+    setGame(undefined);
     navigate('/game');
-    generateGameId();
+    const newGame = await startNewGame();
+    newGame.countries.sort((a, b) => a.name.localeCompare(b.name));
+
+    const gameObj: GameObject = {
+      gameId: newGame.gameId,
+      countries: newGame.countries,
+      guesses: new Array<string>(),
+    };
+
+    setGame(gameObj);
   };
 
   const resumeCurrentGame = () => {
-    if (!gameId) {
+    if (!game) {
       return;
     }
     navigate('/game');
@@ -42,11 +43,11 @@ const App = () => {
               <HomePage
                 startNewGame={startNewGameClicked}
                 resumeCurrentGame={resumeCurrentGame}
-                currentGameId={gameId}
+                hasActiveGame={!!game}
               />
             }
           />
-          <Route path="game" element={<GameView gameId={gameId} />} />
+          <Route path="game" element={<GameView game={game} />} />
           <Route path="first" element={<First />} />
           <Route path="second" element={<Second />} />
 

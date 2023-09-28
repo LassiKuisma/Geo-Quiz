@@ -3,13 +3,13 @@ import { Button, Container, Typography } from '@mui/material';
 interface Props {
   startNewGame: () => void;
   resumeCurrentGame: () => void;
-  currentGameId: undefined | number;
+  hasActiveGame: boolean;
 }
 
 const HomePage = ({
   startNewGame,
   resumeCurrentGame,
-  currentGameId,
+  hasActiveGame,
 }: Props) => {
   return (
     <Container
@@ -29,7 +29,7 @@ const HomePage = ({
         variant="contained"
         sx={{ borderRadius: 5 }}
         onClick={resumeCurrentGame}
-        disabled={!currentGameId}
+        disabled={!hasActiveGame}
       >
         Resume game
       </Button>
