@@ -1,3 +1,8 @@
+export type Err = { k: 'error'; message: string };
+export type Ok<T> = { k: 'ok'; value: T };
+
+export type Result<T> = Ok<T> | Err;
+
 export interface Country {
   id: number;
   area: number;
@@ -41,6 +46,11 @@ export interface MoveResult {
   comparison: Comparison;
 }
 
+export interface Move {
+  guessedCountry: Country;
+  result: MoveResult;
+}
+
 export interface NewGame {
   gameId: number;
   countries: Array<Country>;
@@ -49,5 +59,6 @@ export interface NewGame {
 export interface GameObject {
   gameId: number;
   countries: Array<Country>;
-  guesses: Array<string>;
+  guesses: Array<Move>;
+  isSubmittingMove: boolean;
 }

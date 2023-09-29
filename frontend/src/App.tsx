@@ -4,8 +4,8 @@ import NavigationBar from './components/NavigationBar';
 import HomePage from './components/HomePage';
 import GameView from './components/GameView';
 import { useState } from 'react';
-import { startNewGame } from './services/gameService';
-import { GameObject } from './types';
+import { postMove, startNewGame } from './services/gameService';
+import { Country, GameObject, Move } from './types';
 
 const App = () => {
   const [game, setGame] = useState<undefined | GameObject>(undefined);
@@ -20,7 +20,8 @@ const App = () => {
     const gameObj: GameObject = {
       gameId: newGame.gameId,
       countries: newGame.countries,
-      guesses: new Array<string>(),
+      guesses: new Array<Move>(),
+      isSubmittingMove: false,
     };
 
     setGame(gameObj);
@@ -31,6 +32,41 @@ const App = () => {
       return;
     }
     navigate('/game');
+  };
+
+  const sumbitMove = async (country: Country) => {
+    if (!game) {
+      return;
+    }
+
+    setGame({
+      ...game,
+      isSubmittingMove: true,
+    });
+
+    try {
+      const result = await postMove(game.gameId, country.id);
+      const move: Move = {
+        guessedCountry: country,
+        result,
+      };
+
+      setGame({
+        gameId: game.gameId,
+        countries: game.countries.filter((c) => c.id !== country.id),
+        guesses: [move, ...game.guesses],
+        isSubmittingMove: false,
+      });
+
+      return;
+    } catch (error) {
+      console.log('error:', error);
+      // TODO: error message
+      setGame({
+        ...game,
+        isSubmittingMove: false,
+      });
+    }
   };
 
   return (
@@ -47,7 +83,10 @@ const App = () => {
               />
             }
           />
-          <Route path="game" element={<GameView game={game} />} />
+          <Route
+            path="game"
+            element={<GameView game={game} submitMove={sumbitMove} />}
+          />
           <Route path="first" element={<First />} />
           <Route path="second" element={<Second />} />
 
