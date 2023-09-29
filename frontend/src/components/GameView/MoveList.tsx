@@ -54,14 +54,15 @@ const ResultRow = ({ move }: { move: Move }) => {
     <TableRow>
       <TableCell>{move.guessedCountry.name}</TableCell>
       <TableCell>
-        {diffToStr(comp.areaDifference)} {country.area} km²
+        {diffToStr(comp.areaDifference)} {bigNumberToString(country.area, 0)}{' '}
+        km²
       </TableCell>
       <TableCell>
         {boolToIcon(comp.landlockedEquality)} {boolToStr(country.landlocked)}
       </TableCell>
       <TableCell>
         {diffToStr(comp.populationDifference)}{' '}
-        {populationToStr(country.population)}
+        {bigNumberToString(country.population, 0)}
       </TableCell>
       <TableCell>
         {boolToIcon(comp.drivingSideEqual)} {country.drivingSide}
@@ -72,23 +73,60 @@ const ResultRow = ({ move }: { move: Move }) => {
       <TableCell>
         {boolToIcon(comp.subregionEqual)} {country.subregion}
       </TableCell>
-      <TableCell></TableCell>
+      <ArrayCell
+        values={country.continents}
+        correctValues={comp.sameContinents}
+      />
+      <ArrayCell
+        values={country.languages}
+        correctValues={comp.sameLanguages}
+      />
+      <ArrayCell
+        values={country.neighbours}
+        correctValues={comp.sameNeighbours}
+      />
     </TableRow>
   );
 };
 
-const populationToStr = (population: number): string => {
-  if (population > 1_000_000) {
-    const m = (population / 1_000_000).toFixed(1);
+interface ArrayCellProps {
+  values: Array<string>;
+  correctValues: Array<string>;
+}
+
+const ArrayCell = ({ values, correctValues }: ArrayCellProps) => {
+  const correct = new Array<string>();
+  const wrong = new Array<string>();
+
+  values.forEach((continent) => {
+    if (correctValues.includes(continent)) {
+      correct.push(continent);
+    } else {
+      wrong.push(continent);
+    }
+  });
+
+  return (
+    <TableCell>
+      Correct: {correct.join(', ')}
+      <br />
+      Wrong: {wrong.join(', ')}
+    </TableCell>
+  );
+};
+
+const bigNumberToString = (number: number, digits: number): string => {
+  if (number > 1_000_000) {
+    const m = (number / 1_000_000).toFixed(digits);
     return `${m} million`;
   }
 
-  if (population > 1_000) {
-    const k = (population / 1_000).toFixed(1);
+  if (number > 1_000) {
+    const k = (number / 1_000).toFixed(1);
     return `${k} thousand`;
   }
 
-  return population.toString();
+  return number.toString();
 };
 
 const diffToStr = (diff: Difference) => {
