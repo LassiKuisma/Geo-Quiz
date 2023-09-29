@@ -25,15 +25,15 @@ const MoveList = ({ moves }: Props) => {
           <TableHead>
             <TableRow>
               <TableCell>Country</TableCell>
+              <TableCell>Region</TableCell>
+              <TableCell>Subregion</TableCell>
               <TableCell>Area</TableCell>
               <TableCell>Landlocked</TableCell>
               <TableCell>Population</TableCell>
               <TableCell>Driving side</TableCell>
-              <TableCell>Region</TableCell>
-              <TableCell>Subregion</TableCell>
+              <TableCell>Neighbours</TableCell>
               <TableCell>Continents</TableCell>
               <TableCell>Languages</TableCell>
-              <TableCell>Neighbours</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -54,6 +54,12 @@ const ResultRow = ({ move }: { move: Move }) => {
     <TableRow>
       <TableCell>{move.guessedCountry.name}</TableCell>
       <TableCell>
+        {boolToIcon(comp.regionEqual)} {country.region}
+      </TableCell>
+      <TableCell>
+        {boolToIcon(comp.subregionEqual)} {country.subregion}
+      </TableCell>
+      <TableCell>
         {diffToStr(comp.areaDifference)} {bigNumberToString(country.area, 0)}{' '}
         km²
       </TableCell>
@@ -67,12 +73,10 @@ const ResultRow = ({ move }: { move: Move }) => {
       <TableCell>
         {boolToIcon(comp.drivingSideEqual)} {country.drivingSide}
       </TableCell>
-      <TableCell>
-        {boolToIcon(comp.regionEqual)} {country.region}
-      </TableCell>
-      <TableCell>
-        {boolToIcon(comp.subregionEqual)} {country.subregion}
-      </TableCell>
+      <ArrayCell
+        values={country.neighbours}
+        correctValues={comp.sameNeighbours}
+      />
       <ArrayCell
         values={country.continents}
         correctValues={comp.sameContinents}
@@ -80,10 +84,6 @@ const ResultRow = ({ move }: { move: Move }) => {
       <ArrayCell
         values={country.languages}
         correctValues={comp.sameLanguages}
-      />
-      <ArrayCell
-        values={country.neighbours}
-        correctValues={comp.sameNeighbours}
       />
     </TableRow>
   );
