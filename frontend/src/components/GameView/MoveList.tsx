@@ -122,10 +122,15 @@ const bigNumberToString = (number: number, digits: number): string => {
 };
 
 const diffToStr = (diff: Difference) => {
+  // why do the symbols here seem to be the wrong way around?
+  // example: correct answer has population=9999, you guess a country
+  // with population=10, the API will return 'less', (10 < 999). Then we
+  // display that in frontend: 'You guessed country with population=10,
+  // the correct answer has more than that'
   if (diff === 'more') {
-    return '>';
-  } else if (diff === 'less') {
     return '<';
+  } else if (diff === 'less') {
+    return '>';
   } else {
     return '=';
   }
