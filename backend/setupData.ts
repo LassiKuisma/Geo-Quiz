@@ -69,6 +69,7 @@ const saveData = async (countries: Array<CountryInfo>) => {
       population: country.population,
       location_lat: country.location_lat,
       location_lng: country.location_lng,
+      capital: country.capital,
 
       regionId: region[0].dataValues.id,
       subregionId: subregion[0].dataValues.id,
@@ -247,8 +248,9 @@ const toCountry = (item: unknown): CountryInfo | null => {
   };
 };
 
-interface CountryInfo extends Omit<Country, 'id'> {
+interface CountryInfo extends Omit<Country, 'id' | 'capital'> {
   independent: boolean;
+  capital: string;
 }
 
 interface LatLngPosition {

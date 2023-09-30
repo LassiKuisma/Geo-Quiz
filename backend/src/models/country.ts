@@ -24,6 +24,7 @@ class Country extends Model<
   declare population: number;
   declare location_lat: number;
   declare location_lng: number;
+  declare capital: string;
 
   declare regionId: ForeignKey<Region['id']>;
   declare subregionId: ForeignKey<Subregion['id']>;
@@ -65,6 +66,10 @@ Country.init(
     location_lng: {
       type: DataTypes.FLOAT,
       allowNull: false,
+    },
+    capital: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   {
