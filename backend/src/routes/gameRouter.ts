@@ -1,8 +1,9 @@
 import express from 'express';
 import { isNumber } from '../util/utils';
 import { getAllCountries, getCountry } from '../services/countryService';
-import { Country, Hints, MoveResult } from '../util/types';
-import { compareCountries } from '../util/country';
+import { Country, MoveResult } from '../util/types';
+import { compareCountries, getHints } from '../util/country';
+import { defaultThresholds } from '../util/gameSettings';
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ interface NewGame {
 interface Game {
   gameId: number;
   answer: Country['id'];
+  guesses: number;
 }
 
 const activeGames = new Map<number, Game>();
@@ -27,6 +29,7 @@ const generateGame = (countries: Array<Country>): Game => {
   return {
     gameId: id,
     answer: countryId,
+    guesses: 0,
   };
 };
 
@@ -85,17 +88,15 @@ router.post('/move', async (req, res) => {
   const correctAnswer = resultAnswer.value;
 
   const comparison = compareCountries(playerGuess, correctAnswer);
-  const hints: Hints = {
-    landlocked: correctAnswer.landlocked,
-    drivingSide: correctAnswer.drivingSide,
-    capital: correctAnswer.capital,
-  };
+  const hints = getHints(game.guesses, correctAnswer, defaultThresholds);
 
   const moveResult: MoveResult = {
     correct: playerGuess.id === correctAnswer.id,
     comparison,
     hints,
   };
+
+  game.guesses += 1;
 
   return res.status(200).send(moveResult);
 });

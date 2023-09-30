@@ -45,8 +45,16 @@ export interface MoveResult {
   hints: Hints;
 }
 
+export type Hint<T> = { unlocksIn: number } | T;
+
 export interface Hints {
-  landlocked: null | boolean;
-  drivingSide: null | Side;
-  capital: null | string;
+  landlocked: Hint<boolean>;
+  drivingSide: Hint<Side>;
+  capital: Hint<string | null>;
+}
+
+export interface HintThresholds {
+  landlocked: number;
+  drivingSide: number;
+  capital: number;
 }

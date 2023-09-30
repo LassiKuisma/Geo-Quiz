@@ -1,5 +1,5 @@
-import { compareCountries } from '../src/util/country';
-import { Country, Difference } from '../src/util/types';
+import { compareCountries, getHints } from '../src/util/country';
+import { Country, Difference, Hint, Side } from '../src/util/types';
 
 describe('comparing countries', () => {
   test('works with two completely different countries', () => {
@@ -101,5 +101,131 @@ describe('comparing countries', () => {
       'Binary',
     ]);
     expect(comparison.sameNeighbours).toEqual<Array<string>>(['Jestia']);
+  });
+});
+
+describe('generating hints', () => {
+  test('generates all hints after passing guess threshold', () => {
+    const thresholds = {
+      landlocked: 2,
+      drivingSide: 4,
+      capital: 9,
+    };
+
+    const country: Country = {
+      id: 1,
+      landlocked: false,
+      capital: 'New Skako',
+      drivingSide: 'left',
+      area: 0,
+      countryCode: 'A',
+      name: 'A',
+      population: 0,
+      location_lat: 0,
+      location_lng: 0,
+      region: 'A',
+      subregion: 'A',
+      languages: [],
+      continents: [],
+      neighbours: [],
+    };
+
+    const hints = getHints(1000, country, thresholds);
+    expect(hints.landlocked).toEqual<Hint<boolean>>(false);
+    expect(hints.drivingSide).toEqual<Hint<Side>>('left');
+    expect(hints.capital).toEqual<Hint<string>>('New Skako');
+  });
+
+  test('generates some hints after passing some threshold', () => {
+    const thresholds = {
+      landlocked: 2,
+      drivingSide: 400,
+      capital: 900,
+    };
+
+    const country: Country = {
+      id: 1,
+      landlocked: false,
+      capital: 'New Skako',
+      drivingSide: 'left',
+      area: 0,
+      countryCode: 'A',
+      name: 'A',
+      population: 0,
+      location_lat: 0,
+      location_lng: 0,
+      region: 'A',
+      subregion: 'A',
+      languages: [],
+      continents: [],
+      neighbours: [],
+    };
+
+    const hints = getHints(100, country, thresholds);
+    expect(hints.landlocked).toEqual<Hint<boolean>>(false);
+    expect(hints.drivingSide).toEqual<Hint<Side>>({ unlocksIn: 300 });
+    expect(hints.capital).toEqual<Hint<string>>({ unlocksIn: 800 });
+  });
+
+  test('generates no hints before passing any threshold', () => {
+    const thresholds = {
+      landlocked: 10,
+      drivingSide: 10,
+      capital: 10,
+    };
+
+    const country: Country = {
+      id: 1,
+      landlocked: false,
+      capital: 'New Skako',
+      drivingSide: 'left',
+      area: 0,
+      countryCode: 'A',
+      name: 'A',
+      population: 0,
+      location_lat: 0,
+      location_lng: 0,
+      region: 'A',
+      subregion: 'A',
+      languages: [],
+      continents: [],
+      neighbours: [],
+    };
+
+    const hints = getHints(1, country, thresholds);
+    expect(hints.landlocked).toEqual<Hint<boolean>>({ unlocksIn: 9 });
+    expect(hints.drivingSide).toEqual<Hint<Side>>({ unlocksIn: 9 });
+    expect(hints.capital).toEqual<Hint<string>>({ unlocksIn: 9 });
+  });
+
+  test('generates hints at exact threshold', () => {
+    const thresholds = {
+      landlocked: 20,
+      drivingSide: 21,
+      capital: 22,
+    };
+
+    const country: Country = {
+      id: 1,
+      landlocked: false,
+      capital: 'New Skako',
+      drivingSide: 'left',
+      area: 0,
+      countryCode: 'A',
+      name: 'A',
+      population: 0,
+      location_lat: 0,
+      location_lng: 0,
+      region: 'A',
+      subregion: 'A',
+      languages: [],
+      continents: [],
+      neighbours: [],
+    };
+
+    const hints = getHints(21, country, thresholds);
+    expect(hints.landlocked).toEqual<Hint<boolean>>(false);
+    expect(hints.drivingSide).toEqual<Hint<Side>>('left');
+    expect(hints.capital).toEqual<Hint<string>>({ unlocksIn: 1 });
   });
 });

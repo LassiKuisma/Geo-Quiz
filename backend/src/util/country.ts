@@ -1,4 +1,11 @@
-import { Comparison, Country, Difference } from './types';
+import {
+  Comparison,
+  Country,
+  Difference,
+  Hint,
+  HintThresholds,
+  Hints,
+} from './types';
 
 export const compareCountries = (
   playerGuess: Country,
@@ -52,4 +59,26 @@ const getDifference = (n1: number, n2: number): Difference => {
 const EPSILON = 0.1;
 const approxEqual = (n1: number, n2: number): boolean => {
   return Math.abs(n1 - n2) <= EPSILON;
+};
+
+export const getHints = (
+  guesses: number,
+  country: Country,
+  thresholds: HintThresholds
+): Hints => {
+  const hints = {
+    landlocked: getHint(guesses, thresholds.landlocked, country.landlocked),
+    drivingSide: getHint(guesses, thresholds.drivingSide, country.drivingSide),
+    capital: getHint(guesses, thresholds.capital, country.capital),
+  };
+
+  return hints;
+};
+
+const getHint = <T>(guesses: number, threshold: number, answer: T): Hint<T> => {
+  if (guesses < threshold) {
+    return { unlocksIn: threshold - guesses };
+  }
+
+  return answer;
 };
