@@ -114,7 +114,7 @@ const bigNumberToString = (number: number, digits: number): string => {
   }
 
   if (number > 1_000) {
-    const k = (number / 1_000).toFixed(1);
+    const k = (number / 1_000).toFixed(digits);
     return `${k} thousand`;
   }
 
