@@ -14,7 +14,7 @@ type CountryJoined = CountryModel & { driving_side: DrivingSide } & {
   region: Region;
 } & { subregion: Subregion } & { continents: Array<Continent> } & {
   languages: Array<Language>;
-};
+} & { neighbours: Array<CountryModel> };
 
 const countryOptions: FindOptions<InferAttributes<CountryModel>> = {
   attributes: {
@@ -32,6 +32,12 @@ const countryOptions: FindOptions<InferAttributes<CountryModel>> = {
     {
       model: Language,
       attributes: ['languageName'],
+      through: { attributes: [] },
+    },
+    {
+      model: CountryModel,
+      attributes: ['name'],
+      as: 'neighbours',
       through: { attributes: [] },
     },
   ],
@@ -97,6 +103,7 @@ const modelToCountry = (model: CountryJoined): Country | null => {
   const subregion = model.subregion.subregionName;
   const continents = model.continents.map((c) => c.continentName);
   const languages = model.languages.map((l) => l.languageName);
+  const neighbours = model.neighbours.map((n) => n.name);
 
   return {
     id: model.id,
@@ -115,6 +122,6 @@ const modelToCountry = (model: CountryJoined): Country | null => {
     subregion,
     languages,
     continents,
-    neighbours: new Array<string>(), // TODO: neighbours not yet implemented
+    neighbours,
   };
 };

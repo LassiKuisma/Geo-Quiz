@@ -9,6 +9,7 @@ import {
   Subregion,
   CountryLanguage,
   CountryContinent,
+  CountryNeighbour,
 } from './src/models';
 import {
   isNumber,
@@ -44,10 +45,13 @@ const setup = async () => {
     (country) => country.independent
   );
 
-  await saveData(independentCountries);
+  const countryCodeMap = await saveData(independentCountries);
+  await saveNeighbourData(independentCountries, countryCodeMap);
 };
 
 const saveData = async (countries: Array<CountryInfo>) => {
+  const countryCodeMap = new Map<Country['countryCode'], Country['id']>();
+
   for (const country of countries) {
     const region = await Region.upsert({
       regionName: country.region,
@@ -98,7 +102,34 @@ const saveData = async (countries: Array<CountryInfo>) => {
       });
     }
 
-    // TODO: add countries neighbours
+    countryCodeMap.set(countryModel[0].countryCode, countryModel[0].id);
+  }
+
+  return countryCodeMap;
+};
+
+const saveNeighbourData = async (
+  countries: Array<CountryInfo>,
+  countryCodeMap: Map<Country['countryCode'], Country['id']>
+) => {
+  for (const country of countries) {
+    for (const neighbour of country.neighboursCountryCodes) {
+      const firstCountryId = countryCodeMap.get(country.countryCode);
+      const secondCountryId = countryCodeMap.get(neighbour);
+
+      if (!firstCountryId || !secondCountryId) {
+        const missingCode = !firstCountryId ? country.countryCode : neighbour;
+        console.log(
+          `Error trying to save ${country.name} neighbours. Can't find country id of ${missingCode}`
+        );
+        continue;
+      }
+
+      await CountryNeighbour.upsert({
+        firstCountryId,
+        secondCountryId,
+      });
+    }
   }
 };
 
@@ -241,16 +272,17 @@ const toCountry = (item: unknown): CountryInfo | null => {
     location_lat: location.lat,
     location_lng: location.lng,
     name: countryName,
-    neighbours: neighbours,
+    neighboursCountryCodes: neighbours,
     population: item.population,
     region: item.region,
     subregion: item.subregion,
   };
 };
 
-interface CountryInfo extends Omit<Country, 'id' | 'capital'> {
+interface CountryInfo extends Omit<Country, 'id' | 'capital' | 'neighbours'> {
   independent: boolean;
   capital: string;
+  neighboursCountryCodes: Array<string>;
 }
 
 interface LatLngPosition {
