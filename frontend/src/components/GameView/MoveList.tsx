@@ -30,7 +30,6 @@ const MoveList = ({ moves }: Props) => {
               <TableCell>Area</TableCell>
               <TableCell>Population</TableCell>
               <TableCell>Neighbours</TableCell>
-              <TableCell>Continents</TableCell>
               <TableCell>Languages</TableCell>
             </TableRow>
           </TableHead>
@@ -68,10 +67,6 @@ const ResultRow = ({ move }: { move: Move }) => {
       <ArrayCell
         values={country.neighbours}
         correctValues={comp.sameNeighbours}
-      />
-      <ArrayCell
-        values={country.continents}
-        correctValues={comp.sameContinents}
       />
       <ArrayCell
         values={country.languages}
