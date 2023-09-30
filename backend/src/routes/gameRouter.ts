@@ -1,7 +1,7 @@
 import express from 'express';
 import { isNumber } from '../util/utils';
 import { getAllCountries, getCountry } from '../services/countryService';
-import { Country, MoveResult } from '../util/types';
+import { Country, Hints, MoveResult } from '../util/types';
 import { compareCountries } from '../util/country';
 
 const router = express.Router();
@@ -85,10 +85,16 @@ router.post('/move', async (req, res) => {
   const correctAnswer = resultAnswer.value;
 
   const comparison = compareCountries(playerGuess, correctAnswer);
+  const hints: Hints = {
+    landlocked: correctAnswer.landlocked,
+    drivingSide: correctAnswer.drivingSide,
+    capital: correctAnswer.capital,
+  };
 
   const moveResult: MoveResult = {
     correct: playerGuess.id === correctAnswer.id,
     comparison,
+    hints,
   };
 
   return res.status(200).send(moveResult);

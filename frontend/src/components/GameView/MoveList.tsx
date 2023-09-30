@@ -28,9 +28,7 @@ const MoveList = ({ moves }: Props) => {
               <TableCell>Region</TableCell>
               <TableCell>Subregion</TableCell>
               <TableCell>Area</TableCell>
-              <TableCell>Landlocked</TableCell>
               <TableCell>Population</TableCell>
-              <TableCell>Driving side</TableCell>
               <TableCell>Neighbours</TableCell>
               <TableCell>Continents</TableCell>
               <TableCell>Languages</TableCell>
@@ -64,14 +62,8 @@ const ResultRow = ({ move }: { move: Move }) => {
         km²
       </TableCell>
       <TableCell>
-        {boolToIcon(comp.landlockedEquality)} {boolToStr(country.landlocked)}
-      </TableCell>
-      <TableCell>
         {diffToStr(comp.populationDifference)}{' '}
         {bigNumberToString(country.population, 0)}
-      </TableCell>
-      <TableCell>
-        {boolToIcon(comp.drivingSideEqual)} {country.drivingSide}
       </TableCell>
       <ArrayCell
         values={country.neighbours}
@@ -141,10 +133,6 @@ const diffToStr = (diff: Difference) => {
 
 const boolToIcon = (b: boolean) => {
   return b ? <CheckIcon /> : <CloseIcon />;
-};
-
-const boolToStr = (b: boolean): string => {
-  return b ? 'yes' : 'no';
 };
 
 export default MoveList;

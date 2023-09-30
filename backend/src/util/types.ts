@@ -28,11 +28,9 @@ export type Difference = 'more' | 'less' | 'equal';
 
 export interface Comparison {
   areaDifference: Difference;
-  landlockedEquality: boolean;
   populationDifference: Difference;
   locationLatDifference: Difference;
   locationLngDifference: Difference;
-  drivingSideEqual: boolean;
   regionEqual: boolean;
   subregionEqual: boolean;
 
@@ -44,4 +42,11 @@ export interface Comparison {
 export interface MoveResult {
   correct: boolean;
   comparison: Comparison;
+  hints: Hints;
+}
+
+export interface Hints {
+  landlocked: null | boolean;
+  drivingSide: null | Side;
+  capital: null | string;
 }

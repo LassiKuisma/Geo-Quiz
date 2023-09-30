@@ -6,6 +6,7 @@ import GameView from './components/GameView';
 import { useState } from 'react';
 import { postMove, startNewGame } from './services/gameService';
 import { Country, GameObject, Move } from './types';
+import { emptyHintsObject } from './util/utils';
 
 const App = () => {
   const [game, setGame] = useState<undefined | GameObject>(undefined);
@@ -22,6 +23,7 @@ const App = () => {
       countries: newGame.countries,
       guesses: new Array<Move>(),
       isSubmittingMove: false,
+      hints: emptyHintsObject(),
     };
 
     setGame(gameObj);
@@ -56,6 +58,7 @@ const App = () => {
         countries: game.countries.filter((c) => c.id !== country.id),
         guesses: [move, ...game.guesses],
         isSubmittingMove: false,
+        hints: result.hints,
       });
 
       return;

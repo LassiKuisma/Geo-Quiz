@@ -10,6 +10,7 @@ import {
 import { Country, GameObject } from '../../types';
 import { useState } from 'react';
 import MoveList from './MoveList';
+import HintsView from './HintsViews';
 
 interface Props {
   game: undefined | GameObject;
@@ -75,6 +76,7 @@ const GameView = ({ game, submitMove }: Props) => {
         </Box>
         <ErrorDisplay errorMessage={errorMessage} />
       </Box>
+      <HintsView hints={game.hints} />
       <MoveList moves={game.guesses} />
     </div>
   );

@@ -18,7 +18,6 @@ export const compareCountries = (
 
   return {
     areaDifference: getDifference(playerGuess.area, correctAnswer.area),
-    landlockedEquality: playerGuess.landlocked === correctAnswer.landlocked,
     populationDifference: getDifference(
       playerGuess.population,
       correctAnswer.population
@@ -31,7 +30,6 @@ export const compareCountries = (
       playerGuess.location_lng,
       correctAnswer.location_lng
     ),
-    drivingSideEqual: playerGuess.drivingSide === correctAnswer.drivingSide,
     regionEqual: playerGuess.region === correctAnswer.region,
     subregionEqual: playerGuess.subregion === correctAnswer.subregion,
 

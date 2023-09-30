@@ -41,11 +41,9 @@ describe('comparing countries', () => {
 
     const comparison = compareCountries(countryA, countryB);
     expect(comparison.areaDifference).toEqual<Difference>('less');
-    expect(comparison.landlockedEquality).toEqual<boolean>(false);
     expect(comparison.populationDifference).toEqual<Difference>('more');
     expect(comparison.locationLatDifference).toEqual<Difference>('less');
     expect(comparison.locationLngDifference).toEqual<Difference>('more');
-    expect(comparison.drivingSideEqual).toEqual<boolean>(false);
     expect(comparison.regionEqual).toEqual<boolean>(false);
     expect(comparison.subregionEqual).toEqual<boolean>(false);
     expect(comparison.sameContinents).toEqual<Array<string>>([]);
@@ -92,11 +90,9 @@ describe('comparing countries', () => {
 
     const comparison = compareCountries(countryA, countryB);
     expect(comparison.areaDifference).toEqual<Difference>('equal');
-    expect(comparison.landlockedEquality).toEqual<boolean>(true);
     expect(comparison.populationDifference).toEqual<Difference>('equal');
     expect(comparison.locationLatDifference).toEqual<Difference>('equal');
     expect(comparison.locationLngDifference).toEqual<Difference>('equal');
-    expect(comparison.drivingSideEqual).toEqual<boolean>(true);
     expect(comparison.regionEqual).toEqual<boolean>(true);
     expect(comparison.subregionEqual).toEqual<boolean>(true);
     expect(comparison.sameContinents).toEqual<Array<string>>(['Con']);
