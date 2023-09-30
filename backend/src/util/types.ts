@@ -45,12 +45,20 @@ export interface MoveResult {
   hints: Hints;
 }
 
-export type Hint<T> = { unlocksIn: number } | T;
+export type Hint<T> =
+  | { locked: true; unlocksIn: number }
+  | { locked: false; value: T };
 
 export interface Hints {
   landlocked: Hint<boolean>;
   drivingSide: Hint<Side>;
   capital: Hint<string | null>;
+}
+
+export interface NewGame {
+  gameId: number;
+  countries: Array<Country>;
+  hints: Hints;
 }
 
 export interface HintThresholds {

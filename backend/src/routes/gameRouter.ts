@@ -1,16 +1,11 @@
 import express from 'express';
 import { isNumber } from '../util/utils';
 import { getAllCountries, getCountry } from '../services/countryService';
-import { Country, MoveResult } from '../util/types';
+import { Country, MoveResult, NewGame } from '../util/types';
 import { compareCountries, getHints } from '../util/country';
 import { defaultThresholds } from '../util/gameSettings';
 
 const router = express.Router();
-
-interface NewGame {
-  gameId: number;
-  countries: Array<Country>;
-}
 
 interface Game {
   gameId: number;
@@ -51,6 +46,7 @@ router.post('/newgame', async (_req, res) => {
   const newGame: NewGame = {
     gameId: game.gameId,
     countries,
+    hints: getHints(0, countries[game.answer], defaultThresholds),
   };
 
   return res.json(newGame);

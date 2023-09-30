@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { Hints, Side } from '../../types';
+import { Hint, Hints, Side } from '../../types';
 
 interface Props {
   hints: Hints;
@@ -33,13 +33,15 @@ const HintsView = ({ hints }: Props) => {
   );
 };
 
-const LandlockedRow = ({ landlocked }: { landlocked: null | boolean }) => {
+const LandlockedRow = ({ landlocked }: { landlocked: Hint<boolean> }) => {
   const [revealed, setRevealed] = useState(false);
 
-  const answerAvailable = landlocked !== null;
+  const answerAvailable = !landlocked.locked;
 
-  const hintText = answerAvailable ? boolToStr(landlocked) : 'Unknown';
-  const buttonText = answerAvailable ? 'Click to reveal' : 'Not yet available';
+  const hintText = answerAvailable ? boolToStr(landlocked.value) : 'Unknown';
+  const buttonText = answerAvailable
+    ? 'Click to reveal'
+    : `Unlocks in ${landlocked.unlocksIn} guesses`;
 
   return (
     <TableRow>
@@ -57,13 +59,15 @@ const LandlockedRow = ({ landlocked }: { landlocked: null | boolean }) => {
   );
 };
 
-const DrivingSideRow = ({ drivingSide }: { drivingSide: null | Side }) => {
+const DrivingSideRow = ({ drivingSide }: { drivingSide: Hint<Side> }) => {
   const [revealed, setRevealed] = useState(false);
 
-  const answerAvailable = drivingSide !== null;
+  const answerAvailable = !drivingSide.locked;
 
-  const hintText = answerAvailable ? drivingSide : 'Unknown';
-  const buttonText = answerAvailable ? 'Click to reveal' : 'Not yet available';
+  const hintText = answerAvailable ? drivingSide.value : 'Unknown';
+  const buttonText = answerAvailable
+    ? 'Click to reveal'
+    : `Unlocks in ${drivingSide.unlocksIn} guesses`;
 
   return (
     <TableRow>
@@ -81,13 +85,17 @@ const DrivingSideRow = ({ drivingSide }: { drivingSide: null | Side }) => {
   );
 };
 
-const CapitalRow = ({ capital }: { capital: null | string }) => {
+const CapitalRow = ({ capital }: { capital: Hint<null | string> }) => {
   const [revealed, setRevealed] = useState(false);
 
-  const answerAvailable = capital !== null;
+  const answerAvailable = !capital.locked;
 
-  const hintText = answerAvailable ? capital : 'Unknown';
-  const buttonText = answerAvailable ? 'Click to reveal' : 'Not yet available';
+  const hintText =
+    !answerAvailable || !capital.value ? 'Unknown' : capital.value;
+
+  const buttonText = answerAvailable
+    ? 'Click to reveal'
+    : `Unlocks in ${capital.unlocksIn} guesses`;
 
   return (
     <TableRow>

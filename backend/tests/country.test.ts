@@ -131,9 +131,18 @@ describe('generating hints', () => {
     };
 
     const hints = getHints(1000, country, thresholds);
-    expect(hints.landlocked).toEqual<Hint<boolean>>(false);
-    expect(hints.drivingSide).toEqual<Hint<Side>>('left');
-    expect(hints.capital).toEqual<Hint<string>>('New Skako');
+    expect(hints.landlocked).toEqual<Hint<boolean>>({
+      locked: false,
+      value: false,
+    });
+    expect(hints.drivingSide).toEqual<Hint<Side>>({
+      locked: false,
+      value: 'left',
+    });
+    expect(hints.capital).toEqual<Hint<string>>({
+      locked: false,
+      value: 'New Skako',
+    });
   });
 
   test('generates some hints after passing some threshold', () => {
@@ -162,9 +171,18 @@ describe('generating hints', () => {
     };
 
     const hints = getHints(100, country, thresholds);
-    expect(hints.landlocked).toEqual<Hint<boolean>>(false);
-    expect(hints.drivingSide).toEqual<Hint<Side>>({ unlocksIn: 300 });
-    expect(hints.capital).toEqual<Hint<string>>({ unlocksIn: 800 });
+    expect(hints.landlocked).toEqual<Hint<boolean>>({
+      locked: false,
+      value: false,
+    });
+    expect(hints.drivingSide).toEqual<Hint<Side>>({
+      locked: true,
+      unlocksIn: 300,
+    });
+    expect(hints.capital).toEqual<Hint<string>>({
+      locked: true,
+      unlocksIn: 800,
+    });
   });
 
   test('generates no hints before passing any threshold', () => {
@@ -193,9 +211,18 @@ describe('generating hints', () => {
     };
 
     const hints = getHints(1, country, thresholds);
-    expect(hints.landlocked).toEqual<Hint<boolean>>({ unlocksIn: 9 });
-    expect(hints.drivingSide).toEqual<Hint<Side>>({ unlocksIn: 9 });
-    expect(hints.capital).toEqual<Hint<string>>({ unlocksIn: 9 });
+    expect(hints.landlocked).toEqual<Hint<boolean>>({
+      locked: true,
+      unlocksIn: 9,
+    });
+    expect(hints.drivingSide).toEqual<Hint<Side>>({
+      locked: true,
+      unlocksIn: 9,
+    });
+    expect(hints.capital).toEqual<Hint<string>>({
+      locked: true,
+      unlocksIn: 9,
+    });
   });
 
   test('generates hints at exact threshold', () => {
@@ -224,8 +251,17 @@ describe('generating hints', () => {
     };
 
     const hints = getHints(21, country, thresholds);
-    expect(hints.landlocked).toEqual<Hint<boolean>>(false);
-    expect(hints.drivingSide).toEqual<Hint<Side>>('left');
-    expect(hints.capital).toEqual<Hint<string>>({ unlocksIn: 1 });
+    expect(hints.landlocked).toEqual<Hint<boolean>>({
+      locked: false,
+      value: false,
+    });
+    expect(hints.drivingSide).toEqual<Hint<Side>>({
+      locked: false,
+      value: 'left',
+    });
+    expect(hints.capital).toEqual<Hint<string>>({
+      locked: true,
+      unlocksIn: 1,
+    });
   });
 });

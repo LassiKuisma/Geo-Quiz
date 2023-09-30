@@ -77,8 +77,8 @@ export const getHints = (
 
 const getHint = <T>(guesses: number, threshold: number, answer: T): Hint<T> => {
   if (guesses < threshold) {
-    return { unlocksIn: threshold - guesses };
+    return { locked: true, unlocksIn: threshold - guesses };
   }
 
-  return answer;
+  return { locked: false, value: answer };
 };
