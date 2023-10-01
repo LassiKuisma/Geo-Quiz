@@ -18,7 +18,7 @@ import {
   isString,
   isStringArray,
 } from './src/util/utils';
-import { Country } from './src/util/types';
+import { Country, Side } from './src/util/types';
 
 const url = 'https://restcountries.com/v3.1/all';
 
@@ -41,29 +41,39 @@ const setup = async () => {
     return;
   }
 
-  const independentCountries = dataToCountries(data).filter(
+  const countries = dataToCountries(data).filter(
     (country) => country.independent
   );
 
-  const countryCodeMap = await saveData(independentCountries);
-  await saveNeighbourData(independentCountries, countryCodeMap);
+  const attributes = collectAttributes(countries);
+  const attributesWithId = await saveAttributes(attributes);
+
+  const countryCodeMap = await saveCountryData(countries, attributesWithId);
+  await saveNeighbourData(countries, countryCodeMap);
 };
 
-const saveData = async (countries: Array<CountryInfo>) => {
+const saveCountryData = async (
+  countries: Array<CountryInfo>,
+  attributes: SavedAttributes
+) => {
   const countryCodeMap = new Map<Country['countryCode'], Country['id']>();
 
   for (const country of countries) {
-    const region = await Region.upsert({
-      regionName: country.region,
-    });
-
-    const subregion = await Subregion.upsert({
-      subregionName: country.subregion,
-    });
-
-    const drivingSide = await DrivingSide.upsert({
-      side: country.drivingSide,
-    });
+    const regionId = attributes.regions.get(country.region);
+    if (!regionId) {
+      attributeMissing('region', country.region, country.name);
+      continue;
+    }
+    const subregionId = attributes.subregions.get(country.subregion);
+    if (!subregionId) {
+      attributeMissing('subregion', country.subregion, country.name);
+      continue;
+    }
+    const drivingSideId = attributes.drivingSides.get(country.drivingSide);
+    if (!drivingSideId) {
+      attributeMissing('drivingSide', country.drivingSide, country.name);
+      continue;
+    }
 
     const countryModel = await CountryModel.upsert({
       area: country.area,
@@ -75,29 +85,31 @@ const saveData = async (countries: Array<CountryInfo>) => {
       location_lng: country.location_lng,
       capital: country.capital,
 
-      regionId: region[0].dataValues.id,
-      subregionId: subregion[0].dataValues.id,
-      drivingSideId: drivingSide[0].dataValues.id,
+      regionId,
+      subregionId,
+      drivingSideId,
     });
 
     for (const language of country.languages) {
-      const languageModel = await Language.upsert({
-        languageName: language,
-      });
-
+      const languageId = attributes.languages.get(language);
+      if (!languageId) {
+        attributeMissing('language', language, country.name);
+        continue;
+      }
       await CountryLanguage.upsert({
-        languageId: languageModel[0].dataValues.id,
+        languageId,
         countryId: countryModel[0].dataValues.id,
       });
     }
 
     for (const continent of country.continents) {
-      const continentModel = await Continent.upsert({
-        continentName: continent,
-      });
-
+      const continentId = attributes.continents.get(continent);
+      if (!continentId) {
+        attributeMissing('continent', continent, country.name);
+        continue;
+      }
       await CountryContinent.upsert({
-        continentId: continentModel[0].dataValues.id,
+        continentId,
         countryId: countryModel[0].dataValues.id,
       });
     }
@@ -106,6 +118,98 @@ const saveData = async (countries: Array<CountryInfo>) => {
   }
 
   return countryCodeMap;
+};
+
+interface Attributes {
+  drivingSides: Set<Side>;
+  regions: Set<string>;
+  subregions: Set<string>;
+  languages: Set<string>;
+  continents: Set<string>;
+}
+
+interface SavedAttributes {
+  drivingSides: Map<Side, number>;
+  regions: Map<string, number>;
+  subregions: Map<string, number>;
+  languages: Map<string, number>;
+  continents: Map<string, number>;
+}
+
+const collectAttributes = (countries: Array<CountryInfo>): Attributes => {
+  const result = countries.reduce(
+    (attributes: Attributes, country: CountryInfo) => {
+      attributes.drivingSides.add(country.drivingSide);
+      attributes.regions.add(country.region);
+      attributes.subregions.add(country.subregion);
+
+      country.languages.forEach((language) =>
+        attributes.languages.add(language)
+      );
+
+      country.continents.forEach((continent) =>
+        attributes.continents.add(continent)
+      );
+
+      return attributes;
+    },
+    {
+      drivingSides: new Set<Side>(),
+      regions: new Set<string>(),
+      subregions: new Set<string>(),
+      languages: new Set<string>(),
+      continents: new Set<string>(),
+    }
+  );
+
+  return result;
+};
+
+const saveAttributes = async (attributes: Attributes) => {
+  const result: SavedAttributes = {
+    drivingSides: new Map(),
+    regions: new Map(),
+    subregions: new Map(),
+    languages: new Map(),
+    continents: new Map(),
+  };
+
+  for (const side of attributes.drivingSides) {
+    const saved = await DrivingSide.upsert({
+      side,
+    });
+    result.drivingSides.set(side, saved[0].dataValues.id);
+  }
+
+  for (const region of attributes.regions) {
+    const saved = await Region.upsert({
+      regionName: region,
+    });
+    result.regions.set(region, saved[0].dataValues.id);
+  }
+
+  for (const subregion of attributes.subregions) {
+    const saved = await Subregion.upsert({
+      subregionName: subregion,
+    });
+    result.subregions.set(subregion, saved[0].dataValues.id);
+  }
+
+  for (const language of attributes.languages) {
+    const saved = await Language.upsert({
+      languageName: language,
+    });
+    result.languages.set(language, saved[0].dataValues.id);
+  }
+
+  for (const continent of attributes.continents) {
+    const saved = await Continent.upsert({
+      continentName: continent,
+    });
+    result.continents.set(continent, saved[0].dataValues.id);
+  }
+
+  return result;
 };
 
 const saveNeighbourData = async (
@@ -314,6 +418,16 @@ const toLocation = (param: unknown): LatLngPosition | null => {
 const fieldMissing = (fieldName: string, countryName: string) => {
   console.log(
     `'${fieldName}' field missing from ${countryName}, skipping this entry.`
+  );
+};
+
+const attributeMissing = (
+  attributeName: string,
+  attributeValue: string,
+  countryName: string
+) => {
+  console.log(
+    `Error saving ${countryName}, attribute ${attributeName} with value ${attributeValue} not found.`
   );
 };
 
