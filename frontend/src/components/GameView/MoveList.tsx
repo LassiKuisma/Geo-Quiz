@@ -1,17 +1,27 @@
 import {
   Box,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
+  styled,
 } from '@mui/material';
 import { Difference, Move } from '../../types';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import React from 'react';
+
+const HeaderCell = styled(TableCell)({
+  fontSize: 'large',
+  fontWeight: 'bold',
+  background: 'grey',
+});
 
 interface Props {
   moves: Array<Move>;
@@ -19,19 +29,21 @@ interface Props {
 
 const MoveList = ({ moves }: Props) => {
   return (
-    <div>
-      Guesses
-      <TableContainer>
-        <Table>
+    <Box>
+      <Typography variant="h5" marginY={3} marginX={1}>
+        Guesses
+      </Typography>
+      <TableContainer sx={{ maxHeight: 800 }}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell>Country</TableCell>
-              <TableCell>Region</TableCell>
-              <TableCell>Subregion</TableCell>
-              <TableCell>Area</TableCell>
-              <TableCell>Population</TableCell>
-              <TableCell>Neighbours</TableCell>
-              <TableCell>Languages</TableCell>
+              <HeaderCell>Country</HeaderCell>
+              <HeaderCell>Region</HeaderCell>
+              <HeaderCell>Subregion</HeaderCell>
+              <HeaderCell>Area</HeaderCell>
+              <HeaderCell>Population</HeaderCell>
+              <HeaderCell>Neighbours</HeaderCell>
+              <HeaderCell>Languages</HeaderCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -41,7 +53,7 @@ const MoveList = ({ moves }: Props) => {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </Box>
   );
 };
 
@@ -49,22 +61,26 @@ const ResultRow = ({ move }: { move: Move }) => {
   const country = move.guessedCountry;
   const comp = move.result.comparison;
   return (
-    <TableRow>
-      <TableCell>{move.guessedCountry.name}</TableCell>
-      <TableCell>
-        {boolToIcon(comp.regionEqual)} {country.region}
-      </TableCell>
-      <TableCell>
-        {boolToIcon(comp.subregionEqual)} {country.subregion}
-      </TableCell>
-      <TableCell>
+    <TableRow hover>
+      <Cell fontSize="large" maxWidth={200}>
+        {move.guessedCountry.name}
+      </Cell>
+      <Cell>
+        {boolToIcon(comp.regionEqual)}
+        {country.region}
+      </Cell>
+      <Cell>
+        {boolToIcon(comp.subregionEqual)}
+        {country.subregion}
+      </Cell>
+      <Cell>
         <DiffAsIcon diff={comp.areaDifference} />
         {bigNumberToString(country.area, 0)} km²
-      </TableCell>
-      <TableCell>
+      </Cell>
+      <Cell>
         <DiffAsIcon diff={comp.populationDifference} />
         {bigNumberToString(country.population, 0)}
-      </TableCell>
+      </Cell>
       <ArrayCell
         values={country.neighbours}
         correctValues={comp.sameNeighbours}
@@ -74,6 +90,22 @@ const ResultRow = ({ move }: { move: Move }) => {
         correctValues={comp.sameLanguages}
       />
     </TableRow>
+  );
+};
+
+interface CellProps {
+  children?: React.ReactNode;
+  maxWidth?: number;
+  fontSize?: 'small' | 'medium' | 'large';
+}
+
+const Cell = ({ children, maxWidth, fontSize }: CellProps) => {
+  return (
+    <TableCell sx={{ maxWidth }}>
+      <Stack direction="row" alignItems="center" fontSize={fontSize}>
+        {children}
+      </Stack>
+    </TableCell>
   );
 };
 
@@ -95,18 +127,18 @@ const ArrayCell = ({ values, correctValues }: ArrayCellProps) => {
   });
 
   return (
-    <TableCell>
+    <TableCell sx={{ maxWidth: 200 }}>
       {correct.length !== 0 && (
-        <Box>
+        <Stack direction="row" alignItems="center">
           <CheckIcon />
           {correct.join(', ')}
-        </Box>
+        </Stack>
       )}
       {wrong.length !== 0 && (
-        <Box>
+        <Stack direction="row" alignItems="center">
           <CloseIcon />
           {wrong.join(', ')}
-        </Box>
+        </Stack>
       )}
     </TableCell>
   );

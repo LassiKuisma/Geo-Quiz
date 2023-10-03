@@ -9,23 +9,36 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { Hint, Hints, Side } from '../../types';
+import { Hint, Hints } from '../../types';
 
 interface Props {
   hints: Hints;
 }
 
 const HintsView = ({ hints }: Props) => {
-  const _a = hints;
   return (
     <Box>
-      <Typography variant="h5">Hints</Typography>
+      <Typography variant="h5" marginY={2} marginX={1}>
+        Hints
+      </Typography>
       <TableContainer>
-        <Table>
+        <Table sx={{ width: 400 }}>
           <TableBody>
-            <LandlockedRow landlocked={hints.landlocked} />
-            <DrivingSideRow drivingSide={hints.drivingSide} />
-            <CapitalRow capital={hints.capital} />
+            <HintRow
+              name="Landlocked"
+              hint={hints.landlocked}
+              hintToStr={(hint) => boolToStr(hint)}
+            />
+            <HintRow
+              name="Driving side"
+              hint={hints.drivingSide}
+              hintToStr={(s) => s}
+            />
+            <HintRow
+              name="Capital city"
+              hint={hints.capital}
+              hintToStr={(capital) => (!capital ? 'Unknown' : capital)}
+            />
           </TableBody>
         </Table>
       </TableContainer>
@@ -33,78 +46,34 @@ const HintsView = ({ hints }: Props) => {
   );
 };
 
-const LandlockedRow = ({ landlocked }: { landlocked: Hint<boolean> }) => {
+interface HintRowProps<T> {
+  name: string;
+  hint: Hint<T>;
+  hintToStr: (hint: T) => string;
+}
+
+const HintRow = <T,>({ name, hint, hintToStr }: HintRowProps<T>) => {
   const [revealed, setRevealed] = useState(false);
 
-  const answerAvailable = !landlocked.locked;
+  const answerAvailable = !hint.locked;
 
-  const hintText = answerAvailable ? boolToStr(landlocked.value) : 'Unknown';
+  const hintText = answerAvailable ? hintToStr(hint.value) : 'Unknown';
   const buttonText = answerAvailable
     ? 'Click to reveal'
-    : `Unlocks in ${landlocked.unlocksIn} guesses`;
+    : `Unlocks in ${hint.unlocksIn} guesses`;
 
   return (
     <TableRow>
-      <TableCell sx={{ width: 300 }}>Landlocked</TableCell>
+      <TableCell sx={{ fontSize: 'medium' }}>{name}</TableCell>
       <TableCell>
         {revealed ? (
           <Box>{hintText}</Box>
         ) : (
-          <Button onClick={() => setRevealed(true)} disabled={!answerAvailable}>
-            {buttonText}
-          </Button>
-        )}
-      </TableCell>
-    </TableRow>
-  );
-};
-
-const DrivingSideRow = ({ drivingSide }: { drivingSide: Hint<Side> }) => {
-  const [revealed, setRevealed] = useState(false);
-
-  const answerAvailable = !drivingSide.locked;
-
-  const hintText = answerAvailable ? drivingSide.value : 'Unknown';
-  const buttonText = answerAvailable
-    ? 'Click to reveal'
-    : `Unlocks in ${drivingSide.unlocksIn} guesses`;
-
-  return (
-    <TableRow>
-      <TableCell sx={{ width: 300 }}>Driving side</TableCell>
-      <TableCell>
-        {revealed ? (
-          <Box>{hintText}</Box>
-        ) : (
-          <Button onClick={() => setRevealed(true)} disabled={!answerAvailable}>
-            {buttonText}
-          </Button>
-        )}
-      </TableCell>
-    </TableRow>
-  );
-};
-
-const CapitalRow = ({ capital }: { capital: Hint<null | string> }) => {
-  const [revealed, setRevealed] = useState(false);
-
-  const answerAvailable = !capital.locked;
-
-  const hintText =
-    !answerAvailable || !capital.value ? 'Unknown' : capital.value;
-
-  const buttonText = answerAvailable
-    ? 'Click to reveal'
-    : `Unlocks in ${capital.unlocksIn} guesses`;
-
-  return (
-    <TableRow>
-      <TableCell sx={{ width: 300 }}>Capital city</TableCell>
-      <TableCell>
-        {revealed ? (
-          <Box>{hintText}</Box>
-        ) : (
-          <Button onClick={() => setRevealed(true)} disabled={!answerAvailable}>
+          <Button
+            size="small"
+            onClick={() => setRevealed(true)}
+            disabled={!answerAvailable}
+          >
             {buttonText}
           </Button>
         )}
