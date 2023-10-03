@@ -9,6 +9,7 @@ export const sequelize = new Sequelize(DATABASE_URL, {
     createdAt: false,
     updatedAt: false,
   },
+  logging: false,
 });
 
 export const connectToDatabase = async () => {

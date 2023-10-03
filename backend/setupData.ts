@@ -56,68 +56,143 @@ const saveCountryData = async (
   countries: Array<CountryInfo>,
   attributes: SavedAttributes
 ) => {
-  const countryCodeMap = new Map<Country['countryCode'], Country['id']>();
+  const result = new Map<Country['countryCode'], Country['id']>();
+
+  type CountryInfoWithFks = CountryInfo & { regionId: number } & {
+    subregionId: number;
+  } & { drivingSideId: number };
+
+  const countriesWithAttributes: CountryInfoWithFks[] = countries
+    .map((country) => {
+      const regionId = attributes.regions.get(country.region);
+      if (!regionId) {
+        attributeMissing('region', country.region, country.name);
+        return null;
+      }
+      const subregionId = attributes.subregions.get(country.subregion);
+      if (!subregionId) {
+        attributeMissing('subregion', country.subregion, country.name);
+        return null;
+      }
+      const drivingSideId = attributes.drivingSides.get(country.drivingSide);
+      if (!drivingSideId) {
+        attributeMissing('drivingSide', country.drivingSide, country.name);
+        return null;
+      }
+
+      return {
+        ...country,
+        regionId,
+        subregionId,
+        drivingSideId,
+      };
+    })
+    .filter((country): country is CountryInfoWithFks => !!country);
+
+  (
+    await CountryModel.bulkCreate(
+      countriesWithAttributes.map((country) => ({
+        area: country.area,
+        countryCode: country.countryCode,
+        landlocked: country.landlocked,
+        name: country.name,
+        population: country.population,
+        location_lat: country.location_lat,
+        location_lng: country.location_lng,
+        capital: country.capital,
+        regionId: country.regionId,
+        subregionId: country.subregionId,
+        drivingSideId: country.drivingSideId,
+      })),
+      {
+        fields: [
+          'area',
+          'countryCode',
+          'landlocked',
+          'name',
+          'population',
+          'location_lat',
+          'location_lng',
+          'capital',
+          'regionId',
+          'subregionId',
+          'drivingSideId',
+        ],
+        updateOnDuplicate: [
+          'area',
+          'countryCode',
+          'landlocked',
+          'name',
+          'population',
+          'location_lat',
+          'location_lng',
+          'capital',
+          'regionId',
+          'subregionId',
+          'drivingSideId',
+        ],
+      }
+    )
+  ).forEach((saved) => {
+    result.set(saved.dataValues.countryCode, saved.dataValues.id);
+  });
+
+  const countryLanguages = new Set<{
+    countryId: number;
+    languageId: number;
+  }>();
+  const countryContinents = new Set<{
+    countryId: number;
+    continentId: number;
+  }>();
 
   for (const country of countries) {
-    const regionId = attributes.regions.get(country.region);
-    if (!regionId) {
-      attributeMissing('region', country.region, country.name);
+    const countryId = result.get(country.countryCode);
+    if (!countryId) {
+      console.log(`Error saving ${country.name}, can't find country id.`);
       continue;
     }
-    const subregionId = attributes.subregions.get(country.subregion);
-    if (!subregionId) {
-      attributeMissing('subregion', country.subregion, country.name);
-      continue;
-    }
-    const drivingSideId = attributes.drivingSides.get(country.drivingSide);
-    if (!drivingSideId) {
-      attributeMissing('drivingSide', country.drivingSide, country.name);
-      continue;
-    }
-
-    const countryModel = await CountryModel.upsert({
-      area: country.area,
-      countryCode: country.countryCode,
-      landlocked: country.landlocked,
-      name: country.name,
-      population: country.population,
-      location_lat: country.location_lat,
-      location_lng: country.location_lng,
-      capital: country.capital,
-
-      regionId,
-      subregionId,
-      drivingSideId,
-    });
 
     for (const language of country.languages) {
       const languageId = attributes.languages.get(language);
       if (!languageId) {
-        attributeMissing('language', language, country.name);
+        console.log(
+          `Error saving languages of ${country.name}, can't find language id of ${language}.`
+        );
         continue;
       }
-      await CountryLanguage.upsert({
+      countryLanguages.add({
+        countryId,
         languageId,
-        countryId: countryModel[0].dataValues.id,
       });
     }
 
     for (const continent of country.continents) {
       const continentId = attributes.continents.get(continent);
       if (!continentId) {
-        attributeMissing('continent', continent, country.name);
+        console.log(
+          `Error saving continents of ${country.name}, can't find continent id of ${continent}.`
+        );
         continue;
       }
-      await CountryContinent.upsert({
+      countryContinents.add({
+        countryId,
         continentId,
-        countryId: countryModel[0].dataValues.id,
       });
     }
-
-    countryCodeMap.set(countryModel[0].countryCode, countryModel[0].id);
   }
 
-  return countryCodeMap;
+  await CountryLanguage.bulkCreate([...countryLanguages], {
+    fields: ['countryId', 'languageId'],
+    updateOnDuplicate: ['countryId', 'languageId'],
+  });
+
+  await CountryContinent.bulkCreate([...countryContinents], {
+    fields: ['countryId', 'continentId'],
+    updateOnDuplicate: ['countryId', 'continentId'],
+  });
+
+  return result;
 };
 
 interface Attributes {
@@ -129,7 +204,7 @@ interface Attributes {
 }
 
 interface SavedAttributes {
-  drivingSides: Map<Side, number>;
+  drivingSides: Map<string, number>;
   regions: Map<string, number>;
   subregions: Map<string, number>;
   languages: Map<string, number>;
@@ -174,40 +249,75 @@ const saveAttributes = async (attributes: Attributes) => {
     continents: new Map(),
   };
 
-  for (const side of attributes.drivingSides) {
-    const saved = await DrivingSide.upsert({
-      side,
-    });
-    result.drivingSides.set(side, saved[0].dataValues.id);
-  }
+  (
+    await DrivingSide.bulkCreate(
+      [...attributes.drivingSides].map((side) => ({
+        side,
+      })),
+      {
+        fields: ['side'],
+        updateOnDuplicate: ['side'],
+      }
+    )
+  ).forEach((saved) =>
+    result.drivingSides.set(saved.dataValues.side, saved.dataValues.id)
+  );
 
-  for (const region of attributes.regions) {
-    const saved = await Region.upsert({
-      regionName: region,
-    });
-    result.regions.set(region, saved[0].dataValues.id);
-  }
+  (
+    await Region.bulkCreate(
+      [...attributes.regions].map((region) => ({
+        regionName: region,
+      })),
+      {
+        fields: ['regionName'],
+        updateOnDuplicate: ['regionName'],
+      }
+    )
+  ).forEach((saved) =>
+    result.regions.set(saved.dataValues.regionName, saved.dataValues.id)
+  );
 
-  for (const subregion of attributes.subregions) {
-    const saved = await Subregion.upsert({
-      subregionName: subregion,
-    });
-    result.subregions.set(subregion, saved[0].dataValues.id);
-  }
+  (
+    await Subregion.bulkCreate(
+      [...attributes.subregions].map((subregion) => ({
+        subregionName: subregion,
+      })),
+      {
+        fields: ['subregionName'],
+        updateOnDuplicate: ['subregionName'],
+      }
+    )
+  ).forEach((saved) =>
+    result.subregions.set(saved.dataValues.subregionName, saved.dataValues.id)
+  );
 
-  for (const language of attributes.languages) {
-    const saved = await Language.upsert({
-      languageName: language,
-    });
-    result.languages.set(language, saved[0].dataValues.id);
-  }
+  (
+    await Language.bulkCreate(
+      [...attributes.languages].map((language) => ({
+        languageName: language,
+      })),
+      {
+        fields: ['languageName'],
+        updateOnDuplicate: ['languageName'],
+      }
+    )
+  ).forEach((saved) =>
+    result.languages.set(saved.dataValues.languageName, saved.dataValues.id)
+  );
 
-  for (const continent of attributes.continents) {
-    const saved = await Continent.upsert({
-      continentName: continent,
-    });
-    result.continents.set(continent, saved[0].dataValues.id);
-  }
+  (
+    await Continent.bulkCreate(
+      [...attributes.continents].map((continent) => ({
+        continentName: continent,
+      })),
+      {
+        fields: ['continentName'],
+        updateOnDuplicate: ['continentName'],
+      }
+    )
+  ).forEach((saved) =>
+    result.continents.set(saved.dataValues.continentName, saved.dataValues.id)
+  );
 
   return result;
 };
@@ -216,6 +326,11 @@ const saveNeighbourData = async (
   countries: Array<CountryInfo>,
   countryCodeMap: Map<Country['countryCode'], Country['id']>
 ) => {
+  const countryNeighbours = new Set<{
+    firstCountryId: number;
+    secondCountryId: number;
+  }>();
+
   for (const country of countries) {
     for (const neighbour of country.neighboursCountryCodes) {
       const firstCountryId = countryCodeMap.get(country.countryCode);
@@ -229,12 +344,17 @@ const saveNeighbourData = async (
         continue;
       }
 
-      await CountryNeighbour.upsert({
+      countryNeighbours.add({
         firstCountryId,
         secondCountryId,
       });
     }
   }
+
+  await CountryNeighbour.bulkCreate([...countryNeighbours], {
+    fields: ['firstCountryId', 'secondCountryId'],
+    updateOnDuplicate: ['firstCountryId', 'secondCountryId'],
+  });
 };
 
 const fetchData = async () => {
