@@ -1,4 +1,5 @@
 import {
+  Box,
   Table,
   TableBody,
   TableCell,
@@ -9,14 +10,14 @@ import {
 import { Difference, Move } from '../../types';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 interface Props {
   moves: Array<Move>;
 }
 
 const MoveList = ({ moves }: Props) => {
-  const _a = moves;
-
   return (
     <div>
       Guesses
@@ -57,11 +58,11 @@ const ResultRow = ({ move }: { move: Move }) => {
         {boolToIcon(comp.subregionEqual)} {country.subregion}
       </TableCell>
       <TableCell>
-        {diffToStr(comp.areaDifference)} {bigNumberToString(country.area, 0)}{' '}
-        km²
+        <DiffAsIcon diff={comp.areaDifference} />
+        {bigNumberToString(country.area, 0)} km²
       </TableCell>
       <TableCell>
-        {diffToStr(comp.populationDifference)}{' '}
+        <DiffAsIcon diff={comp.populationDifference} />
         {bigNumberToString(country.population, 0)}
       </TableCell>
       <ArrayCell
@@ -95,9 +96,18 @@ const ArrayCell = ({ values, correctValues }: ArrayCellProps) => {
 
   return (
     <TableCell>
-      Correct: {correct.join(', ')}
-      <br />
-      Wrong: {wrong.join(', ')}
+      {correct.length !== 0 && (
+        <Box>
+          <CheckIcon />
+          {correct.join(', ')}
+        </Box>
+      )}
+      {wrong.length !== 0 && (
+        <Box>
+          <CloseIcon />
+          {wrong.join(', ')}
+        </Box>
+      )}
     </TableCell>
   );
 };
@@ -116,18 +126,18 @@ const bigNumberToString = (number: number, digits: number): string => {
   return number.toString();
 };
 
-const diffToStr = (diff: Difference) => {
+const DiffAsIcon = ({ diff }: { diff: Difference }) => {
   // why do the symbols here seem to be the wrong way around?
   // example: correct answer has population=9999, you guess a country
   // with population=10, the API will return 'less', (10 < 999). Then we
   // display that in frontend: 'You guessed country with population=10,
   // the correct answer has more than that'
   if (diff === 'more') {
-    return '<';
+    return <ArrowDropDownIcon />;
   } else if (diff === 'less') {
-    return '>';
+    return <ArrowDropUpIcon />;
   } else {
-    return '=';
+    return <></>;
   }
 };
 
