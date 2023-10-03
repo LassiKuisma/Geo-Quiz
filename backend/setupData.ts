@@ -23,10 +23,10 @@ import { Country, Side } from './src/util/types';
 const url = 'https://restcountries.com/v3.1/all';
 
 const setup = async () => {
+  console.log('Connecting to database');
   await connectToDatabase();
 
   console.log('Fetching country data');
-
   const response: unknown = await fetchData();
 
   if (!response || typeof response !== 'object' || !('data' in response)) {
@@ -41,15 +41,19 @@ const setup = async () => {
     return;
   }
 
-  const countries = dataToCountries(data).filter(
-    (country) => country.independent
-  );
+  const allCountries = dataToCountries(data);
+  const countries = allCountries.filter((country) => country.independent);
+  const nonIndependent = allCountries
+    .filter((country) => !country.independent)
+    .map((c) => c.countryCode);
 
   const attributes = collectAttributes(countries);
   const attributesWithId = await saveAttributes(attributes);
 
   const countryCodeMap = await saveCountryData(countries, attributesWithId);
-  await saveNeighbourData(countries, countryCodeMap);
+  await saveNeighbourData(countries, countryCodeMap, nonIndependent);
+
+  console.log('Setup complete');
 };
 
 const saveCountryData = async (
@@ -324,7 +328,8 @@ const saveAttributes = async (attributes: Attributes) => {
 
 const saveNeighbourData = async (
   countries: Array<CountryInfo>,
-  countryCodeMap: Map<Country['countryCode'], Country['id']>
+  countryCodeMap: Map<Country['countryCode'], Country['id']>,
+  nonIndependentCountries: Array<string>
 ) => {
   const countryNeighbours = new Set<{
     firstCountryId: number;
@@ -332,15 +337,25 @@ const saveNeighbourData = async (
   }>();
 
   for (const country of countries) {
-    for (const neighbour of country.neighboursCountryCodes) {
-      const firstCountryId = countryCodeMap.get(country.countryCode);
-      const secondCountryId = countryCodeMap.get(neighbour);
+    const firstCountryId = countryCodeMap.get(country.countryCode);
+    if (!firstCountryId) {
+      console.log(
+        `Error saving country neighbours: can't find id of ${country.name}.`
+      );
+      continue;
+    }
 
-      if (!firstCountryId || !secondCountryId) {
-        const missingCode = !firstCountryId ? country.countryCode : neighbour;
-        console.log(
-          `Error trying to save ${country.name} neighbours. Can't find country id of ${missingCode}`
-        );
+    for (const neighbour of country.neighboursCountryCodes) {
+      const secondCountryId = countryCodeMap.get(neighbour);
+      if (!secondCountryId) {
+        // some entries have non-independent neighbours that will not be saved to db
+        // only log error if neighbour is not one of these
+        const unknownCode = !nonIndependentCountries.includes(neighbour);
+        if (unknownCode) {
+          console.log(
+            `Error saving ${country.name}'s neighbours: id of country code ${neighbour} not found. Skipping this entry.`
+          );
+        }
         continue;
       }
 
@@ -397,13 +412,15 @@ const toCountry = (item: unknown): CountryInfo | null => {
     return null;
   }
 
+  let capital;
   // some countries have multiple capitals, so in the api capitals are given as array
   if (!('capital' in item) || !isStringArray(item.capital)) {
-    fieldMissing('capital', countryName);
-    return null;
+    console.log(`${countryName} is missing capital, marking it as 'Unknown'.`);
+    capital = 'Unknown';
+  } else {
+    // to simplify things: join the names into one string for easier display
+    capital = item.capital.join(', ');
   }
-  // to simplify things: join the names into one string for easier display
-  const capital = item.capital.join(', ');
 
   if (!('car' in item) || typeof item.car !== 'object') {
     fieldMissing('car', countryName);
@@ -420,9 +437,14 @@ const toCountry = (item: unknown): CountryInfo | null => {
     return null;
   }
 
+  let independent;
   if (!('independent' in item) || typeof item.independent !== 'boolean') {
-    fieldMissing('independent', countryName);
-    return null;
+    console.log(
+      `${countryName} is missing independence info, marking it as non-independent.`
+    );
+    independent = false;
+  } else {
+    independent = item.independent;
   }
 
   if (!('landlocked' in item) || typeof item.landlocked !== 'boolean') {
@@ -490,7 +512,7 @@ const toCountry = (item: unknown): CountryInfo | null => {
     drivingSide: carData.side,
     continents: item.continents,
     countryCode: item.cca3,
-    independent: item.independent,
+    independent,
     landlocked: item.landlocked,
     languages: languages,
     location_lat: location.lat,
