@@ -23,6 +23,7 @@ const App = () => {
       guesses: new Array<Move>(),
       isSubmittingMove: false,
       hints: newGame.hints,
+      gameOver: false,
     };
 
     setGame(gameObj);
@@ -58,6 +59,7 @@ const App = () => {
         guesses: [move, ...game.guesses],
         isSubmittingMove: false,
         hints: result.hints,
+        gameOver: game.gameOver || result.correct,
       });
 
       return;

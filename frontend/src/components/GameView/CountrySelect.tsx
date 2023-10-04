@@ -33,11 +33,14 @@ const CountrySelect = ({ game, submitMove }: Props) => {
     setCountryValue(null);
   };
 
+  const disableInput = game.gameOver || game.isSubmittingMove;
+
   return (
     <Box width={600}>
       <Box display={'flex'} alignItems={'center'}>
         <Autocomplete
           id="country-select-combo-box"
+          disabled={disableInput}
           sx={{ width: '100%' }}
           value={countryValue}
           onChange={(_event, newValue) => {
@@ -64,6 +67,7 @@ const CountrySelect = ({ game, submitMove }: Props) => {
           variant="outlined"
           onClick={guessClicked}
           sx={{ marginX: 1, padding: 1.5 }}
+          disabled={disableInput}
         >
           Guess
         </Button>

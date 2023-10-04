@@ -3,6 +3,7 @@ import { Country, GameObject } from '../../types';
 import MoveList from './MoveList';
 import HintsView from './HintsViews';
 import CountrySelect from './CountrySelect';
+import GameOver from './GameOver';
 
 interface Props {
   game: undefined | GameObject;
@@ -23,6 +24,7 @@ const GameView = ({ game, submitMove }: Props) => {
         <CountrySelect game={game} submitMove={submitMove} />
       </Box>
       <HintsView hints={game.hints} />
+      <GameOver show={game.gameOver} turns={game.guesses.length} />
       <MoveList moves={game.guesses} />
     </Box>
   );

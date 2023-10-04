@@ -72,4 +72,5 @@ export interface GameObject {
   guesses: Array<Move>;
   isSubmittingMove: boolean;
   hints: Hints;
+  gameOver: boolean;
 }
