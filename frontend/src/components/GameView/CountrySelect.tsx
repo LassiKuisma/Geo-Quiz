@@ -35,7 +35,7 @@ const CountrySelect = ({ game, submitMove }: Props) => {
 
   return (
     <Box width={600}>
-      <Box display={'flex'}>
+      <Box display={'flex'} alignItems={'center'}>
         <Autocomplete
           id="country-select-combo-box"
           sx={{ width: '100%' }}
@@ -60,7 +60,11 @@ const CountrySelect = ({ game, submitMove }: Props) => {
             />
           )}
         />
-        <Button variant="outlined" onClick={guessClicked}>
+        <Button
+          variant="outlined"
+          onClick={guessClicked}
+          sx={{ marginX: 1, padding: 1.5 }}
+        >
           Guess
         </Button>
         <LoadingIcon visible={game.isSubmittingMove} />
@@ -79,7 +83,11 @@ const ErrorDisplay = ({ errorMessage }: { errorMessage: null | string }) => {
 };
 
 const LoadingIcon = ({ visible }: { visible: boolean }) => {
-  return <Box sx={{ width: 100 }}>{visible && <CircularProgress />}</Box>;
+  return (
+    <Box sx={{ width: 100 }} marginX={1}>
+      {visible && <CircularProgress />}
+    </Box>
+  );
 };
 
 export default CountrySelect;

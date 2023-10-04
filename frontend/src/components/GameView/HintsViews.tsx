@@ -18,7 +18,7 @@ interface Props {
 const HintsView = ({ hints }: Props) => {
   return (
     <Box>
-      <Typography variant="h5" marginY={2} marginX={1}>
+      <Typography variant="h5" marginY={2}>
         Hints
       </Typography>
       <TableContainer>

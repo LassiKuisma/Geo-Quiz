@@ -15,9 +15,13 @@ const GameView = ({ game, submitMove }: Props) => {
   }
 
   return (
-    <Box>
-      <Typography variant="h3">Guess a country</Typography>
-      <CountrySelect game={game} submitMove={submitMove} />
+    <Box margin={1}>
+      <Box marginY={2}>
+        <Typography variant="h3" marginY={1}>
+          Guess a country
+        </Typography>
+        <CountrySelect game={game} submitMove={submitMove} />
+      </Box>
       <HintsView hints={game.hints} />
       <MoveList moves={game.guesses} />
     </Box>

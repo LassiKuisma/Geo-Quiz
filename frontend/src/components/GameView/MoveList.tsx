@@ -30,7 +30,7 @@ interface Props {
 const MoveList = ({ moves }: Props) => {
   return (
     <Box>
-      <Typography variant="h5" marginY={3} marginX={1}>
+      <Typography variant="h5" marginY={3}>
         Guesses
       </Typography>
       <TableContainer sx={{ maxHeight: 800 }}>
@@ -60,34 +60,37 @@ const MoveList = ({ moves }: Props) => {
 const ResultRow = ({ move }: { move: Move }) => {
   const country = move.guessedCountry;
   const comp = move.result.comparison;
+  const correctAnswer = move.result.correct;
   return (
     <TableRow hover>
-      <Cell fontSize="large" maxWidth={200}>
+      <Cell fontSize="large" maxWidth={200} correctAnswer={correctAnswer}>
         {move.guessedCountry.name}
       </Cell>
-      <Cell>
+      <Cell correctAnswer={correctAnswer}>
         {boolToIcon(comp.regionEqual)}
         {country.region}
       </Cell>
-      <Cell>
+      <Cell correctAnswer={correctAnswer}>
         {boolToIcon(comp.subregionEqual)}
         {country.subregion}
       </Cell>
-      <Cell>
+      <Cell correctAnswer={correctAnswer}>
         <DiffAsIcon diff={comp.areaDifference} />
         {bigNumberToString(country.area, 0)} km²
       </Cell>
-      <Cell>
+      <Cell correctAnswer={correctAnswer}>
         <DiffAsIcon diff={comp.populationDifference} />
         {bigNumberToString(country.population, 0)}
       </Cell>
       <ArrayCell
         values={country.neighbours}
         correctValues={comp.sameNeighbours}
+        correctAnswer={correctAnswer}
       />
       <ArrayCell
         values={country.languages}
         correctValues={comp.sameLanguages}
+        correctAnswer={correctAnswer}
       />
     </TableRow>
   );
@@ -97,12 +100,19 @@ interface CellProps {
   children?: React.ReactNode;
   maxWidth?: number;
   fontSize?: 'small' | 'medium' | 'large';
+  correctAnswer?: boolean;
 }
 
-const Cell = ({ children, maxWidth, fontSize }: CellProps) => {
+const Cell = ({ children, maxWidth, fontSize, correctAnswer }: CellProps) => {
+  const fontWeight = correctAnswer === true ? 'bold' : undefined;
   return (
     <TableCell sx={{ maxWidth }}>
-      <Stack direction="row" alignItems="center" fontSize={fontSize}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        fontSize={fontSize}
+        fontWeight={fontWeight}
+      >
         {children}
       </Stack>
     </TableCell>
@@ -112,9 +122,14 @@ const Cell = ({ children, maxWidth, fontSize }: CellProps) => {
 interface ArrayCellProps {
   values: Array<string>;
   correctValues: Array<string>;
+  correctAnswer?: boolean;
 }
 
-const ArrayCell = ({ values, correctValues }: ArrayCellProps) => {
+const ArrayCell = ({
+  values,
+  correctValues,
+  correctAnswer,
+}: ArrayCellProps) => {
   const correct = new Array<string>();
   const wrong = new Array<string>();
 
@@ -126,16 +141,28 @@ const ArrayCell = ({ values, correctValues }: ArrayCellProps) => {
     }
   });
 
+  const fontWeight = correctAnswer === true ? 'bold' : undefined;
+
   return (
     <TableCell sx={{ maxWidth: 200 }}>
       {correct.length !== 0 && (
-        <Stack direction="row" alignItems="center">
+        <Stack
+          direction="row"
+          alignItems="center"
+          fontWeight={fontWeight}
+          marginBottom={1}
+        >
           <CheckIcon />
           {correct.join(', ')}
         </Stack>
       )}
       {wrong.length !== 0 && (
-        <Stack direction="row" alignItems="center">
+        <Stack
+          direction="row"
+          alignItems="center"
+          fontWeight={fontWeight}
+          marginTop={1}
+        >
           <CloseIcon />
           {wrong.join(', ')}
         </Stack>
