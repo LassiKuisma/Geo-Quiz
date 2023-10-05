@@ -12,12 +12,12 @@ const pages: Array<Page> = [
     to: '/',
   },
   {
-    name: 'First page',
-    to: '/first',
+    name: 'Play',
+    to: '/game',
   },
   {
-    name: 'Second page',
-    to: '/second',
+    name: 'List of countries',
+    to: '/countries',
   },
 ];
 

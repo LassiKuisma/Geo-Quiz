@@ -6,9 +6,13 @@ import GameView from './components/GameView';
 import { useState } from 'react';
 import { postMove, startNewGame } from './services/gameService';
 import { Country, GameObject, Move } from './types';
+import CountryList from './components/CountryList';
 
 const App = () => {
   const [game, setGame] = useState<undefined | GameObject>(undefined);
+  const [countries, setCountries] = useState<undefined | Array<Country>>(
+    undefined
+  );
   const navigate = useNavigate();
 
   const startNewGameClicked = async () => {
@@ -91,8 +95,12 @@ const App = () => {
             path="game"
             element={<GameView game={game} submitMove={sumbitMove} />}
           />
-          <Route path="first" element={<First />} />
-          <Route path="second" element={<Second />} />
+          <Route
+            path="countries"
+            element={
+              <CountryList countries={countries} setCountries={setCountries} />
+            }
+          />
 
           <Route path="*" element={<NoMatch />} />
         </Route>
@@ -107,22 +115,6 @@ const Layout = () => {
       <NavigationBar />
       <hr />
       <Outlet />
-    </div>
-  );
-};
-
-const First = () => {
-  return (
-    <div>
-      <h2>First page about some stuff</h2>
-    </div>
-  );
-};
-
-const Second = () => {
-  return (
-    <div>
-      <h2>Second page, full of interesting things</h2>
     </div>
   );
 };
