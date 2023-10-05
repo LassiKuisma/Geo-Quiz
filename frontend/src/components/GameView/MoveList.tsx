@@ -16,6 +16,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import React from 'react';
+import { prefixNumber } from '../../util/utils';
 
 const HeaderCell = styled(TableCell)({
   fontSize: 'large',
@@ -76,11 +77,11 @@ const ResultRow = ({ move }: { move: Move }) => {
       </Cell>
       <Cell correctAnswer={correctAnswer}>
         <DiffAsIcon diff={comp.areaDifference} />
-        {bigNumberToString(country.area, 0)} km²
+        {prefixNumber(country.area, 0)} km²
       </Cell>
       <Cell correctAnswer={correctAnswer}>
         <DiffAsIcon diff={comp.populationDifference} />
-        {bigNumberToString(country.population, 0)}
+        {prefixNumber(country.population, 0)}
       </Cell>
       <ArrayCell
         values={country.neighbours}
@@ -169,20 +170,6 @@ const ArrayCell = ({
       )}
     </TableCell>
   );
-};
-
-const bigNumberToString = (number: number, digits: number): string => {
-  if (number > 1_000_000) {
-    const m = (number / 1_000_000).toFixed(digits);
-    return `${m} million`;
-  }
-
-  if (number > 1_000) {
-    const k = (number / 1_000).toFixed(digits);
-    return `${k} thousand`;
-  }
-
-  return number.toString();
 };
 
 const DiffAsIcon = ({ diff }: { diff: Difference }) => {
