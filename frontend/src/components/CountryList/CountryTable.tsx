@@ -10,7 +10,8 @@ import {
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { Country } from '../../types';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { prefixNumber } from '../../util/utils';
 
 type Order = 'asc' | 'desc';
 
@@ -69,11 +70,14 @@ const CountryTable = ({ countries }: Props) => {
     Subregion: country.subregion,
     Area: country.area,
     Population: country.population,
-    Neighbours: country.neighbours.join(', '),
-    Languages: country.languages.join(', '),
+    Neighbours: country.neighbours.slice().sort().join(', '),
+    Languages: country.languages.slice().sort().join(', '),
   }));
 
-  const rowsSorted = countriesAsRows.sort(getComparator(order, orderBy));
+  const rowsSorted = useMemo(
+    () => countriesAsRows.sort(getComparator(order, orderBy)),
+    [order, orderBy]
+  );
 
   return (
     <TableContainer sx={{ maxHeight: 800 }}>
@@ -89,8 +93,8 @@ const CountryTable = ({ countries }: Props) => {
               <TableCell>{country.Country}</TableCell>
               <TableCell>{country.Region}</TableCell>
               <TableCell>{country.Subregion}</TableCell>
-              <TableCell>{country.Area}</TableCell>
-              <TableCell>{country.Population}</TableCell>
+              <TableCell>{prefixNumber(country.Area, 0)} km²</TableCell>
+              <TableCell>{prefixNumber(country.Population, 0)}</TableCell>
               <TableCell>{country.Neighbours}</TableCell>
               <TableCell>{country.Languages}</TableCell>
             </TableRow>
