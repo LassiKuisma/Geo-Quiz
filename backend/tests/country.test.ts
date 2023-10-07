@@ -40,10 +40,10 @@ describe('comparing countries', () => {
     };
 
     const comparison = compareCountries(countryA, countryB);
-    expect(comparison.areaDifference).toEqual<Difference>('less');
-    expect(comparison.populationDifference).toEqual<Difference>('more');
-    expect(comparison.locationLatDifference).toEqual<Difference>('less');
-    expect(comparison.locationLngDifference).toEqual<Difference>('more');
+    expect(comparison.areaDifference).toEqual<Difference>('more');
+    expect(comparison.populationDifference).toEqual<Difference>('less');
+    expect(comparison.locationLatDifference).toEqual<Difference>('more');
+    expect(comparison.locationLngDifference).toEqual<Difference>('less');
     expect(comparison.regionEqual).toEqual<boolean>(false);
     expect(comparison.subregionEqual).toEqual<boolean>(false);
     expect(comparison.sameContinents).toEqual<Array<string>>([]);

@@ -24,18 +24,18 @@ export const compareCountries = (
   );
 
   return {
-    areaDifference: getDifference(playerGuess.area, correctAnswer.area),
+    areaDifference: getDifference(correctAnswer.area, playerGuess.area),
     populationDifference: getDifference(
-      playerGuess.population,
-      correctAnswer.population
+      correctAnswer.population,
+      playerGuess.population
     ),
     locationLatDifference: getDifference(
-      playerGuess.location_lat,
-      correctAnswer.location_lat
+      correctAnswer.location_lat,
+      playerGuess.location_lat
     ),
     locationLngDifference: getDifference(
-      playerGuess.location_lng,
-      correctAnswer.location_lng
+      correctAnswer.location_lng,
+      playerGuess.location_lng
     ),
     regionEqual: playerGuess.region === correctAnswer.region,
     subregionEqual: playerGuess.subregion === correctAnswer.subregion,
