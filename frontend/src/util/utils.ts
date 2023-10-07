@@ -27,3 +27,10 @@ export const prefixNumber = (number: number, digits: number): string => {
 
   return number.toString();
 };
+
+export const locationToStr = (lat: number, lng: number): string => {
+  const latStr = lat < 0 ? `${-lat.toFixed(0)}S` : `${lat.toFixed(0)}N`;
+  const lngStr = lng < 0 ? `${-lng.toFixed(0)}W` : `${lng.toFixed(0)}E`;
+
+  return `${latStr}, ${lngStr}`;
+};

@@ -11,7 +11,7 @@ import {
 import { visuallyHidden } from '@mui/utils';
 import { Country } from '../../types';
 import { useMemo, useState } from 'react';
-import { prefixNumber } from '../../util/utils';
+import { locationToStr, prefixNumber } from '../../util/utils';
 
 type Order = 'asc' | 'desc';
 
@@ -25,7 +25,7 @@ const descendingComparator = <T,>(a: T, b: T, orderBy: keyof T) => {
   return 0;
 };
 
-const getComparator = <Key extends keyof CountryRow>(
+const getComparator = <Key extends SortableColumn>(
   order: Order,
   orderBy: Key
 ): ((
@@ -45,7 +45,13 @@ interface CountryRow {
   Population: number;
   Neighbours: string;
   Languages: string;
+  Location: { lat: number; lng: number };
 }
+
+type SortableColumn = keyof Omit<
+  CountryRow,
+  'Neighbours' | 'Languages' | 'Location'
+>;
 
 interface Props {
   countries: Array<Country>;
@@ -53,11 +59,11 @@ interface Props {
 
 const CountryTable = ({ countries }: Props) => {
   const [order, setOrder] = useState<Order>('asc');
-  const [orderBy, setOrderBy] = useState<keyof CountryRow>('Country');
+  const [orderBy, setOrderBy] = useState<SortableColumn>('Country');
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof CountryRow
+    property: SortableColumn
   ) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -72,6 +78,7 @@ const CountryTable = ({ countries }: Props) => {
     Population: country.population,
     Neighbours: country.neighbours.slice().sort().join(', '),
     Languages: country.languages.slice().sort().join(', '),
+    Location: { lat: country.location_lat, lng: country.location_lng },
   }));
 
   const rowsSorted = useMemo(
@@ -97,6 +104,9 @@ const CountryTable = ({ countries }: Props) => {
               <TableCell>{prefixNumber(country.Population, 0)}</TableCell>
               <TableCell>{country.Neighbours}</TableCell>
               <TableCell>{country.Languages}</TableCell>
+              <TableCell>
+                {locationToStr(country.Location.lat, country.Location.lng)}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -110,22 +120,20 @@ interface HeaderRowProps {
   orderBy: string;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof CountryRow
+    property: SortableColumn
   ) => void;
 }
 
 const HeaderRow = ({ order, orderBy, onRequestSort }: HeaderRowProps) => {
-  const headers: {
-    name: keyof CountryRow;
-    sortable: boolean;
-  }[] = [
-    { name: 'Country', sortable: true },
-    { name: 'Region', sortable: true },
-    { name: 'Subregion', sortable: true },
-    { name: 'Area', sortable: true },
-    { name: 'Population', sortable: true },
-    { name: 'Neighbours', sortable: false },
-    { name: 'Languages', sortable: false },
+  const headers = [
+    'Country',
+    'Region',
+    'Subregion',
+    'Area',
+    'Population',
+    'Neighbours',
+    'Languages',
+    'Location',
   ];
 
   return (
@@ -134,9 +142,8 @@ const HeaderRow = ({ order, orderBy, onRequestSort }: HeaderRowProps) => {
         {headers.map((header) => {
           return (
             <HeaderCell
-              key={header.name}
-              name={header.name}
-              sortable={header.sortable}
+              key={header}
+              name={header}
               order={order}
               orderBy={orderBy}
               onRequestSort={onRequestSort}
@@ -149,27 +156,33 @@ const HeaderRow = ({ order, orderBy, onRequestSort }: HeaderRowProps) => {
 };
 
 interface HeaderCellProps {
-  name: keyof CountryRow;
-  sortable: boolean;
+  name: string;
   order: Order;
   orderBy: string;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof CountryRow
+    property: SortableColumn
   ) => void;
 }
 
 const HeaderCell = ({
   name,
-  sortable,
   order,
   orderBy,
   onRequestSort,
 }: HeaderCellProps) => {
   const createSortHandler =
-    (property: keyof CountryRow) => (event: React.MouseEvent<unknown>) => {
+    (property: SortableColumn) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
+
+  const isSortable = (param: string): param is SortableColumn => {
+    return ['Country', 'Region', 'Subregion', 'Area', 'Population'].includes(
+      param
+    );
+  };
+
+  const sortable = isSortable(name);
 
   const sortByThisColumn = orderBy === name;
 
