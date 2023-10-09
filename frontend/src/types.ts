@@ -37,6 +37,8 @@ export interface Comparison {
   sameContinents: Array<string>;
   sameLanguages: Array<string>;
   sameNeighbours: Array<string>;
+
+  direction: number | undefined;
 }
 
 export interface MoveResult {

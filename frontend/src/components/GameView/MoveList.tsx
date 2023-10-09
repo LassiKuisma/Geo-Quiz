@@ -15,6 +15,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import Arrow from '@mui/icons-material/TrendingFlat';
 import React from 'react';
 import { prefixNumber } from '../../util/utils';
 
@@ -45,6 +46,7 @@ const MoveList = ({ moves }: Props) => {
               <HeaderCell>Population</HeaderCell>
               <HeaderCell>Neighbours</HeaderCell>
               <HeaderCell>Languages</HeaderCell>
+              <HeaderCell>Direction</HeaderCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -59,9 +61,16 @@ const MoveList = ({ moves }: Props) => {
 };
 
 const ResultRow = ({ move }: { move: Move }) => {
+  // the icon I'm using is right-facing arrow. The angle returned by server
+  // is 0=up, 90=right(east)
+  const ARROW_ROTATION_OFFSET = -90;
+
   const country = move.guessedCountry;
   const comp = move.result.comparison;
   const correctAnswer = move.result.correct;
+  const direction = move.result.comparison.direction;
+  const angle = !direction ? undefined : direction + ARROW_ROTATION_OFFSET;
+
   return (
     <TableRow hover>
       <Cell fontSize="large" maxWidth={200} correctAnswer={correctAnswer}>
@@ -93,6 +102,16 @@ const ResultRow = ({ move }: { move: Move }) => {
         correctValues={comp.sameLanguages}
         correctAnswer={correctAnswer}
       />
+      <Cell>
+        {angle && (
+          <Arrow
+            fontSize="large"
+            sx={{
+              rotate: angle + 'deg',
+            }}
+          />
+        )}
+      </Cell>
     </TableRow>
   );
 };
