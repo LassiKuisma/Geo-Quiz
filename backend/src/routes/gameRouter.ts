@@ -1,32 +1,12 @@
 import express from 'express';
 import { isNumber } from '../util/utils';
 import { getAllCountries, getCountry } from '../services/countryService';
-import { Country, MoveResult, NewGame } from '../util/types';
+import { MoveResult, NewGame } from '../util/types';
 import { compareCountries, getHints } from '../util/country';
 import { defaultThresholds } from '../util/gameSettings';
+import { generateGame, getGame } from '../services/gameService';
 
 const router = express.Router();
-
-interface Game {
-  gameId: number;
-  answer: Country['id'];
-  guesses: number;
-}
-
-const activeGames = new Map<number, Game>();
-
-const generateGame = (countries: Array<Country>): Game => {
-  const id = activeGames.size + 1;
-
-  const index = Math.floor(Math.random() * countries.length);
-  const countryId = countries[index].id;
-
-  return {
-    gameId: id,
-    answer: countryId,
-    guesses: 0,
-  };
-};
 
 router.post('/newgame', async (_req, res) => {
   const result = await getAllCountries();
@@ -41,7 +21,6 @@ router.post('/newgame', async (_req, res) => {
   }
 
   const game = generateGame(countries);
-  activeGames.set(game.gameId, game);
 
   const newGame: NewGame = {
     gameId: game.gameId,
@@ -65,7 +44,7 @@ router.post('/move', async (req, res) => {
     return res.status(400).send('Country id missing or invalid');
   }
 
-  const game = activeGames.get(body.gameId);
+  const game = getGame(body.gameId);
   if (!game) {
     return res.status(404).send(`Game with id ${body.gameId} not found`);
   }

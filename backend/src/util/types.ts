@@ -69,3 +69,9 @@ export interface HintThresholds {
   drivingSide: number;
   capital: number;
 }
+
+export interface Game {
+  gameId: number;
+  answer: Country['id'];
+  guesses: number;
+}
