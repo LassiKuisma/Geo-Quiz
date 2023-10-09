@@ -37,3 +37,8 @@ export const isSide = (param: unknown): param is Side => {
 
   return param === 'left' || param === 'right';
 };
+
+const EPSILON = 0.1;
+export const approxEqual = (n1: number, n2: number): boolean => {
+  return Math.abs(n1 - n2) <= EPSILON;
+};

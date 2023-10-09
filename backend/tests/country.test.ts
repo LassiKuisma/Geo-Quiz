@@ -265,3 +265,176 @@ describe('generating hints', () => {
     });
   });
 });
+
+describe('comparing locations', () => {
+  const country = (lat: number, lng: number): Country => {
+    return {
+      id: 0,
+      area: 0,
+      countryCode: '',
+      landlocked: false,
+      name: '',
+      population: 0,
+      location_lat: lat,
+      location_lng: lng,
+      drivingSide: 'right',
+      capital: '',
+      region: '',
+      subregion: '',
+      languages: [],
+      continents: [],
+      neighbours: [],
+    };
+  };
+
+  describe('guessing country directly north, east, south and west', () => {
+    const correctAnswer = country(0, 0);
+
+    // note: the result is the "opposite" direction of variable name
+    // "north" = I guessed location north of answer -> point south
+    const north = { name: 'north', country: country(10, 0), expected: 180 };
+    const south = { name: 'south', country: country(-10, 0), expected: 0 };
+    const east = { name: 'east', country: country(0, 10), expected: 270 };
+    const west = { name: 'west', country: country(0, -10), expected: 90 };
+
+    const items = [north, south, east, west];
+
+    test.each(items)('$name', ({ country, expected }) => {
+      expect(compareCountries(country, correctAnswer).direction).toBeCloseTo(
+        expected
+      );
+    });
+  });
+
+  test('between location on different sides of anti-meridian (straight)', () => {
+    const correctAnswer = country(0, 170);
+    const playerGuess = country(0, -170);
+
+    const comparison = compareCountries(playerGuess, correctAnswer);
+    expect(comparison.direction).toBeCloseTo(270);
+  });
+
+  test('between location on different sides of anti-meridian (diagonal)', () => {
+    const correctAnswer = country(25, -165);
+    const playerGuess = country(-10, 160);
+
+    const comparison = compareCountries(playerGuess, correctAnswer);
+    expect(comparison.direction).toBeCloseTo(45);
+  });
+
+  test('guessing the same location', () => {
+    const correctAnswer = country(12.34, -123.98);
+    const playerGuess = country(12.34, -123.98);
+
+    const comparison = compareCountries(playerGuess, correctAnswer);
+    expect(comparison.direction).toBe(undefined);
+  });
+
+  test('guessing nearly same location', () => {
+    const correctAnswer = country(-77.888, 3.33333);
+    const playerGuess = country(-77.887, 3.33332);
+
+    const comparison = compareCountries(playerGuess, correctAnswer);
+    expect(comparison.direction).toBe(undefined);
+  });
+
+  describe('using real life country locations', () => {
+    const locations = new Map<string, [number, number]>();
+    locations.set('Brazil', [-10, -55]);
+    locations.set('Mexico', [23, -102]);
+    locations.set('Argentina', [-34, -64]);
+    locations.set('New Zealand', [-41, 174]);
+    locations.set('Japan', [36, 138]);
+    locations.set('USA', [38, -97]);
+    locations.set('South Africa', [-29, 24]);
+    locations.set('Finland', [64, 26]);
+    locations.set('Algeria', [28, 3]);
+    locations.set('Libya', [25, 17]);
+    locations.set('South Korea', [37, 127.5]);
+    locations.set('Switzerland', [47, 8]);
+    locations.set('Poland', [52, 20]);
+    locations.set('Sweden', [62, 15]);
+
+    type Direction =
+      | 'north'
+      | 'east'
+      | 'south'
+      | 'west'
+      | 'north-east'
+      | 'north-west'
+      | 'south-east'
+      | 'south-west';
+
+    const directions: Direction[] = [
+      'north',
+      'north-east',
+      'east',
+      'south-east',
+      'south',
+      'south-west',
+      'west',
+      'north-west',
+    ];
+
+    const angleToDirection = (angle: number): Direction => {
+      // add 22.5 to "rotate" the sectors: north goes from [0, 45] to [-22.5, 22.5]
+      const clamped = (angle + 22.5) % 360;
+      const index = Math.floor(clamped / 45);
+      const result = directions[index];
+      return result;
+    };
+
+    const countryDirections = new Array<[string, Direction, string]>();
+    countryDirections.push(['Brazil', 'north-west', 'Mexico']);
+    countryDirections.push(['Mexico', 'south-east', 'Brazil']);
+
+    countryDirections.push(['Argentina', 'west', 'New Zealand']);
+    countryDirections.push(['New Zealand', 'east', 'Argentina']);
+
+    countryDirections.push(['Japan', 'east', 'USA']);
+    countryDirections.push(['USA', 'west', 'Japan']);
+
+    countryDirections.push(['South Africa', 'north', 'Finland']);
+    countryDirections.push(['Finland', 'south', 'South Africa']);
+
+    countryDirections.push(['Algeria', 'east', 'Libya']);
+    countryDirections.push(['Libya', 'west', 'Algeria']);
+
+    countryDirections.push(['South Africa', 'north-east', 'South Korea']);
+    countryDirections.push(['South Korea', 'south-west', 'South Africa']);
+
+    countryDirections.push(['Switzerland', 'north-east', 'Poland']);
+    countryDirections.push(['Poland', 'south-west', 'Switzerland']);
+
+    countryDirections.push(['Finland', 'west', 'Sweden']);
+    countryDirections.push(['Sweden', 'east', 'Finland']);
+
+    test.each(countryDirections)(
+      'going from %s %s leads to %s',
+      (name1, expectedDirection, name2) => {
+        const loc1 = locations.get(name1);
+        if (!loc1) throw new Error(`${name1} not found`);
+        const country1 = country(loc1[0], loc1[1]);
+
+        const loc2 = locations.get(name2);
+        if (!loc2) throw new Error(`${name2} not found`);
+        const country2 = country(loc2[0], loc2[1]);
+
+        const angle = compareCountries(country1, country2).direction;
+        if (!angle) {
+          throw new Error(`angle is undefined between ${name1} and ${name2}`);
+        }
+
+        const direction = angleToDirection(angle);
+
+        if (expectedDirection !== direction) {
+          throw new Error(
+            `expected ${expectedDirection}, got ${direction} (${angle.toFixed(
+              2
+            )})`
+          );
+        }
+      }
+    );
+  });
+});

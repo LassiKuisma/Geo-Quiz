@@ -37,6 +37,9 @@ export interface Comparison {
   sameContinents: Array<string>;
   sameLanguages: Array<string>;
   sameNeighbours: Array<string>;
+
+  // angle in degrees, pointing towards the target, 0 being north, 90 east
+  direction: number | undefined;
 }
 
 export interface MoveResult {
