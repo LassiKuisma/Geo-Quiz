@@ -2,12 +2,8 @@ import { CountryModel, GameModel } from '../models';
 
 import { Game, NewGame, Ok, Result } from '../util/types';
 import { defaultThresholds } from '../util/gameSettings';
-import {
-  CountryJoined,
-  countryOptions,
-  getHints,
-  modelToCountry,
-} from '../util/country';
+import { getHints } from '../util/country';
+import { countryOptions, CountryJoined, modelToCountry } from '../util/models';
 import { error, ok } from '../util/utils';
 
 import { getAllCountries } from './countryService';
