@@ -72,6 +72,6 @@ export interface HintThresholds {
 
 export interface Game {
   gameId: number;
-  answer: Country['id'];
+  answer: Country;
   guesses: number;
 }

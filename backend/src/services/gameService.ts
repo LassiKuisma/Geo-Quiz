@@ -1,8 +1,13 @@
-import { GameModel } from '../models';
+import { CountryModel, GameModel } from '../models';
 
 import { Game, NewGame, Result } from '../util/types';
 import { defaultThresholds } from '../util/gameSettings';
-import { getHints } from '../util/country';
+import {
+  CountryJoined,
+  countryOptions,
+  getHints,
+  modelToCountry,
+} from '../util/country';
 import { error, ok } from '../util/utils';
 
 import { getAllCountries } from './countryService';
@@ -56,15 +61,25 @@ export const generateGame = async (): Promise<Result<NewGame>> => {
 
 export const getGame = async (id: number): Promise<Game | undefined> => {
   try {
-    // TODO: include the answer country in the query
-    const result = await GameModel.findByPk(id);
+    const result = (await GameModel.findByPk(id, {
+      include: {
+        model: CountryModel,
+        ...countryOptions,
+      },
+    })) as (GameModel & { country: CountryJoined }) | null;
+
     if (!result) {
+      return undefined;
+    }
+
+    const country = modelToCountry(result.country);
+    if (!country) {
       return undefined;
     }
 
     const game: Game = {
       gameId: result.gameId,
-      answer: result.countryId,
+      answer: country,
       guesses: result.guessCount,
     };
     return game;

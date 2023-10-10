@@ -45,13 +45,8 @@ router.post('/move', async (req, res) => {
     return res.status(400).send(`Country with id ${body.countryId} not found`);
   }
 
-  const resultAnswer = await getCountry(game.answer);
-  if (resultAnswer.k === 'error' || !resultAnswer.value) {
-    return res.status(500).send('Something went wrong.');
-  }
-
   const playerGuess = resultPlayer.value;
-  const correctAnswer = resultAnswer.value;
+  const correctAnswer = game.answer;
 
   const comparison = compareCountries(playerGuess, correctAnswer);
   const hints = getHints(game.guesses, correctAnswer, defaultThresholds);
