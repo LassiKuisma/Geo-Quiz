@@ -1,33 +1,24 @@
 import express from 'express';
 import { isNumber } from '../util/utils';
-import { getAllCountries, getCountry } from '../services/countryService';
-import { MoveResult, NewGame } from '../util/types';
+import { getCountry } from '../services/countryService';
+import { MoveResult } from '../util/types';
 import { compareCountries, getHints } from '../util/country';
 import { defaultThresholds } from '../util/gameSettings';
-import { generateGame, getGame } from '../services/gameService';
+import {
+  generateGame,
+  getGame,
+  increaseGuessCount,
+} from '../services/gameService';
 
 const router = express.Router();
 
 router.post('/newgame', async (_req, res) => {
-  const result = await getAllCountries();
-  if (result.k === 'error') {
-    return res.status(500).send(result.message);
+  const gameResult = await generateGame();
+  if (gameResult.k === 'error') {
+    return res.status(500).send(gameResult.message);
   }
 
-  const countries = result.value;
-  if (countries.length === 0) {
-    console.log('Error creating game: no countries found');
-    return res.status(500).send('Failed to create new game.');
-  }
-
-  const game = generateGame(countries);
-
-  const newGame: NewGame = {
-    gameId: game.gameId,
-    countries,
-    hints: getHints(0, countries[game.answer], defaultThresholds),
-  };
-
+  const newGame = gameResult.value;
   return res.json(newGame);
 });
 
@@ -44,7 +35,7 @@ router.post('/move', async (req, res) => {
     return res.status(400).send('Country id missing or invalid');
   }
 
-  const game = getGame(body.gameId);
+  const game = await getGame(body.gameId);
   if (!game) {
     return res.status(404).send(`Game with id ${body.gameId} not found`);
   }
@@ -71,7 +62,10 @@ router.post('/move', async (req, res) => {
     hints,
   };
 
-  game.guesses += 1;
+  const guessSaved = await increaseGuessCount(game.gameId);
+  if (guessSaved.k === 'error') {
+    return res.status(500).send(guessSaved.message);
+  }
 
   return res.status(200).send(moveResult);
 });

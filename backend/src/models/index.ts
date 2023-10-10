@@ -7,6 +7,7 @@ import { DrivingSide } from './drivingSide';
 import { Language } from './language';
 import { Region } from './region';
 import { Subregion } from './subregion';
+import { GameModel } from './game';
 
 Continent.belongsToMany(Country, { through: CountryContinent });
 Country.belongsToMany(Continent, { through: CountryContinent });
@@ -40,4 +41,5 @@ export {
   Language,
   Region,
   Subregion,
+  GameModel,
 };
