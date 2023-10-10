@@ -1,0 +1,16 @@
+name: Deployment pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Print hello
+        run: echo "Hello!"
