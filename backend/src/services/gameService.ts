@@ -1,6 +1,6 @@
 import { CountryModel, GameModel } from '../models';
 
-import { Game, NewGame, Result } from '../util/types';
+import { Game, NewGame, Ok, Result } from '../util/types';
 import { defaultThresholds } from '../util/gameSettings';
 import {
   CountryJoined,
@@ -59,7 +59,15 @@ export const generateGame = async (): Promise<Result<NewGame>> => {
   return error(msg);
 };
 
-export const getGame = async (id: number): Promise<Game | undefined> => {
+type GameError = {
+  k: 'error';
+  statusCode: number;
+  message: string;
+};
+
+type ResultGame<T> = Ok<T> | GameError;
+
+export const getGame = async (id: number): Promise<ResultGame<Game>> => {
   try {
     const result = (await GameModel.findByPk(id, {
       include: {
@@ -69,12 +77,24 @@ export const getGame = async (id: number): Promise<Game | undefined> => {
     })) as (GameModel & { country: CountryJoined }) | null;
 
     if (!result) {
-      return undefined;
+      return {
+        k: 'error',
+        statusCode: 404,
+        message: `Game with id ${id} not found`,
+      };
     }
 
     const country = modelToCountry(result.country);
     if (!country) {
-      return undefined;
+      console.log(
+        `Error fetching game id=${id}: query returned faulty sql model.`
+      );
+
+      return {
+        k: 'error',
+        statusCode: 500,
+        message: 'Unknown database error',
+      };
     }
 
     const game: Game = {
@@ -82,9 +102,16 @@ export const getGame = async (id: number): Promise<Game | undefined> => {
       answer: country,
       guesses: result.guessCount,
     };
-    return game;
-  } catch (error) {
-    return undefined;
+
+    return ok(game);
+  } catch (err) {
+    console.log(`Error fetching game id=${id}:`, err);
+
+    return {
+      k: 'error',
+      statusCode: 500,
+      message: 'Unknown database error',
+    };
   }
 };
 

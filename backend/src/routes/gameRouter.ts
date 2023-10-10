@@ -35,10 +35,12 @@ router.post('/move', async (req, res) => {
     return res.status(400).send('Country id missing or invalid');
   }
 
-  const game = await getGame(body.gameId);
-  if (!game) {
-    return res.status(404).send(`Game with id ${body.gameId} not found`);
+  const gameResult = await getGame(body.gameId);
+  if (gameResult.k === 'error') {
+    return res.status(gameResult.statusCode).send(gameResult.message);
   }
+
+  const game = gameResult.value;
 
   const resultPlayer = await getCountry(body.countryId);
   if (resultPlayer.k === 'error' || !resultPlayer.value) {
