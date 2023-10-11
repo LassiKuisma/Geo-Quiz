@@ -9,6 +9,9 @@ import { PORT } from './util/config';
 import { connectToDatabase } from './util/db';
 
 const app = express();
+
+app.use(express.static('build'));
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 app.use(cors());
 app.use(express.json());
