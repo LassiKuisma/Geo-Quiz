@@ -76,3 +76,8 @@ export interface GameObject {
   hints: Hints;
   gameOver: boolean;
 }
+
+type GameLoading = { k: 'loading' };
+type GameOk = { k: 'ok'; game: GameObject };
+type GameLoadError = { k: 'error'; message: string };
+export type GameStatus = undefined | GameLoading | GameOk | GameLoadError;

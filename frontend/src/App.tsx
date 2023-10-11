@@ -5,24 +5,25 @@ import HomePage from './components/HomePage';
 import GameView from './components/GameView';
 import { useState } from 'react';
 import { startNewGame } from './services/gameService';
-import { Country, GameObject, Move } from './types';
+import { Country, GameObject, GameStatus, Move } from './types';
 import CountryList from './components/CountryList';
 
 const App = () => {
-  const [game, setGame] = useState<undefined | GameObject>(undefined);
+  const [game, setGame] = useState<GameStatus>(undefined);
   const [countries, setCountries] = useState<undefined | Array<Country>>(
     undefined
   );
   const navigate = useNavigate();
 
   const startNewGameClicked = async () => {
-    setGame(undefined);
+    setGame({ k: 'loading' });
     navigate('/game');
     const newGameResult = await startNewGame();
     if (newGameResult.k === 'error') {
-      // TODO: display message
-      console.log('error starting new game:', newGameResult.message);
-      setGame(undefined);
+      setGame({
+        k: 'error',
+        message: newGameResult.message,
+      });
       return;
     }
     const newGame = newGameResult.value;
@@ -38,7 +39,10 @@ const App = () => {
       gameOver: false,
     };
 
-    setGame(gameObj);
+    setGame({
+      k: 'ok',
+      game: gameObj,
+    });
   };
 
   const resumeCurrentGame = () => {
@@ -47,6 +51,8 @@ const App = () => {
     }
     navigate('/game');
   };
+
+  const hasActiveGame = game?.k === 'ok';
 
   return (
     <div>
@@ -58,7 +64,7 @@ const App = () => {
               <HomePage
                 startNewGame={startNewGameClicked}
                 resumeCurrentGame={resumeCurrentGame}
-                hasActiveGame={!!game}
+                hasActiveGame={hasActiveGame}
               />
             }
           />
