@@ -1,11 +1,12 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 
 interface Props {
   show: boolean;
   turns: number;
+  startNewGame: () => void;
 }
 
-const GameOver = ({ show, turns }: Props) => {
+const GameOver = ({ show, turns, startNewGame }: Props) => {
   if (!show) {
     return null;
   }
@@ -13,7 +14,10 @@ const GameOver = ({ show, turns }: Props) => {
   return (
     <Box marginTop={3}>
       <Typography variant="h4">You got it!</Typography>
-      You guessed the correct answer in {turns} turns.
+      <Box margin={0.5}>You guessed the correct answer in {turns} turns.</Box>
+      <Button variant="contained" onClick={startNewGame}>
+        Play again?
+      </Button>
     </Box>
   );
 };

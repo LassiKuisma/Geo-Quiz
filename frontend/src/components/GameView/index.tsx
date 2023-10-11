@@ -1,4 +1,4 @@
-import { Alert, Box, Typography } from '@mui/material';
+import { Alert, Box, Button, Typography } from '@mui/material';
 import { Country, GameStatus, Move } from '../../types';
 import MoveList from './MoveList';
 import HintsView from './HintsViews';
@@ -10,9 +10,10 @@ import { postMove } from '../../services/gameService';
 interface Props {
   game: GameStatus;
   setGame: (game: GameStatus) => void;
+  startNewGame: () => void;
 }
 
-const GameView = ({ game, setGame }: Props) => {
+const GameView = ({ game, setGame, startNewGame }: Props) => {
   const [error, setError] = useState<string | undefined>(undefined);
 
   const submitMove = async (country: Country) => {
@@ -68,15 +69,26 @@ const GameView = ({ game, setGame }: Props) => {
   };
 
   if (!game) {
-    return <Box>Active game not found.</Box>;
+    return (
+      <Box margin={1}>
+        <Box>Game not started, start a new game?</Box>
+        <Button
+          variant="contained"
+          sx={{ marginY: 1, padding: 1 }}
+          onClick={startNewGame}
+        >
+          Start new game
+        </Button>
+      </Box>
+    );
   }
 
   if (game.k === 'loading') {
-    return <Box>Loading new game...</Box>;
+    return <Box margin={1}>Loading new game...</Box>;
   }
 
   if (game.k === 'error') {
-    return <Box>Error loading game: {game.message}</Box>;
+    return <Box margin={1}>Error loading game: {game.message}</Box>;
   }
 
   const gameObj = game.game;
@@ -91,7 +103,11 @@ const GameView = ({ game, setGame }: Props) => {
       </Box>
       <Error message={error} />
       <HintsView hints={gameObj.hints} />
-      <GameOver show={gameObj.gameOver} turns={gameObj.guesses.length} />
+      <GameOver
+        show={gameObj.gameOver}
+        turns={gameObj.guesses.length}
+        startNewGame={startNewGame}
+      />
       <MoveList moves={gameObj.guesses} />
     </Box>
   );

@@ -70,7 +70,13 @@ const App = () => {
           />
           <Route
             path="game"
-            element={<GameView game={game} setGame={setGame} />}
+            element={
+              <GameView
+                game={game}
+                setGame={setGame}
+                startNewGame={startNewGameClicked}
+              />
+            }
           />
           <Route
             path="countries"
