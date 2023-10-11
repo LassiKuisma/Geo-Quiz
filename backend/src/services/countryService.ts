@@ -19,11 +19,7 @@ export const getAllCountries = async (): Promise<Result<Country[]>> => {
 
     return ok(countries);
   } catch (err) {
-    if (err instanceof Error) {
-      return error(err.message);
-    } else {
-      return error('Unknown error fetching data.');
-    }
+    return error('error fetching data');
   }
 };
 
@@ -42,10 +38,6 @@ export const getCountry = async (
 
     return ok(modelToCountry(country));
   } catch (err) {
-    if (err instanceof Error) {
-      return error(err.message);
-    } else {
-      return error('Unknown error fetching data.');
-    }
+    return error('error fetching data');
   }
 };

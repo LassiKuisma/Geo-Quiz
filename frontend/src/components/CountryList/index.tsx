@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { Country } from '../../types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getAllCountries } from '../../services/countryService';
 import CountryTable from './CountryTable';
 
@@ -10,6 +10,8 @@ interface Props {
 }
 
 const CountryList = ({ countries, setCountries }: Props) => {
+  const [error, setError] = useState<string | undefined>(undefined);
+
   useEffect(() => {
     if (countries) {
       return;
@@ -17,11 +19,25 @@ const CountryList = ({ countries, setCountries }: Props) => {
 
     const updateCountries = async () => {
       const result = await getAllCountries();
-      setCountries(result);
+      if (result.k === 'error') {
+        setError(result.message);
+      } else {
+        setCountries(result.value);
+        setError(undefined);
+      }
     };
 
     updateCountries();
   }, [countries]);
+
+  if (error) {
+    return (
+      <Box>
+        <Box>Error fetching country data: {error}</Box>
+        Try again later
+      </Box>
+    );
+  }
 
   if (!countries) {
     return <Box>Loading...</Box>;

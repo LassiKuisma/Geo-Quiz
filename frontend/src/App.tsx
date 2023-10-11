@@ -18,7 +18,15 @@ const App = () => {
   const startNewGameClicked = async () => {
     setGame(undefined);
     navigate('/game');
-    const newGame = await startNewGame();
+    const newGameResult = await startNewGame();
+    if (newGameResult.k === 'error') {
+      // TODO: display message
+      console.log('error starting new game:', newGameResult.message);
+      setGame(undefined);
+      return;
+    }
+    const newGame = newGameResult.value;
+
     newGame.countries.sort((a, b) => a.name.localeCompare(b.name));
 
     const gameObj: GameObject = {
@@ -50,31 +58,34 @@ const App = () => {
       isSubmittingMove: true,
     });
 
-    try {
-      const result = await postMove(game.gameId, country.id);
-      const move: Move = {
-        guessedCountry: country,
-        result,
-      };
-
-      setGame({
-        gameId: game.gameId,
-        countries: game.countries.filter((c) => c.id !== country.id),
-        guesses: [move, ...game.guesses],
-        isSubmittingMove: false,
-        hints: result.hints,
-        gameOver: game.gameOver || result.correct,
-      });
-
-      return;
-    } catch (error) {
-      console.log('error:', error);
-      // TODO: error message
+    const moveResult = await postMove(game.gameId, country.id);
+    if (moveResult.k === 'error') {
+      // TODO: display error message
+      console.log('error submitting move:', moveResult.message);
       setGame({
         ...game,
         isSubmittingMove: false,
       });
+      return;
     }
+
+    const result = moveResult.value;
+
+    const move: Move = {
+      guessedCountry: country,
+      result,
+    };
+
+    setGame({
+      gameId: game.gameId,
+      countries: game.countries.filter((c) => c.id !== country.id),
+      guesses: [move, ...game.guesses],
+      isSubmittingMove: false,
+      hints: result.hints,
+      gameOver: game.gameOver || result.correct,
+    });
+
+    return;
   };
 
   return (

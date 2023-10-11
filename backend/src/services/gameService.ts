@@ -13,14 +13,14 @@ const MAX_RETRIES = 10;
 export const generateGame = async (): Promise<Result<NewGame>> => {
   const countriesResult = await getAllCountries();
   if (countriesResult.k === 'error') {
-    const msg = `Failed to create game, fetching countries failed: ${countriesResult.message}`;
+    const msg = 'unable to fetch country data';
     return error(msg);
   }
 
   const countries = countriesResult.value;
   if (countries.length === 0) {
     console.log('Error creating game: no countries found');
-    const msg = 'Failed to create new game: no countries found';
+    const msg = 'no countries found';
     return error(msg);
   }
 
@@ -51,7 +51,8 @@ export const generateGame = async (): Promise<Result<NewGame>> => {
     }
   }
 
-  const msg = 'Failed to create a new game';
+  console.log('unable to find a unique id for game');
+  const msg = 'uknown error';
   return error(msg);
 };
 
