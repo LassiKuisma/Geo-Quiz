@@ -16,7 +16,8 @@ Perform these steps before running any other scrips:
 
 1. Perform steps in setup section
 2. `npm run dev`
-3. Note: might have to change frontend's api url in `../frontend/.env`
+3. If running frontend in development mode:
+   - check that url in `../frontend/.env` has same port as backend
 
 ### Production mode
 
@@ -29,7 +30,7 @@ Perform these steps before running any other scrips:
 
 ### `npm run setup`
 
-Populates database with country data from [restcountries.com](https://restcountries.com). Must be ran at least once before starting application _(or after setting up database)_.
+Populates database with country data from [restcountries.com](https://restcountries.com).
 
 Setup is safe to run multiple times: it will not insert same data twice into db (though you don't need to run it every time you're running backend, only after db setup).
 
