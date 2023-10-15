@@ -4,6 +4,7 @@ import cors from 'cors';
 
 import countryRouter from './routes/countryRouter';
 import gameRouter from './routes/gameRouter';
+import usersRouter from './routes/usersRouter';
 
 import { PORT } from './util/config';
 import { connectToDatabase } from './util/db';
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.use('/api/countries', countryRouter);
 app.use('/api/game', gameRouter);
+app.use('/api/users', usersRouter);
 
 const start = async () => {
   await connectToDatabase();

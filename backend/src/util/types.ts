@@ -75,3 +75,7 @@ export interface Game {
   answer: Country;
   guesses: number;
 }
+
+export interface User {
+  username: string;
+}
