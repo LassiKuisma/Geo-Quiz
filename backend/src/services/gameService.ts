@@ -8,8 +8,6 @@ import { error, ok } from '../util/utils';
 
 import { getAllCountries } from './countryService';
 
-const MAX_RETRIES = 10;
-
 export const generateGame = async (): Promise<Result<NewGame>> => {
   const countriesResult = await getAllCountries();
   if (countriesResult.k === 'error') {
@@ -24,36 +22,26 @@ export const generateGame = async (): Promise<Result<NewGame>> => {
     return error(msg);
   }
 
-  for (let n = 0; n < MAX_RETRIES; n++) {
-    const id = Math.floor(Math.random() * 100000);
+  const index = Math.floor(Math.random() * countries.length);
+  const country = countries[index];
+  const countryId = country.id;
 
-    const index = Math.floor(Math.random() * countries.length);
-    const country = countries[index];
-    const countryId = country.id;
+  try {
+    const created = await GameModel.create({
+      countryId,
+    });
 
-    try {
-      const created = await GameModel.create({
-        gameId: id,
-        countryId,
-      });
+    const newGame = {
+      gameId: created.gameId,
+      countries,
+      hints: getHints(0, country, defaultThresholds),
+    };
 
-      const newGame = {
-        gameId: created.gameId,
-        countries,
-        hints: getHints(0, country, defaultThresholds),
-      };
-
-      return ok(newGame);
-    } catch (error) {
-      console.log(
-        `Failed to create new game (attempt ${n + 1}/${MAX_RETRIES})`
-      );
-    }
+    return ok(newGame);
+  } catch (err) {
+    const msg = 'Db error';
+    return error(msg);
   }
-
-  console.log('unable to find a unique id for game');
-  const msg = 'uknown error';
-  return error(msg);
 };
 
 type GameError = {

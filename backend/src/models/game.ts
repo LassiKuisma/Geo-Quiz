@@ -13,7 +13,7 @@ class GameModel extends Model<
   InferAttributes<GameModel>,
   InferCreationAttributes<GameModel>
 > {
-  declare gameId: number;
+  declare gameId: CreationOptional<number>;
   declare countryId: ForeignKey<Country['id']>;
 
   declare guessCount: CreationOptional<number>;
@@ -24,7 +24,8 @@ GameModel.init(
     gameId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      allowNull: false,
+      allowNull: true,
+      autoIncrement: true,
     },
     countryId: {
       type: DataTypes.INTEGER,
