@@ -9,7 +9,7 @@ import {
   getGame,
   increaseGuessCount,
 } from '../services/gameService';
-import { extractUser } from '../util/authentication';
+import { extractUser, canPostMoves } from '../util/authentication';
 
 const router = express.Router();
 
@@ -53,15 +53,28 @@ router.post('/move', async (req, res) => {
   if (gameResult.k === 'error') {
     return res.status(gameResult.statusCode).send(gameResult.message);
   }
-
   const game = gameResult.value;
 
-  const resultPlayer = await getCountry(body.countryId);
-  if (resultPlayer.k === 'error' || !resultPlayer.value) {
+  const userResult = await extractUser(req);
+  if (userResult.k === 'error') {
+    return res.status(500).send(userResult.message);
+  }
+  if (userResult.k === 'invalid-token' || userResult.k === 'user-not-found') {
+    return res.status(400).send('Invalid token');
+  }
+  const user = userResult.k === 'ok' ? userResult.value : undefined;
+
+  const canPostMove = canPostMoves(user?.id, game.owner?.id);
+  if (!canPostMove) {
+    return res.status(403).send("You don't have permission to this game");
+  }
+
+  const countryResult = await getCountry(body.countryId);
+  if (countryResult.k === 'error' || !countryResult.value) {
     return res.status(400).send(`Country with id ${body.countryId} not found`);
   }
 
-  const playerGuess = resultPlayer.value;
+  const playerGuess = countryResult.value;
   const correctAnswer = game.answer;
 
   const comparison = compareCountries(playerGuess, correctAnswer);

@@ -49,3 +49,20 @@ export const extractUser = async (request: Request): Promise<UserResult> => {
     return error('Unknown error');
   }
 };
+
+export const canPostMoves = (
+  userId?: number,
+  gameOwnerId?: number
+): boolean => {
+  if (!gameOwnerId) {
+    // game doesn't have owner -> let anyone make moves on it I guess
+    return true;
+  }
+
+  if (!userId) {
+    // game has owner id, user is not authenticated -> denied
+    return false;
+  }
+
+  return userId === gameOwnerId;
+};
