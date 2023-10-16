@@ -19,3 +19,19 @@ export const createUser = async (
     return error('Db error');
   }
 };
+
+export const findUser = async (
+  username: string
+): Promise<Result<UserModel | null>> => {
+  try {
+    const user = await UserModel.findOne({
+      where: {
+        username,
+      },
+    });
+
+    return ok(user);
+  } catch (err) {
+    return error('Db error');
+  }
+};

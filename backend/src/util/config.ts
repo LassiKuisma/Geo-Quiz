@@ -16,4 +16,12 @@ const DATABASE_URL = dbUrl;
 
 const PORT = process.env.PORT || 3003;
 
-export { DATABASE_URL, PORT };
+const jwt = process.env.JWT_SECRET;
+if (!jwt) {
+  console.log('JWT secret missing');
+  process.exit(1);
+}
+
+const JWT_SECRET = jwt;
+
+export { DATABASE_URL, PORT, JWT_SECRET };
