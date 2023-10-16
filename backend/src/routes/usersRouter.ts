@@ -38,7 +38,9 @@ router.post('/create', async (req, res) => {
 
   const user = saveResult.value;
 
-  return res.status(200).json(user);
+  return res.status(200).send({
+    username: user.username,
+  });
 });
 
 export default router;

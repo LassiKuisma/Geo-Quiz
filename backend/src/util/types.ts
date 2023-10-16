@@ -74,8 +74,10 @@ export interface Game {
   gameId: number;
   answer: Country;
   guesses: number;
+  owner?: User;
 }
 
 export interface User {
   username: string;
+  id: number;
 }

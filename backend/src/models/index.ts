@@ -34,6 +34,8 @@ Country.belongsToMany(Country, {
 
 GameModel.belongsTo(Country);
 
+GameModel.belongsTo(UserModel);
+
 export {
   Continent,
   Country as CountryModel,

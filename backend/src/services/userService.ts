@@ -14,6 +14,7 @@ export const createUser = async (
 
     return ok({
       username: saved.username,
+      id: saved.id,
     });
   } catch (err) {
     return error('Db error');

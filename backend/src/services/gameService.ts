@@ -1,6 +1,6 @@
-import { CountryModel, GameModel } from '../models';
+import { CountryModel, GameModel, UserModel } from '../models';
 
-import { Game, NewGame, Ok, Result } from '../util/types';
+import { Game, NewGame, Ok, Result, User } from '../util/types';
 import { defaultThresholds } from '../util/gameSettings';
 import { getHints } from '../util/country';
 import { countryOptions, CountryJoined, modelToCountry } from '../util/models';
@@ -8,7 +8,9 @@ import { error, ok } from '../util/utils';
 
 import { getAllCountries } from './countryService';
 
-export const generateGame = async (): Promise<Result<NewGame>> => {
+export const generateGame = async (
+  user?: UserModel
+): Promise<Result<NewGame>> => {
   const countriesResult = await getAllCountries();
   if (countriesResult.k === 'error') {
     const msg = 'unable to fetch country data';
@@ -27,8 +29,11 @@ export const generateGame = async (): Promise<Result<NewGame>> => {
   const countryId = country.id;
 
   try {
+    const userId = user ? user.id : undefined;
+
     const created = await GameModel.create({
       countryId,
+      userId,
     });
 
     const newGame = {
@@ -52,14 +57,21 @@ type GameError = {
 
 type ResultGame<T> = Ok<T> | GameError;
 
+type GameJoined = GameModel & { country: CountryJoined } & { user?: UserModel };
+
 export const getGame = async (id: number): Promise<ResultGame<Game>> => {
   try {
     const result = (await GameModel.findByPk(id, {
-      include: {
-        model: CountryModel,
-        ...countryOptions,
-      },
-    })) as (GameModel & { country: CountryJoined }) | null;
+      include: [
+        {
+          model: CountryModel,
+          ...countryOptions,
+        },
+        {
+          model: UserModel,
+        },
+      ],
+    })) as GameJoined | null;
 
     if (!result) {
       return {
@@ -82,10 +94,18 @@ export const getGame = async (id: number): Promise<ResultGame<Game>> => {
       };
     }
 
+    const owner: User | undefined = !result.user
+      ? undefined
+      : {
+          username: result.user.username,
+          id: result.userId,
+        };
+
     const game: Game = {
       gameId: result.gameId,
       answer: country,
       guesses: result.guessCount,
+      owner,
     };
 
     return ok(game);

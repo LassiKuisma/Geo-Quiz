@@ -9,11 +9,25 @@ import {
   getGame,
   increaseGuessCount,
 } from '../services/gameService';
+import { extractUser } from '../util/authentication';
 
 const router = express.Router();
 
-router.post('/newgame', async (_req, res) => {
-  const gameResult = await generateGame();
+router.post('/newgame', async (req, res) => {
+  // user id can be added to games, but it's not required
+  // only return error if token is invalid or user missing (token missing is ok)
+  const userResult = await extractUser(req);
+  if (userResult.k === 'error') {
+    return res.status(500).send(userResult.message);
+  }
+
+  if (userResult.k === 'invalid-token' || userResult.k === 'user-not-found') {
+    return res.status(400).send('Invalid token');
+  }
+
+  const user = userResult.k === 'ok' ? userResult.value : undefined;
+
+  const gameResult = await generateGame(user);
   if (gameResult.k === 'error') {
     return res.status(500).send(gameResult.message);
   }
