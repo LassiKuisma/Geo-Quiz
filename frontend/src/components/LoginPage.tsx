@@ -3,6 +3,7 @@ import {
   Alert,
   Box,
   Button,
+  CircularProgress,
   FormControl,
   IconButton,
   InputAdornment,
@@ -20,6 +21,7 @@ const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined
   );
+  const [waiting, setWaiting] = useState(false);
 
   const togglePasswordVisible = () => {
     setShowPassword((show) => !show);
@@ -27,10 +29,18 @@ const LoginPage = () => {
 
   const handleLogin = async (event: FormEvent) => {
     event.preventDefault();
-    setErrorMessage(undefined);
 
-    console.log('logging in...');
+    if (waiting) {
+      return;
+    }
+
+    setErrorMessage(undefined);
+    setShowPassword(false);
+    setWaiting(true);
+
     const result = await tryLogin(username, password);
+    setWaiting(false);
+
     if (result.k === 'error') {
       setErrorMessage(`Error logging in: ${result.message}`);
       return;
@@ -52,7 +62,12 @@ const LoginPage = () => {
 
         <ErrorDisplay message={errorMessage} />
 
-        <FormControl variant="outlined" fullWidth sx={{ marginY: 1 }}>
+        <FormControl
+          variant="outlined"
+          fullWidth
+          sx={{ marginY: 1 }}
+          disabled={waiting}
+        >
           <InputLabel htmlFor="username-input">Username</InputLabel>
           <OutlinedInput
             id="username-input"
@@ -65,7 +80,12 @@ const LoginPage = () => {
           />
         </FormControl>
 
-        <FormControl variant="outlined" fullWidth sx={{ marginY: 1 }}>
+        <FormControl
+          variant="outlined"
+          fullWidth
+          sx={{ marginY: 1 }}
+          disabled={waiting}
+        >
           <InputLabel htmlFor="password-input">Password</InputLabel>
           <OutlinedInput
             id="password-input"
@@ -90,7 +110,13 @@ const LoginPage = () => {
         </FormControl>
 
         <Box display="flex" justifyContent="end" marginY={1}>
-          <Button type="submit" variant="contained" size="large">
+          {waiting && <CircularProgress sx={{ marginX: 2 }} />}
+          <Button
+            type="submit"
+            variant="contained"
+            size="large"
+            disabled={waiting}
+          >
             Log in
           </Button>
         </Box>
