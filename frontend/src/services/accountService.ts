@@ -1,19 +1,20 @@
 import axios, { AxiosError } from 'axios';
 import { apiBaseUrl } from '../constants';
-import { Result } from '../types';
+import { Result, UserWithToken } from '../types';
 import { error, ok } from '../util/utils';
-
-type NewUser = { username: string };
 
 export const tryCreateAccount = async (
   username: string,
   password: string
-): Promise<Result<NewUser>> => {
+): Promise<Result<UserWithToken>> => {
   try {
-    const { data } = await axios.post<NewUser>(`${apiBaseUrl}/users/create`, {
-      username,
-      password,
-    });
+    const { data } = await axios.post<UserWithToken>(
+      `${apiBaseUrl}/users/create`,
+      {
+        username,
+        password,
+      }
+    );
 
     return ok(data);
   } catch (err) {

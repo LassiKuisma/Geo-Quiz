@@ -3,6 +3,7 @@ import { isString } from '../util/utils';
 import bcrypt from 'bcrypt';
 import { validateUserInfo } from '../util/newUser';
 import { createUser } from '../services/userService';
+import { createToken } from '../util/authentication';
 
 const router = express.Router();
 
@@ -38,9 +39,9 @@ router.post('/create', async (req, res) => {
 
   const user = saveResult.value;
 
-  return res.status(200).send({
-    username: user.username,
-  });
+  // sign them in
+  const userWithToken = createToken(user.username, user.id);
+  return res.status(200).send(userWithToken);
 });
 
 export default router;

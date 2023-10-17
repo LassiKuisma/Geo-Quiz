@@ -1,10 +1,9 @@
 import express from 'express';
 import { isString } from '../util/utils';
 
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { findUser } from '../services/userService';
-import { JWT_SECRET } from '../util/config';
+import { createToken } from '../util/authentication';
 
 const router = express.Router();
 
@@ -40,14 +39,8 @@ router.post('/', async (req, res) => {
     return res.status(401).send('Invalid username or password');
   }
 
-  const payload = {
-    username: user.username,
-    id: user.id,
-  };
-
-  const token = jwt.sign(payload, JWT_SECRET);
-
-  return res.status(200).send({ token, username: user.username });
+  const userWithToken = createToken(user.username, user.id);
+  return res.status(200).send(userWithToken);
 });
 
 export default router;

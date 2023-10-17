@@ -91,7 +91,10 @@ const App = () => {
             }
           />
           <Route path="login" element={<LoginPage setUser={setUser} />} />
-          <Route path="create-account" element={<CreateAccountPage />} />
+          <Route
+            path="create-account"
+            element={<CreateAccountPage setUser={setUser} />}
+          />
 
           <Route path="*" element={<NoMatch />} />
         </Route>

@@ -2,7 +2,7 @@ import { Request } from 'express';
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { JWT_SECRET } from './config';
 import { error, isNumber, ok } from './utils';
-import { Err, Ok } from './types';
+import { Err, Ok, UserWithToken } from './types';
 import { UserModel } from '../models';
 
 type TokenMissing = { k: 'token-missing' };
@@ -65,4 +65,17 @@ export const canPostMoves = (
   }
 
   return userId === gameOwnerId;
+};
+
+export const createToken = (username: string, id: number): UserWithToken => {
+  const payload = {
+    username,
+    id,
+  };
+
+  const token = jwt.sign(payload, JWT_SECRET);
+  return {
+    username,
+    token,
+  };
 };

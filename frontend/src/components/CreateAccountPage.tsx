@@ -13,13 +13,18 @@ import {
   FormHelperText,
 } from '@mui/material';
 import { FormEvent, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { tryCreateAccount } from '../services/accountService';
+import { UserWithToken } from '../types';
 
 const minLength = 3;
 const maxLength = 100;
 
-const CreateAccountPage = () => {
+interface Props {
+  setUser: (uwt: UserWithToken) => void;
+}
+
+const CreateAccountPage = ({ setUser }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -35,6 +40,8 @@ const CreateAccountPage = () => {
   const [passwordError, setPasswordError] = useState<string | undefined>(
     undefined
   );
+
+  const navigate = useNavigate();
 
   const checkUsernameLength = () => {
     if (username.length < minLength) {
@@ -88,7 +95,8 @@ const CreateAccountPage = () => {
     setUsername('');
     setPassword('');
 
-    console.log('new account created! Welcome', result.value.username);
+    setUser(result.value);
+    navigate('/');
   };
 
   return (
