@@ -23,9 +23,10 @@ const pages: Array<Page> = [
 
 interface AppBarProps {
   loggedInUser?: string;
+  setUser: (_: undefined) => void;
 }
 
-const NavigationBar = ({ loggedInUser }: AppBarProps) => {
+const NavigationBar = ({ loggedInUser, setUser }: AppBarProps) => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -35,7 +36,7 @@ const NavigationBar = ({ loggedInUser }: AppBarProps) => {
               <AppBarButton key={page.name} text={page.name} linkTo={page.to} />
             ))}
           </Box>
-          <LoginItems loggedInUser={loggedInUser} />
+          <LoginItems loggedInUser={loggedInUser} setUser={setUser} />
         </Toolbar>
       </AppBar>
     </Box>
@@ -59,9 +60,14 @@ const AppBarButton = ({ text, linkTo }: AppBarButtonProps) => {
   );
 };
 
-const LoginItems = ({ loggedInUser }: { loggedInUser?: string }) => {
+interface LoginProps {
+  loggedInUser?: string;
+  setUser: (_: undefined) => void;
+}
+
+const LoginItems = ({ loggedInUser, setUser }: LoginProps) => {
   const logout = () => {
-    console.log('logging out...');
+    setUser(undefined);
   };
 
   return (

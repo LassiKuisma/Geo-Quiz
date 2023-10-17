@@ -13,8 +13,14 @@ import {
 } from '@mui/material';
 import { FormEvent, useState } from 'react';
 import { tryLogin } from '../services/loginService';
+import { useNavigate } from 'react-router-dom';
+import { UserWithToken } from '../types';
 
-const LoginPage = () => {
+interface Props {
+  setUser: (uwt: UserWithToken) => void;
+}
+
+const LoginPage = ({ setUser }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -22,6 +28,7 @@ const LoginPage = () => {
     undefined
   );
   const [waiting, setWaiting] = useState(false);
+  const navigate = useNavigate();
 
   const togglePasswordVisible = () => {
     setShowPassword((show) => !show);
@@ -49,8 +56,8 @@ const LoginPage = () => {
     setUsername('');
     setPassword('');
 
-    const login = result.value;
-    console.log('login result:', login);
+    setUser(result.value);
+    navigate('/');
   };
 
   return (

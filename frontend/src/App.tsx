@@ -5,7 +5,7 @@ import HomePage from './components/HomePage';
 import GameView from './components/GameView';
 import { useState } from 'react';
 import { startNewGame } from './services/gameService';
-import { Country, GameObject, GameStatus, Move } from './types';
+import { Country, GameObject, GameStatus, Move, UserWithToken } from './types';
 import CountryList from './components/CountryList';
 import LoginPage from './components/LoginPage';
 
@@ -14,6 +14,7 @@ const App = () => {
   const [countries, setCountries] = useState<undefined | Array<Country>>(
     undefined
   );
+  const [user, setUser] = useState<UserWithToken | undefined>(undefined);
   const navigate = useNavigate();
 
   const startNewGameClicked = async () => {
@@ -58,7 +59,10 @@ const App = () => {
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route
+          path="/"
+          element={<Layout loggedInUser={user?.username} setUser={setUser} />}
+        >
           <Route
             index
             element={
@@ -85,7 +89,7 @@ const App = () => {
               <CountryList countries={countries} setCountries={setCountries} />
             }
           />
-          <Route path="login" element={<LoginPage />} />
+          <Route path="login" element={<LoginPage setUser={setUser} />} />
 
           <Route path="*" element={<NoMatch />} />
         </Route>
@@ -94,10 +98,15 @@ const App = () => {
   );
 };
 
-const Layout = () => {
+interface LayoutProps {
+  loggedInUser?: string;
+  setUser: (_: undefined) => void;
+}
+
+const Layout = ({ loggedInUser, setUser }: LayoutProps) => {
   return (
     <div>
-      <NavigationBar />
+      <NavigationBar loggedInUser={loggedInUser} setUser={setUser} />
       <hr />
       <Outlet />
     </div>
