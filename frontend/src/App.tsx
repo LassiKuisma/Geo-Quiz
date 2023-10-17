@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { startNewGame } from './services/gameService';
 import { Country, GameObject, GameStatus, Move } from './types';
 import CountryList from './components/CountryList';
+import LoginPage from './components/LoginPage';
 
 const App = () => {
   const [game, setGame] = useState<GameStatus>(undefined);
@@ -84,6 +85,7 @@ const App = () => {
               <CountryList countries={countries} setCountries={setCountries} />
             }
           />
+          <Route path="login" element={<LoginPage />} />
 
           <Route path="*" element={<NoMatch />} />
         </Route>
