@@ -8,6 +8,7 @@ import { startNewGame } from './services/gameService';
 import { Country, GameObject, GameStatus, Move, UserWithToken } from './types';
 import CountryList from './components/CountryList';
 import LoginPage from './components/LoginPage';
+import CreateAccountPage from './components/CreateAccountPage';
 
 const App = () => {
   const [game, setGame] = useState<GameStatus>(undefined);
@@ -90,6 +91,7 @@ const App = () => {
             }
           />
           <Route path="login" element={<LoginPage setUser={setUser} />} />
+          <Route path="create-account" element={<CreateAccountPage />} />
 
           <Route path="*" element={<NoMatch />} />
         </Route>
