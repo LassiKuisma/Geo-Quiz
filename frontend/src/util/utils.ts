@@ -1,4 +1,4 @@
-import { Err, Ok } from '../types';
+import { Err, Ok, Result, UserWithToken } from '../types';
 
 /**
  * Helper function for Result type.
@@ -33,4 +33,29 @@ export const locationToStr = (lat: number, lng: number): string => {
   const lngStr = lng < 0 ? `${-lng.toFixed(0)}W` : `${lng.toFixed(0)}E`;
 
   return `${latStr}, ${lngStr}`;
+};
+
+const isString = (text: unknown): text is string => {
+  return typeof text === 'string' || text instanceof String;
+};
+
+export const userFromJson = (json: string): Result<UserWithToken> => {
+  try {
+    const parsed = JSON.parse(json);
+    if (!('username' in parsed) || !isString(parsed.username)) {
+      return error('Username is missing or not a string');
+    }
+
+    if (!('token' in parsed) || !isString(parsed.token)) {
+      return error('Token is missing or not a string');
+    }
+
+    return ok({
+      username: parsed.username,
+      token: parsed.token,
+    });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Unknown error';
+    return error(msg);
+  }
 };
