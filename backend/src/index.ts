@@ -23,6 +23,10 @@ app.use('/api/game', gameRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 
+app.get('/health', (_req, res) => {
+  res.status(200).send('ok');
+});
+
 const start = async () => {
   await connectToDatabase();
 
