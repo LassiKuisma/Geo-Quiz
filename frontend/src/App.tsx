@@ -75,11 +75,15 @@ const App = () => {
   const handleLogin = (user: UserWithToken) => {
     setUser(user);
     window.localStorage.setItem(USER_STORAGE_PATH, JSON.stringify(user));
+
+    setGame(undefined);
   };
 
   const handleLogout = () => {
     setUser(undefined);
     window.localStorage.removeItem(USER_STORAGE_PATH);
+
+    setGame(undefined);
   };
 
   const hasActiveGame = game?.k === 'ok';
