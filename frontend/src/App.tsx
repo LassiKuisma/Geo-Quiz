@@ -38,7 +38,7 @@ const App = () => {
   const startNewGameClicked = async () => {
     setGame({ k: 'loading' });
     navigate('/game');
-    const newGameResult = await startNewGame();
+    const newGameResult = await startNewGame(user?.token);
     if (newGameResult.k === 'error') {
       setGame({
         k: 'error',
@@ -110,6 +110,7 @@ const App = () => {
                 game={game}
                 setGame={setGame}
                 startNewGame={startNewGameClicked}
+                user={user}
               />
             }
           />
