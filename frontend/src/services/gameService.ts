@@ -3,9 +3,15 @@ import { apiBaseUrl } from '../constants';
 import { MoveResult, NewGame, Result } from '../types';
 import { error, ok } from '../util/utils';
 
-export const startNewGame = async (): Promise<Result<NewGame>> => {
+export const startNewGame = async (
+  token?: string
+): Promise<Result<NewGame>> => {
   try {
-    const { data } = await axios.post<NewGame>(`${apiBaseUrl}/game/newgame`);
+    const { data } = await axios.post<NewGame>(
+      `${apiBaseUrl}/game/newgame`,
+      {},
+      config(token)
+    );
 
     return ok(data);
   } catch (err) {
@@ -23,13 +29,18 @@ export const startNewGame = async (): Promise<Result<NewGame>> => {
 
 export const postMove = async (
   gameId: number,
-  countryId: number
+  countryId: number,
+  token?: string
 ): Promise<Result<MoveResult>> => {
   try {
-    const { data } = await axios.post<MoveResult>(`${apiBaseUrl}/game/move`, {
-      gameId,
-      countryId,
-    });
+    const { data } = await axios.post<MoveResult>(
+      `${apiBaseUrl}/game/move`,
+      {
+        gameId,
+        countryId,
+      },
+      config(token)
+    );
 
     return ok(data);
   } catch (err) {
@@ -43,4 +54,12 @@ export const postMove = async (
     }
     return error('Unknown error');
   }
+};
+
+const config = (token?: string) => {
+  return token
+    ? {
+        headers: { Authorization: `bearer ${token}` },
+      }
+    : undefined;
 };

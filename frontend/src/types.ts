@@ -81,3 +81,5 @@ type GameLoading = { k: 'loading' };
 type GameOk = { k: 'ok'; game: GameObject };
 type GameLoadError = { k: 'error'; message: string };
 export type GameStatus = undefined | GameLoading | GameOk | GameLoadError;
+
+export type UserWithToken = { username: string; token: string };

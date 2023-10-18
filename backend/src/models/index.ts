@@ -8,6 +8,7 @@ import { Language } from './language';
 import { Region } from './region';
 import { Subregion } from './subregion';
 import { GameModel } from './game';
+import { UserModel } from './user';
 
 Continent.belongsToMany(Country, { through: CountryContinent });
 Country.belongsToMany(Continent, { through: CountryContinent });
@@ -33,6 +34,8 @@ Country.belongsToMany(Country, {
 
 GameModel.belongsTo(Country);
 
+GameModel.belongsTo(UserModel);
+
 export {
   Continent,
   Country as CountryModel,
@@ -44,4 +47,5 @@ export {
   Region,
   Subregion,
   GameModel,
+  UserModel,
 };

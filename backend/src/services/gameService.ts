@@ -1,6 +1,6 @@
-import { CountryModel, GameModel } from '../models';
+import { CountryModel, GameModel, UserModel } from '../models';
 
-import { Game, NewGame, Ok, Result } from '../util/types';
+import { Game, NewGame, Ok, Result, User } from '../util/types';
 import { defaultThresholds } from '../util/gameSettings';
 import { getHints } from '../util/country';
 import { countryOptions, CountryJoined, modelToCountry } from '../util/models';
@@ -8,9 +8,9 @@ import { error, ok } from '../util/utils';
 
 import { getAllCountries } from './countryService';
 
-const MAX_RETRIES = 10;
-
-export const generateGame = async (): Promise<Result<NewGame>> => {
+export const generateGame = async (
+  user?: UserModel
+): Promise<Result<NewGame>> => {
   const countriesResult = await getAllCountries();
   if (countriesResult.k === 'error') {
     const msg = 'unable to fetch country data';
@@ -24,36 +24,29 @@ export const generateGame = async (): Promise<Result<NewGame>> => {
     return error(msg);
   }
 
-  for (let n = 0; n < MAX_RETRIES; n++) {
-    const id = Math.floor(Math.random() * 100000);
+  const index = Math.floor(Math.random() * countries.length);
+  const country = countries[index];
+  const countryId = country.id;
 
-    const index = Math.floor(Math.random() * countries.length);
-    const country = countries[index];
-    const countryId = country.id;
+  try {
+    const userId = user ? user.id : undefined;
 
-    try {
-      const created = await GameModel.create({
-        gameId: id,
-        countryId,
-      });
+    const created = await GameModel.create({
+      countryId,
+      userId,
+    });
 
-      const newGame = {
-        gameId: created.gameId,
-        countries,
-        hints: getHints(0, country, defaultThresholds),
-      };
+    const newGame = {
+      gameId: created.gameId,
+      countries,
+      hints: getHints(0, country, defaultThresholds),
+    };
 
-      return ok(newGame);
-    } catch (error) {
-      console.log(
-        `Failed to create new game (attempt ${n + 1}/${MAX_RETRIES})`
-      );
-    }
+    return ok(newGame);
+  } catch (err) {
+    const msg = 'Db error';
+    return error(msg);
   }
-
-  console.log('unable to find a unique id for game');
-  const msg = 'uknown error';
-  return error(msg);
 };
 
 type GameError = {
@@ -64,14 +57,21 @@ type GameError = {
 
 type ResultGame<T> = Ok<T> | GameError;
 
+type GameJoined = GameModel & { country: CountryJoined } & { user?: UserModel };
+
 export const getGame = async (id: number): Promise<ResultGame<Game>> => {
   try {
     const result = (await GameModel.findByPk(id, {
-      include: {
-        model: CountryModel,
-        ...countryOptions,
-      },
-    })) as (GameModel & { country: CountryJoined }) | null;
+      include: [
+        {
+          model: CountryModel,
+          ...countryOptions,
+        },
+        {
+          model: UserModel,
+        },
+      ],
+    })) as GameJoined | null;
 
     if (!result) {
       return {
@@ -94,10 +94,18 @@ export const getGame = async (id: number): Promise<ResultGame<Game>> => {
       };
     }
 
+    const owner: User | undefined = !result.user
+      ? undefined
+      : {
+          username: result.user.username,
+          id: result.userId,
+        };
+
     const game: Game = {
       gameId: result.gameId,
       answer: country,
       guesses: result.guessCount,
+      owner,
     };
 
     return ok(game);

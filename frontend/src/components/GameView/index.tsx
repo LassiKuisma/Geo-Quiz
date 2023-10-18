@@ -1,5 +1,5 @@
 import { Alert, Box, Button, Typography } from '@mui/material';
-import { Country, GameStatus, Move } from '../../types';
+import { Country, GameStatus, Move, UserWithToken } from '../../types';
 import MoveList from './MoveList';
 import HintsView from './HintsViews';
 import CountrySelect from './CountrySelect';
@@ -11,9 +11,10 @@ interface Props {
   game: GameStatus;
   setGame: (game: GameStatus) => void;
   startNewGame: () => void;
+  user?: UserWithToken;
 }
 
-const GameView = ({ game, setGame, startNewGame }: Props) => {
+const GameView = ({ game, setGame, startNewGame, user }: Props) => {
   const [error, setError] = useState<string | undefined>(undefined);
 
   const submitMove = async (country: Country) => {
@@ -31,7 +32,7 @@ const GameView = ({ game, setGame, startNewGame }: Props) => {
       },
     });
 
-    const moveResult = await postMove(gameObj.gameId, country.id);
+    const moveResult = await postMove(gameObj.gameId, country.id, user?.token);
     if (moveResult.k === 'error') {
       setError(moveResult.message);
       setGame({

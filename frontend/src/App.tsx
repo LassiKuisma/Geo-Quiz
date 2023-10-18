@@ -3,22 +3,42 @@ import { Routes, Route, Link, Outlet, useNavigate } from 'react-router-dom';
 import NavigationBar from './components/NavigationBar';
 import HomePage from './components/HomePage';
 import GameView from './components/GameView';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { startNewGame } from './services/gameService';
-import { Country, GameObject, GameStatus, Move } from './types';
+import { Country, GameObject, GameStatus, Move, UserWithToken } from './types';
 import CountryList from './components/CountryList';
+import LoginPage from './components/LoginPage';
+import CreateAccountPage from './components/CreateAccountPage';
+import { USER_STORAGE_PATH } from './constants';
+import { userFromJson } from './util/utils';
 
 const App = () => {
   const [game, setGame] = useState<GameStatus>(undefined);
   const [countries, setCountries] = useState<undefined | Array<Country>>(
     undefined
   );
+  const [user, setUser] = useState<UserWithToken | undefined>(undefined);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUser = window.localStorage.getItem(USER_STORAGE_PATH);
+    if (!storedUser) {
+      return;
+    }
+
+    const parsed = userFromJson(storedUser);
+    if (parsed.k === 'error') {
+      console.log('Failed to get user from local storage:', parsed.message);
+      return;
+    }
+
+    setUser(parsed.value);
+  }, []);
 
   const startNewGameClicked = async () => {
     setGame({ k: 'loading' });
     navigate('/game');
-    const newGameResult = await startNewGame();
+    const newGameResult = await startNewGame(user?.token);
     if (newGameResult.k === 'error') {
       setGame({
         k: 'error',
@@ -52,12 +72,31 @@ const App = () => {
     navigate('/game');
   };
 
+  const handleLogin = (user: UserWithToken) => {
+    setUser(user);
+    window.localStorage.setItem(USER_STORAGE_PATH, JSON.stringify(user));
+
+    setGame(undefined);
+  };
+
+  const handleLogout = () => {
+    setUser(undefined);
+    window.localStorage.removeItem(USER_STORAGE_PATH);
+
+    setGame(undefined);
+  };
+
   const hasActiveGame = game?.k === 'ok';
 
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route
+          path="/"
+          element={
+            <Layout loggedInUser={user?.username} setUser={handleLogout} />
+          }
+        >
           <Route
             index
             element={
@@ -75,6 +114,7 @@ const App = () => {
                 game={game}
                 setGame={setGame}
                 startNewGame={startNewGameClicked}
+                user={user}
               />
             }
           />
@@ -84,6 +124,11 @@ const App = () => {
               <CountryList countries={countries} setCountries={setCountries} />
             }
           />
+          <Route path="login" element={<LoginPage setUser={handleLogin} />} />
+          <Route
+            path="create-account"
+            element={<CreateAccountPage setUser={handleLogin} />}
+          />
 
           <Route path="*" element={<NoMatch />} />
         </Route>
@@ -92,10 +137,15 @@ const App = () => {
   );
 };
 
-const Layout = () => {
+interface LayoutProps {
+  loggedInUser?: string;
+  setUser: (_: undefined) => void;
+}
+
+const Layout = ({ loggedInUser, setUser }: LayoutProps) => {
   return (
     <div>
-      <NavigationBar />
+      <NavigationBar loggedInUser={loggedInUser} setUser={setUser} />
       <hr />
       <Outlet />
     </div>
