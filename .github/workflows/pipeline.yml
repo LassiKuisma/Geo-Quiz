@@ -39,3 +39,13 @@ jobs:
         run: npm install
       - name: Run lint
         run: npm run lint
+  deploy_app:
+    runs-on: ubuntu-20.04
+    needs: [check_backend, check_frontend]
+    steps:
+      - name: Deploy to render
+        if: ${{ github.event_name == 'push' }}
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
