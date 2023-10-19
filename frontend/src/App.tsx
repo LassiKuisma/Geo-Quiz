@@ -11,6 +11,16 @@ import LoginPage from './components/LoginPage';
 import CreateAccountPage from './components/CreateAccountPage';
 import { USER_STORAGE_PATH } from './constants';
 import { userFromJson } from './util/utils';
+import { Box, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+  typography: {
+    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+  },
+});
 
 const App = () => {
   const [game, setGame] = useState<GameStatus>(undefined);
@@ -89,51 +99,57 @@ const App = () => {
   const hasActiveGame = game?.k === 'ok';
 
   return (
-    <div>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Layout loggedInUser={user?.username} setUser={handleLogout} />
-          }
-        >
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <Box>
+        <Routes>
           <Route
-            index
+            path="/"
             element={
-              <HomePage
-                startNewGame={startNewGameClicked}
-                resumeCurrentGame={resumeCurrentGame}
-                hasActiveGame={hasActiveGame}
-              />
+              <Layout loggedInUser={user?.username} setUser={handleLogout} />
             }
-          />
-          <Route
-            path="game"
-            element={
-              <GameView
-                game={game}
-                setGame={setGame}
-                startNewGame={startNewGameClicked}
-                user={user}
-              />
-            }
-          />
-          <Route
-            path="countries"
-            element={
-              <CountryList countries={countries} setCountries={setCountries} />
-            }
-          />
-          <Route path="login" element={<LoginPage setUser={handleLogin} />} />
-          <Route
-            path="create-account"
-            element={<CreateAccountPage setUser={handleLogin} />}
-          />
+          >
+            <Route
+              index
+              element={
+                <HomePage
+                  startNewGame={startNewGameClicked}
+                  resumeCurrentGame={resumeCurrentGame}
+                  hasActiveGame={hasActiveGame}
+                />
+              }
+            />
+            <Route
+              path="game"
+              element={
+                <GameView
+                  game={game}
+                  setGame={setGame}
+                  startNewGame={startNewGameClicked}
+                  user={user}
+                />
+              }
+            />
+            <Route
+              path="countries"
+              element={
+                <CountryList
+                  countries={countries}
+                  setCountries={setCountries}
+                />
+              }
+            />
+            <Route path="login" element={<LoginPage setUser={handleLogin} />} />
+            <Route
+              path="create-account"
+              element={<CreateAccountPage setUser={handleLogin} />}
+            />
 
-          <Route path="*" element={<NoMatch />} />
-        </Route>
-      </Routes>
-    </div>
+            <Route path="*" element={<NoMatch />} />
+          </Route>
+        </Routes>
+      </Box>
+    </ThemeProvider>
   );
 };
 
@@ -144,11 +160,10 @@ interface LayoutProps {
 
 const Layout = ({ loggedInUser, setUser }: LayoutProps) => {
   return (
-    <div>
+    <Box>
       <NavigationBar loggedInUser={loggedInUser} setUser={setUser} />
-      <hr />
       <Outlet />
-    </div>
+    </Box>
   );
 };
 

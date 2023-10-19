@@ -7,6 +7,7 @@ import {
   TableCell,
   TableSortLabel,
   Box,
+  styled,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { Country } from '../../types';
@@ -165,6 +166,12 @@ interface HeaderCellProps {
   ) => void;
 }
 
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  fontSize: 'large',
+  fontWeight: 'bold',
+  background: theme.palette.primary.contrastText,
+}));
+
 const HeaderCell = ({
   name,
   order,
@@ -187,10 +194,7 @@ const HeaderCell = ({
   const sortByThisColumn = orderBy === name;
 
   return (
-    <TableCell
-      sortDirection={sortByThisColumn ? order : false}
-      sx={{ fontSize: 'large', fontWeight: 'bold', background: 'grey' }}
-    >
+    <StyledTableCell sortDirection={sortByThisColumn ? order : false}>
       {sortable ? (
         <TableSortLabel
           active={sortByThisColumn}
@@ -207,7 +211,7 @@ const HeaderCell = ({
       ) : (
         <>{name}</>
       )}
-    </TableCell>
+    </StyledTableCell>
   );
 };
 

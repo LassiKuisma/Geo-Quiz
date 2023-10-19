@@ -30,7 +30,7 @@ const NavigationBar = ({ loggedInUser, setUser }: AppBarProps) => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar variant="dense">
           <Box display={'flex'}>
             {pages.map((page) => (
               <AppBarButton key={page.name} text={page.name} linkTo={page.to} />
@@ -74,13 +74,8 @@ const LoginItems = ({ loggedInUser, setUser }: LoginProps) => {
     <Box display={'flex'} marginLeft={'auto'}>
       {loggedInUser ? (
         <Box display={'flex'} alignItems="center">
-          <Typography sx={{ my: 1, color: 'white' }} variant="h6">
-            Logged in as {loggedInUser}
-          </Typography>
-          <Button
-            sx={{ my: 1, color: 'white', display: 'block' }}
-            onClick={logout}
-          >
+          <Typography>Logged in as {loggedInUser}</Typography>
+          <Button color="inherit" onClick={logout}>
             LOG OUT
           </Button>
         </Box>

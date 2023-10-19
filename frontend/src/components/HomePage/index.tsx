@@ -23,7 +23,7 @@ const HomePage = ({
       }}
     >
       <Typography variant="h3" sx={{ marginBottom: 3 }}>
-        Main menu
+        Geo Quiz
       </Typography>
       <Button
         variant="contained"
