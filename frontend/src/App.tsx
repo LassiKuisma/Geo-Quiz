@@ -5,13 +5,29 @@ import HomePage from './components/HomePage';
 import GameView from './components/GameView';
 import { useEffect, useState } from 'react';
 import { startNewGame } from './services/gameService';
-import { Country, GameObject, GameStatus, Move, UserWithToken } from './types';
+import {
+  AppTheme,
+  Country,
+  GameObject,
+  GameStatus,
+  Move,
+  UserWithToken,
+} from './types';
 import CountryList from './components/CountryList';
 import LoginPage from './components/LoginPage';
 import CreateAccountPage from './components/CreateAccountPage';
 import { USER_STORAGE_PATH } from './constants';
 import { userFromJson } from './util/utils';
 import { Box, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+  typography: {
+    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+  },
+});
 
 const darkTheme = createTheme({
   palette: {
@@ -29,6 +45,7 @@ const App = () => {
   );
   const [user, setUser] = useState<UserWithToken | undefined>(undefined);
   const navigate = useNavigate();
+  const [theme, setTheme] = useState<AppTheme>('light');
 
   useEffect(() => {
     const storedUser = window.localStorage.getItem(USER_STORAGE_PATH);
@@ -96,17 +113,27 @@ const App = () => {
     setGame(undefined);
   };
 
+  const switchToTheme = (newTheme: AppTheme) => {
+    setTheme(newTheme);
+  };
+
   const hasActiveGame = game?.k === 'ok';
+  const currentTheme = theme === 'dark' ? darkTheme : lightTheme;
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={currentTheme}>
       <CssBaseline />
       <Box>
         <Routes>
           <Route
             path="/"
             element={
-              <Layout loggedInUser={user?.username} setUser={handleLogout} />
+              <Layout
+                loggedInUser={user?.username}
+                setUser={handleLogout}
+                theme={theme}
+                switchToTheme={switchToTheme}
+              />
             }
           >
             <Route
@@ -156,12 +183,24 @@ const App = () => {
 interface LayoutProps {
   loggedInUser?: string;
   setUser: (_: undefined) => void;
+  theme: AppTheme;
+  switchToTheme: (newTheme: AppTheme) => void;
 }
 
-const Layout = ({ loggedInUser, setUser }: LayoutProps) => {
+const Layout = ({
+  loggedInUser,
+  setUser,
+  theme,
+  switchToTheme,
+}: LayoutProps) => {
   return (
     <Box>
-      <NavigationBar loggedInUser={loggedInUser} setUser={setUser} />
+      <NavigationBar
+        loggedInUser={loggedInUser}
+        setUser={setUser}
+        theme={theme}
+        switchToTheme={switchToTheme}
+      />
       <Outlet />
     </Box>
   );

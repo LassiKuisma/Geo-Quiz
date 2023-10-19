@@ -1,5 +1,15 @@
-import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
+import { DarkMode, LightMode } from '@mui/icons-material';
+import {
+  AppBar,
+  Box,
+  Button,
+  Divider,
+  Switch,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 import { Link } from 'react-router-dom';
+import { AppTheme } from '../types';
 
 interface Page {
   name: string;
@@ -24,9 +34,16 @@ const pages: Array<Page> = [
 interface AppBarProps {
   loggedInUser?: string;
   setUser: (_: undefined) => void;
+  theme: AppTheme;
+  switchToTheme: (newTheme: AppTheme) => void;
 }
 
-const NavigationBar = ({ loggedInUser, setUser }: AppBarProps) => {
+const NavigationBar = ({
+  loggedInUser,
+  setUser,
+  theme,
+  switchToTheme,
+}: AppBarProps) => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -37,6 +54,13 @@ const NavigationBar = ({ loggedInUser, setUser }: AppBarProps) => {
             ))}
           </Box>
           <LoginItems loggedInUser={loggedInUser} setUser={setUser} />
+          <Divider
+            orientation="vertical"
+            flexItem
+            variant="middle"
+            sx={{ marginX: 1 }}
+          />
+          <ThemeSelect theme={theme} switchToTheme={switchToTheme} />
         </Toolbar>
       </AppBar>
     </Box>
@@ -85,6 +109,28 @@ const LoginItems = ({ loggedInUser, setUser }: LoginProps) => {
           <AppBarButton text="Log in" linkTo="/login" />
         </>
       )}
+    </Box>
+  );
+};
+
+interface ThemeProps {
+  theme: AppTheme;
+  switchToTheme: (newTheme: AppTheme) => void;
+}
+
+const ThemeSelect = ({ theme, switchToTheme }: ThemeProps) => {
+  return (
+    <Box display="flex" alignItems="center">
+      <LightMode />
+      <Switch
+        aria-label="theme switch"
+        checked={theme === 'dark'}
+        onChange={(e) => {
+          const newTheme = e.target.checked ? 'dark' : 'light';
+          switchToTheme(newTheme);
+        }}
+      />
+      <DarkMode />
     </Box>
   );
 };
