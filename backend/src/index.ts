@@ -1,6 +1,7 @@
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
+import path from 'node:path';
 
 import countryRouter from './routes/countryRouter';
 import gameRouter from './routes/gameRouter';
@@ -23,8 +24,16 @@ app.use('/api/game', gameRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 
+app.get('/api/*', (_req, res) => {
+  res.status(404).send('Unknown endpoint');
+});
+
 app.get('/health', (_req, res) => {
   res.status(200).send('ok');
+});
+
+app.get('/*', (_req, res) => {
+  return res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
 });
 
 const start = async () => {
