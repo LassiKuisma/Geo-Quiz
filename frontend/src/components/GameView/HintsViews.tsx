@@ -22,7 +22,7 @@ const HintsView = ({ hints }: Props) => {
         Hints
       </Typography>
       <TableContainer>
-        <Table sx={{ width: 400 }}>
+        <Table sx={{ width: '25rem' }} size="small">
           <TableBody>
             <HintRow
               name="Landlocked"

@@ -19,11 +19,11 @@ import Arrow from '@mui/icons-material/TrendingFlat';
 import React from 'react';
 import { prefixNumber } from '../../util/utils';
 
-const HeaderCell = styled(TableCell)({
+const HeaderCell = styled(TableCell)(({ theme }) => ({
   fontSize: 'large',
   fontWeight: 'bold',
-  background: 'grey',
-});
+  background: theme.palette.primary.contrastText,
+}));
 
 interface Props {
   moves: Array<Move>;
@@ -73,22 +73,22 @@ const ResultRow = ({ move }: { move: Move }) => {
 
   return (
     <TableRow hover>
-      <Cell fontSize="large" maxWidth={200} correctAnswer={correctAnswer}>
+      <Cell fontSize="large" maxWidth="8rem" correctAnswer={correctAnswer}>
         {move.guessedCountry.name}
       </Cell>
-      <Cell correctAnswer={correctAnswer}>
+      <Cell maxWidth="8rem" correctAnswer={correctAnswer}>
         {boolToIcon(comp.regionEqual)}
         {country.region}
       </Cell>
-      <Cell correctAnswer={correctAnswer}>
+      <Cell maxWidth="8rem" correctAnswer={correctAnswer}>
         {boolToIcon(comp.subregionEqual)}
         {country.subregion}
       </Cell>
-      <Cell correctAnswer={correctAnswer}>
+      <Cell maxWidth="8rem" correctAnswer={correctAnswer}>
         <DiffAsIcon diff={comp.areaDifference} />
         {prefixNumber(country.area, 0)} km²
       </Cell>
-      <Cell correctAnswer={correctAnswer}>
+      <Cell maxWidth="8rem" correctAnswer={correctAnswer}>
         <DiffAsIcon diff={comp.populationDifference} />
         {prefixNumber(country.population, 0)}
       </Cell>
@@ -102,7 +102,7 @@ const ResultRow = ({ move }: { move: Move }) => {
         correctValues={comp.sameLanguages}
         correctAnswer={correctAnswer}
       />
-      <Cell>
+      <Cell maxWidth="4rem">
         {angle && (
           <Arrow
             fontSize="large"
@@ -118,7 +118,7 @@ const ResultRow = ({ move }: { move: Move }) => {
 
 interface CellProps {
   children?: React.ReactNode;
-  maxWidth?: number;
+  maxWidth?: string;
   fontSize?: 'small' | 'medium' | 'large';
   correctAnswer?: boolean;
 }
@@ -126,7 +126,7 @@ interface CellProps {
 const Cell = ({ children, maxWidth, fontSize, correctAnswer }: CellProps) => {
   const fontWeight = correctAnswer === true ? 'bold' : undefined;
   return (
-    <TableCell sx={{ maxWidth }}>
+    <TableCell sx={{ maxWidth: maxWidth }}>
       <Stack
         direction="row"
         alignItems="center"
@@ -164,7 +164,7 @@ const ArrayCell = ({
   const fontWeight = correctAnswer === true ? 'bold' : undefined;
 
   return (
-    <TableCell sx={{ maxWidth: 200 }}>
+    <TableCell sx={{ maxWidth: '12rem' }}>
       {correct.length !== 0 && (
         <Stack
           direction="row"

@@ -101,7 +101,7 @@ const CreateAccountPage = ({ setUser }: Props) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Box width={400} margin={1}>
+      <Box width="25rem" margin={1}>
         <Typography variant="h4" fontWeight="bold" marginY={2}>
           Create account
         </Typography>

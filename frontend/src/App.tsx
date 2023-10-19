@@ -5,12 +5,44 @@ import HomePage from './components/HomePage';
 import GameView from './components/GameView';
 import { useEffect, useState } from 'react';
 import { startNewGame } from './services/gameService';
-import { Country, GameObject, GameStatus, Move, UserWithToken } from './types';
+import {
+  AppTheme,
+  Country,
+  GameObject,
+  GameStatus,
+  Move,
+  UserWithToken,
+} from './types';
 import CountryList from './components/CountryList';
 import LoginPage from './components/LoginPage';
 import CreateAccountPage from './components/CreateAccountPage';
-import { USER_STORAGE_PATH } from './constants';
+import { PREFERRED_THEME_PATH, USER_STORAGE_PATH } from './constants';
 import { userFromJson } from './util/utils';
+import {
+  Box,
+  CssBaseline,
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+} from '@mui/material';
+
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+  typography: {
+    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+  },
+});
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+  typography: {
+    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+  },
+});
 
 const App = () => {
   const [game, setGame] = useState<GameStatus>(undefined);
@@ -19,6 +51,16 @@ const App = () => {
   );
   const [user, setUser] = useState<UserWithToken | undefined>(undefined);
   const navigate = useNavigate();
+
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const savedTheme = window.localStorage.getItem(PREFERRED_THEME_PATH);
+  const preferredTheme =
+    savedTheme === 'dark' || savedTheme === 'light'
+      ? savedTheme
+      : prefersDarkMode
+      ? 'dark'
+      : 'light';
+  const [theme, setTheme] = useState<AppTheme>(preferredTheme);
 
   useEffect(() => {
     const storedUser = window.localStorage.getItem(USER_STORAGE_PATH);
@@ -86,69 +128,97 @@ const App = () => {
     setGame(undefined);
   };
 
+  const switchToTheme = (newTheme: AppTheme) => {
+    setTheme(newTheme);
+    window.localStorage.setItem(PREFERRED_THEME_PATH, newTheme);
+  };
+
   const hasActiveGame = game?.k === 'ok';
+  const currentTheme = theme === 'dark' ? darkTheme : lightTheme;
 
   return (
-    <div>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Layout loggedInUser={user?.username} setUser={handleLogout} />
-          }
-        >
+    <ThemeProvider theme={currentTheme}>
+      <CssBaseline />
+      <Box>
+        <Routes>
           <Route
-            index
+            path="/"
             element={
-              <HomePage
-                startNewGame={startNewGameClicked}
-                resumeCurrentGame={resumeCurrentGame}
-                hasActiveGame={hasActiveGame}
+              <Layout
+                loggedInUser={user?.username}
+                setUser={handleLogout}
+                theme={theme}
+                switchToTheme={switchToTheme}
               />
             }
-          />
-          <Route
-            path="game"
-            element={
-              <GameView
-                game={game}
-                setGame={setGame}
-                startNewGame={startNewGameClicked}
-                user={user}
-              />
-            }
-          />
-          <Route
-            path="countries"
-            element={
-              <CountryList countries={countries} setCountries={setCountries} />
-            }
-          />
-          <Route path="login" element={<LoginPage setUser={handleLogin} />} />
-          <Route
-            path="create-account"
-            element={<CreateAccountPage setUser={handleLogin} />}
-          />
+          >
+            <Route
+              index
+              element={
+                <HomePage
+                  startNewGame={startNewGameClicked}
+                  resumeCurrentGame={resumeCurrentGame}
+                  hasActiveGame={hasActiveGame}
+                />
+              }
+            />
+            <Route
+              path="game"
+              element={
+                <GameView
+                  game={game}
+                  setGame={setGame}
+                  startNewGame={startNewGameClicked}
+                  user={user}
+                />
+              }
+            />
+            <Route
+              path="countries"
+              element={
+                <CountryList
+                  countries={countries}
+                  setCountries={setCountries}
+                />
+              }
+            />
+            <Route path="login" element={<LoginPage setUser={handleLogin} />} />
+            <Route
+              path="create-account"
+              element={<CreateAccountPage setUser={handleLogin} />}
+            />
 
-          <Route path="*" element={<NoMatch />} />
-        </Route>
-      </Routes>
-    </div>
+            <Route path="*" element={<NoMatch />} />
+          </Route>
+        </Routes>
+      </Box>
+    </ThemeProvider>
   );
 };
 
 interface LayoutProps {
   loggedInUser?: string;
   setUser: (_: undefined) => void;
+  theme: AppTheme;
+  switchToTheme: (newTheme: AppTheme) => void;
 }
 
-const Layout = ({ loggedInUser, setUser }: LayoutProps) => {
+const Layout = ({
+  loggedInUser,
+  setUser,
+  theme,
+  switchToTheme,
+}: LayoutProps) => {
   return (
-    <div>
-      <NavigationBar loggedInUser={loggedInUser} setUser={setUser} />
-      <hr />
+    <Box>
+      <NavigationBar
+        loggedInUser={loggedInUser}
+        setUser={setUser}
+        theme={theme}
+        switchToTheme={switchToTheme}
+      />
       <Outlet />
-    </div>
+    </Box>
   );
 };
 
