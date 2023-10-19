@@ -4,3 +4,4 @@ export const apiBaseUrl =
   process.env.NODE_ENV === 'production' ? '/api' : envUrl;
 
 export const USER_STORAGE_PATH = 'geo-quiz-app-user';
+export const PREFERRED_THEME_PATH = 'geo-quiz-theme';

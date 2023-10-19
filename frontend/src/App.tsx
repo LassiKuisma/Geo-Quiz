@@ -16,9 +16,15 @@ import {
 import CountryList from './components/CountryList';
 import LoginPage from './components/LoginPage';
 import CreateAccountPage from './components/CreateAccountPage';
-import { USER_STORAGE_PATH } from './constants';
+import { PREFERRED_THEME_PATH, USER_STORAGE_PATH } from './constants';
 import { userFromJson } from './util/utils';
-import { Box, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import {
+  Box,
+  CssBaseline,
+  ThemeProvider,
+  createTheme,
+  useMediaQuery,
+} from '@mui/material';
 
 const lightTheme = createTheme({
   palette: {
@@ -45,7 +51,16 @@ const App = () => {
   );
   const [user, setUser] = useState<UserWithToken | undefined>(undefined);
   const navigate = useNavigate();
-  const [theme, setTheme] = useState<AppTheme>('light');
+
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const savedTheme = window.localStorage.getItem(PREFERRED_THEME_PATH);
+  const preferredTheme =
+    savedTheme === 'dark' || savedTheme === 'light'
+      ? savedTheme
+      : prefersDarkMode
+      ? 'dark'
+      : 'light';
+  const [theme, setTheme] = useState<AppTheme>(preferredTheme);
 
   useEffect(() => {
     const storedUser = window.localStorage.getItem(USER_STORAGE_PATH);
@@ -115,6 +130,7 @@ const App = () => {
 
   const switchToTheme = (newTheme: AppTheme) => {
     setTheme(newTheme);
+    window.localStorage.setItem(PREFERRED_THEME_PATH, newTheme);
   };
 
   const hasActiveGame = game?.k === 'ok';
