@@ -1,7 +1,6 @@
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
-import path from 'node:path';
 
 import countryRouter from './routes/countryRouter';
 import gameRouter from './routes/gameRouter';
@@ -32,9 +31,7 @@ app.get('/health', (_req, res) => {
   res.status(200).send('ok');
 });
 
-app.get('/*', (_req, res) => {
-  return res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
-});
+app.use('/*', express.static('build'));
 
 const start = async () => {
   await connectToDatabase();
