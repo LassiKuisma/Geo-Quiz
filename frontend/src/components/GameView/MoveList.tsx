@@ -41,11 +41,10 @@ const MoveList = ({ moves }: Props) => {
             <TableRow>
               <HeaderCell>Country</HeaderCell>
               <HeaderCell>Region</HeaderCell>
-              <HeaderCell>Subregion</HeaderCell>
               <HeaderCell>Area</HeaderCell>
               <HeaderCell>Population</HeaderCell>
-              <HeaderCell>Neighbours</HeaderCell>
-              <HeaderCell>Languages</HeaderCell>
+              <HeaderCell>Same neighbours</HeaderCell>
+              <HeaderCell>Same languages</HeaderCell>
               <HeaderCell>Direction</HeaderCell>
             </TableRow>
           </TableHead>
@@ -76,14 +75,14 @@ const ResultRow = ({ move }: { move: Move }) => {
       <Cell fontSize="large" maxWidth="8rem" correctAnswer={correctAnswer}>
         {move.guessedCountry.name}
       </Cell>
-      <Cell maxWidth="8rem" correctAnswer={correctAnswer}>
-        {boolToIcon(comp.regionEqual)}
-        {country.region}
-      </Cell>
-      <Cell maxWidth="8rem" correctAnswer={correctAnswer}>
-        {boolToIcon(comp.subregionEqual)}
-        {country.subregion}
-      </Cell>
+      <RegionCell
+        maxWidth="8rem"
+        correctAnswer={correctAnswer}
+        region={country.region}
+        regionCorrect={comp.regionEqual}
+        subregion={country.subregion}
+        subregionCorrect={comp.subregionEqual}
+      />
       <Cell maxWidth="8rem" correctAnswer={correctAnswer}>
         <DiffAsIcon diff={comp.areaDifference} />
         {prefixNumber(country.area, 0)} km²
@@ -93,12 +92,10 @@ const ResultRow = ({ move }: { move: Move }) => {
         {prefixNumber(country.population, 0)}
       </Cell>
       <ArrayCell
-        values={country.neighbours}
         correctValues={comp.sameNeighbours}
         correctAnswer={correctAnswer}
       />
       <ArrayCell
-        values={country.languages}
         correctValues={comp.sameLanguages}
         correctAnswer={correctAnswer}
       />
@@ -139,54 +136,61 @@ const Cell = ({ children, maxWidth, fontSize, correctAnswer }: CellProps) => {
   );
 };
 
+interface RegionCellProps {
+  maxWidth: string;
+  correctAnswer: boolean;
+  region: string;
+  regionCorrect: boolean;
+  subregion: string;
+  subregionCorrect: boolean;
+}
+
+const RegionCell = ({
+  maxWidth,
+  correctAnswer,
+  region,
+  regionCorrect,
+  subregion,
+  subregionCorrect,
+}: RegionCellProps) => {
+  const color = (correct: boolean) => {
+    return correct ? 'green' : 'red';
+  };
+
+  return (
+    <Cell maxWidth={maxWidth} correctAnswer={correctAnswer}>
+      <Stack>
+        <Box display="flex" alignItems="center" color={color(regionCorrect)}>
+          {boolToIcon(regionCorrect)}
+          {region}
+        </Box>
+        <Box
+          display="flex"
+          alignItems="center"
+          marginLeft="1rem"
+          color={color(subregionCorrect)}
+        >
+          {boolToIcon(subregionCorrect)}
+          {subregion}
+        </Box>
+      </Stack>
+    </Cell>
+  );
+};
+
 interface ArrayCellProps {
-  values: Array<string>;
   correctValues: Array<string>;
   correctAnswer?: boolean;
 }
 
-const ArrayCell = ({
-  values,
-  correctValues,
-  correctAnswer,
-}: ArrayCellProps) => {
-  const correct = new Array<string>();
-  const wrong = new Array<string>();
-
-  values.forEach((continent) => {
-    if (correctValues.includes(continent)) {
-      correct.push(continent);
-    } else {
-      wrong.push(continent);
-    }
-  });
-
+const ArrayCell = ({ correctValues, correctAnswer }: ArrayCellProps) => {
   const fontWeight = correctAnswer === true ? 'bold' : undefined;
 
   return (
     <TableCell sx={{ maxWidth: '12rem' }}>
-      {correct.length !== 0 && (
-        <Stack
-          direction="row"
-          alignItems="center"
-          fontWeight={fontWeight}
-          marginBottom={1}
-        >
-          <CheckIcon />
-          {correct.join(', ')}
-        </Stack>
-      )}
-      {wrong.length !== 0 && (
-        <Stack
-          direction="row"
-          alignItems="center"
-          fontWeight={fontWeight}
-          marginTop={1}
-        >
-          <CloseIcon />
-          {wrong.join(', ')}
-        </Stack>
-      )}
+      <Box fontWeight={fontWeight}>
+        {correctValues.length !== 0 ? correctValues.join(', ') : 'None'}
+      </Box>
     </TableCell>
   );
 };
