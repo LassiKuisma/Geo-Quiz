@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { AppTheme } from '../types';
+import { AppTheme } from '../../types';
 
 interface Page {
   name: string;
