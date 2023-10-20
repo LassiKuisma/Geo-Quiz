@@ -1,4 +1,7 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Button,
   Table,
@@ -8,6 +11,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState } from 'react';
 import { Hint, Hints } from '../../types';
 
@@ -17,31 +21,35 @@ interface Props {
 
 const HintsView = ({ hints }: Props) => {
   return (
-    <Box>
-      <Typography variant="h5" marginY={2}>
-        Hints
-      </Typography>
-      <TableContainer>
-        <Table sx={{ width: '25rem' }} size="small">
-          <TableBody>
-            <HintRow
-              name="Landlocked"
-              hint={hints.landlocked}
-              hintToStr={(hint) => boolToStr(hint)}
-            />
-            <HintRow
-              name="Driving side"
-              hint={hints.drivingSide}
-              hintToStr={(s) => s}
-            />
-            <HintRow
-              name="Capital city"
-              hint={hints.capital}
-              hintToStr={(capital) => (!capital ? 'Unknown' : capital)}
-            />
-          </TableBody>
-        </Table>
-      </TableContainer>
+    <Box sx={{ width: '30rem' }} marginY={4}>
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography>Hints</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <TableContainer>
+            <Table size="small">
+              <TableBody>
+                <HintRow
+                  name="Landlocked"
+                  hint={hints.landlocked}
+                  hintToStr={(hint) => boolToStr(hint)}
+                />
+                <HintRow
+                  name="Driving side"
+                  hint={hints.drivingSide}
+                  hintToStr={(s) => s}
+                />
+                <HintRow
+                  name="Capital city"
+                  hint={hints.capital}
+                  hintToStr={(capital) => (!capital ? 'Unknown' : capital)}
+                />
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </AccordionDetails>
+      </Accordion>
     </Box>
   );
 };
