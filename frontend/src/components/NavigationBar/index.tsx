@@ -19,7 +19,7 @@ const pages: Array<Page> = [
 
 interface AppBarProps {
   hasSmallDevice: boolean;
-  loggedInUser?: string;
+  loggedInUser: string | undefined;
   setUser: (_: undefined) => void;
   theme: AppTheme;
   switchToTheme: (newTheme: AppTheme) => void;
@@ -33,7 +33,13 @@ const NavigationBar = ({
   switchToTheme,
 }: AppBarProps) => {
   return hasSmallDevice ? (
-    <MobileNavBar />
+    <MobileNavBar
+      pages={pages}
+      theme={theme}
+      switchToTheme={switchToTheme}
+      loggedInUser={loggedInUser}
+      setUser={setUser}
+    />
   ) : (
     <DesktopNavBar
       pages={pages}
