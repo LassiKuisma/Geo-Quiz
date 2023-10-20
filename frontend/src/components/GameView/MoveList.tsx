@@ -27,25 +27,33 @@ const HeaderCell = styled(TableCell)(({ theme }) => ({
 
 interface Props {
   moves: Array<Move>;
+  hasSmallDevice: boolean;
 }
 
-const MoveList = ({ moves }: Props) => {
+const leftArrow = '\u{2190}'; // ←
+const rightArrow = '\u{2192}'; // →
+
+const MoveList = ({ moves, hasSmallDevice }: Props) => {
   return (
     <Box>
-      <Typography variant="h5" marginY={3}>
+      <Typography variant="h5" marginY="0.5em">
         Guesses
       </Typography>
-      <TableContainer sx={{ maxHeight: 800 }}>
+      {hasSmallDevice && (
+        <Box>
+          {leftArrow} Scroll sideways {rightArrow}
+        </Box>
+      )}
+      <TableContainer sx={{ maxHeight: '65vh' }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
               <HeaderCell>Country</HeaderCell>
               <HeaderCell>Region</HeaderCell>
-              <HeaderCell>Subregion</HeaderCell>
               <HeaderCell>Area</HeaderCell>
               <HeaderCell>Population</HeaderCell>
-              <HeaderCell>Neighbours</HeaderCell>
-              <HeaderCell>Languages</HeaderCell>
+              <HeaderCell>Same neighbours</HeaderCell>
+              <HeaderCell>Same languages</HeaderCell>
               <HeaderCell>Direction</HeaderCell>
             </TableRow>
           </TableHead>
@@ -73,36 +81,33 @@ const ResultRow = ({ move }: { move: Move }) => {
 
   return (
     <TableRow hover>
-      <Cell fontSize="large" maxWidth="8rem" correctAnswer={correctAnswer}>
+      <Cell fontSize="large" correctAnswer={correctAnswer}>
         {move.guessedCountry.name}
       </Cell>
-      <Cell maxWidth="8rem" correctAnswer={correctAnswer}>
-        {boolToIcon(comp.regionEqual)}
-        {country.region}
-      </Cell>
-      <Cell maxWidth="8rem" correctAnswer={correctAnswer}>
-        {boolToIcon(comp.subregionEqual)}
-        {country.subregion}
-      </Cell>
-      <Cell maxWidth="8rem" correctAnswer={correctAnswer}>
+      <RegionCell
+        correctAnswer={correctAnswer}
+        region={country.region}
+        regionCorrect={comp.regionEqual}
+        subregion={country.subregion}
+        subregionCorrect={comp.subregionEqual}
+      />
+      <Cell correctAnswer={correctAnswer}>
         <DiffAsIcon diff={comp.areaDifference} />
         {prefixNumber(country.area, 0)} km²
       </Cell>
-      <Cell maxWidth="8rem" correctAnswer={correctAnswer}>
+      <Cell correctAnswer={correctAnswer}>
         <DiffAsIcon diff={comp.populationDifference} />
         {prefixNumber(country.population, 0)}
       </Cell>
       <ArrayCell
-        values={country.neighbours}
         correctValues={comp.sameNeighbours}
         correctAnswer={correctAnswer}
       />
       <ArrayCell
-        values={country.languages}
         correctValues={comp.sameLanguages}
         correctAnswer={correctAnswer}
       />
-      <Cell maxWidth="4rem">
+      <Cell>
         {angle && (
           <Arrow
             fontSize="large"
@@ -118,15 +123,14 @@ const ResultRow = ({ move }: { move: Move }) => {
 
 interface CellProps {
   children?: React.ReactNode;
-  maxWidth?: string;
   fontSize?: 'small' | 'medium' | 'large';
   correctAnswer?: boolean;
 }
 
-const Cell = ({ children, maxWidth, fontSize, correctAnswer }: CellProps) => {
+const Cell = ({ children, fontSize, correctAnswer }: CellProps) => {
   const fontWeight = correctAnswer === true ? 'bold' : undefined;
   return (
-    <TableCell sx={{ maxWidth: maxWidth }}>
+    <TableCell>
       <Stack
         direction="row"
         alignItems="center"
@@ -139,54 +143,59 @@ const Cell = ({ children, maxWidth, fontSize, correctAnswer }: CellProps) => {
   );
 };
 
+interface RegionCellProps {
+  correctAnswer: boolean;
+  region: string;
+  regionCorrect: boolean;
+  subregion: string;
+  subregionCorrect: boolean;
+}
+
+const RegionCell = ({
+  correctAnswer,
+  region,
+  regionCorrect,
+  subregion,
+  subregionCorrect,
+}: RegionCellProps) => {
+  const color = (correct: boolean) => {
+    return correct ? 'green' : 'red';
+  };
+
+  return (
+    <Cell correctAnswer={correctAnswer}>
+      <Stack>
+        <Box display="flex" alignItems="center" color={color(regionCorrect)}>
+          {boolToIcon(regionCorrect)}
+          {region}
+        </Box>
+        <Box
+          display="flex"
+          alignItems="center"
+          marginLeft="15%"
+          color={color(subregionCorrect)}
+        >
+          {boolToIcon(subregionCorrect)}
+          {subregion}
+        </Box>
+      </Stack>
+    </Cell>
+  );
+};
+
 interface ArrayCellProps {
-  values: Array<string>;
   correctValues: Array<string>;
   correctAnswer?: boolean;
 }
 
-const ArrayCell = ({
-  values,
-  correctValues,
-  correctAnswer,
-}: ArrayCellProps) => {
-  const correct = new Array<string>();
-  const wrong = new Array<string>();
-
-  values.forEach((continent) => {
-    if (correctValues.includes(continent)) {
-      correct.push(continent);
-    } else {
-      wrong.push(continent);
-    }
-  });
-
+const ArrayCell = ({ correctValues, correctAnswer }: ArrayCellProps) => {
   const fontWeight = correctAnswer === true ? 'bold' : undefined;
 
   return (
-    <TableCell sx={{ maxWidth: '12rem' }}>
-      {correct.length !== 0 && (
-        <Stack
-          direction="row"
-          alignItems="center"
-          fontWeight={fontWeight}
-          marginBottom={1}
-        >
-          <CheckIcon />
-          {correct.join(', ')}
-        </Stack>
-      )}
-      {wrong.length !== 0 && (
-        <Stack
-          direction="row"
-          alignItems="center"
-          fontWeight={fontWeight}
-          marginTop={1}
-        >
-          <CloseIcon />
-          {wrong.join(', ')}
-        </Stack>
-      )}
+    <TableCell>
+      <Box fontWeight={fontWeight}>
+        {correctValues.length !== 0 ? correctValues.join(', ') : 'None'}
+      </Box>
     </TableCell>
   );
 };

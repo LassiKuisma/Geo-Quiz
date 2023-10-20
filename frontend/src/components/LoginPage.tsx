@@ -62,7 +62,7 @@ const LoginPage = ({ setUser }: Props) => {
 
   return (
     <form onSubmit={handleLogin}>
-      <Box width="25rem" margin={1}>
+      <Box width="500px" maxWidth="100%" padding="0.75em">
         <Typography variant="h4" fontWeight="bold" marginY={2}>
           Log in
         </Typography>

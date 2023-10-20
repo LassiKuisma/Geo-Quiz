@@ -12,9 +12,16 @@ interface Props {
   setGame: (game: GameStatus) => void;
   startNewGame: () => void;
   user?: UserWithToken;
+  hasSmallDevice: boolean;
 }
 
-const GameView = ({ game, setGame, startNewGame, user }: Props) => {
+const GameView = ({
+  game,
+  setGame,
+  startNewGame,
+  user,
+  hasSmallDevice,
+}: Props) => {
   const [error, setError] = useState<string | undefined>(undefined);
 
   const submitMove = async (country: Country) => {
@@ -95,10 +102,12 @@ const GameView = ({ game, setGame, startNewGame, user }: Props) => {
   const gameObj = game.game;
 
   return (
-    <Box margin={1}>
-      <Box marginY={2}>
-        <Typography variant="h3" marginY={1}>
-          Guess a country
+    <Box margin="0.25em">
+      <Box>
+        <Typography variant="h3">
+          {game.game.guesses.length === 0
+            ? 'Take a blind guess!'
+            : 'Guess a country'}
         </Typography>
         <CountrySelect game={gameObj} submitMove={submitMove} />
       </Box>
@@ -109,7 +118,7 @@ const GameView = ({ game, setGame, startNewGame, user }: Props) => {
         turns={gameObj.guesses.length}
         startNewGame={startNewGame}
       />
-      <MoveList moves={gameObj.guesses} />
+      <MoveList moves={gameObj.guesses} hasSmallDevice={hasSmallDevice} />
     </Box>
   );
 };

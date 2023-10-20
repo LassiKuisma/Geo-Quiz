@@ -1,51 +1,33 @@
-import { DarkMode, LightMode } from '@mui/icons-material';
+import { LightMode, DarkMode } from '@mui/icons-material';
 import {
-  AppBar,
   Box,
-  Button,
-  Divider,
-  Switch,
+  AppBar,
   Toolbar,
+  Divider,
+  Button,
+  Switch,
   Typography,
 } from '@mui/material';
+import { AppTheme, Page } from '../../types';
 import { Link } from 'react-router-dom';
-import { AppTheme } from '../types';
 
-interface Page {
-  name: string;
-  to: string;
-}
-
-const pages: Array<Page> = [
-  {
-    name: 'Home',
-    to: '/',
-  },
-  {
-    name: 'Play',
-    to: '/game',
-  },
-  {
-    name: 'List of countries',
-    to: '/countries',
-  },
-];
-
-interface AppBarProps {
+interface Props {
+  pages: Array<Page>;
   loggedInUser?: string;
   setUser: (_: undefined) => void;
   theme: AppTheme;
   switchToTheme: (newTheme: AppTheme) => void;
 }
 
-const NavigationBar = ({
+const DesktopNavBar = ({
+  pages,
   loggedInUser,
   setUser,
   theme,
   switchToTheme,
-}: AppBarProps) => {
+}: Props) => {
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box>
       <AppBar position="static">
         <Toolbar variant="dense">
           <Box display={'flex'}>
@@ -74,11 +56,7 @@ interface AppBarButtonProps {
 
 const AppBarButton = ({ text, linkTo }: AppBarButtonProps) => {
   return (
-    <Button
-      sx={{ my: 1, color: 'white', display: 'block' }}
-      component={Link}
-      to={linkTo}
-    >
+    <Button sx={{ color: 'white' }} component={Link} to={linkTo}>
       {text}
     </Button>
   );
@@ -135,4 +113,4 @@ const ThemeSelect = ({ theme, switchToTheme }: ThemeProps) => {
   );
 };
 
-export default NavigationBar;
+export default DesktopNavBar;

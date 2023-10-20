@@ -43,11 +43,7 @@ const CountryList = ({ countries, setCountries }: Props) => {
     return <Box>Loading...</Box>;
   }
 
-  return (
-    <Box>
-      <CountryTable countries={countries} />
-    </Box>
-  );
+  return <CountryTable countries={countries} />;
 };
 
 export default CountryList;

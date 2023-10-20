@@ -62,6 +62,8 @@ const App = () => {
       : 'light';
   const [theme, setTheme] = useState<AppTheme>(preferredTheme);
 
+  const hasSmallDevice = !useMediaQuery('(min-width: 768px)');
+
   useEffect(() => {
     const storedUser = window.localStorage.getItem(USER_STORAGE_PATH);
     if (!storedUser) {
@@ -145,6 +147,7 @@ const App = () => {
             path="/"
             element={
               <Layout
+                hasSmallDevice={hasSmallDevice}
                 loggedInUser={user?.username}
                 setUser={handleLogout}
                 theme={theme}
@@ -170,6 +173,7 @@ const App = () => {
                   setGame={setGame}
                   startNewGame={startNewGameClicked}
                   user={user}
+                  hasSmallDevice={hasSmallDevice}
                 />
               }
             />
@@ -197,6 +201,7 @@ const App = () => {
 };
 
 interface LayoutProps {
+  hasSmallDevice: boolean;
   loggedInUser?: string;
   setUser: (_: undefined) => void;
   theme: AppTheme;
@@ -204,6 +209,7 @@ interface LayoutProps {
 }
 
 const Layout = ({
+  hasSmallDevice,
   loggedInUser,
   setUser,
   theme,
@@ -212,12 +218,15 @@ const Layout = ({
   return (
     <Box>
       <NavigationBar
+        hasSmallDevice={hasSmallDevice}
         loggedInUser={loggedInUser}
         setUser={setUser}
         theme={theme}
         switchToTheme={switchToTheme}
       />
-      <Outlet />
+      <Box width="100vw" maxWidth="1024px" margin="auto">
+        <Outlet />
+      </Box>
     </Box>
   );
 };

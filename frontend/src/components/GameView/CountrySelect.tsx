@@ -36,12 +36,13 @@ const CountrySelect = ({ game, submitMove }: Props) => {
   const disableInput = game.gameOver || game.isSubmittingMove;
 
   return (
-    <Box width="40rem">
+    <Box>
       <Box display={'flex'} alignItems={'center'}>
         <Autocomplete
           id="country-select-combo-box"
           disabled={disableInput}
           fullWidth
+          sx={{ width: '400px' }}
           value={countryValue}
           onChange={(_event, newValue) => {
             setCountryValue(newValue);
@@ -88,8 +89,8 @@ const ErrorDisplay = ({ errorMessage }: { errorMessage: null | string }) => {
 
 const LoadingIcon = ({ visible }: { visible: boolean }) => {
   return (
-    <Box sx={{ width: 100 }} marginX={1}>
-      {visible && <CircularProgress />}
+    <Box>
+      <CircularProgress sx={{ visibility: visible ? 'visible' : 'hidden' }} />
     </Box>
   );
 };

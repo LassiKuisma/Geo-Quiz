@@ -85,3 +85,8 @@ export type GameStatus = undefined | GameLoading | GameOk | GameLoadError;
 export type UserWithToken = { username: string; token: string };
 
 export type AppTheme = 'dark' | 'light';
+
+export interface Page {
+  name: string;
+  to: string;
+}
