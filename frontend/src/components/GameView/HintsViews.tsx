@@ -21,7 +21,7 @@ interface Props {
 
 const HintsView = ({ hints }: Props) => {
   return (
-    <Box sx={{ width: '30rem' }} marginY={4}>
+    <Box width="400px" maxWidth="100%" marginY="1em">
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography>Hints</Typography>

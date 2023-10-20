@@ -26,7 +26,7 @@ const pages: Array<Page> = [
     to: '/game',
   },
   {
-    name: 'List of countries',
+    name: 'Countries',
     to: '/countries',
   },
 ];
@@ -74,11 +74,7 @@ interface AppBarButtonProps {
 
 const AppBarButton = ({ text, linkTo }: AppBarButtonProps) => {
   return (
-    <Button
-      sx={{ my: 1, color: 'white', display: 'block' }}
-      component={Link}
-      to={linkTo}
-    >
+    <Button sx={{ color: 'white' }} component={Link} to={linkTo}>
       {text}
     </Button>
   );

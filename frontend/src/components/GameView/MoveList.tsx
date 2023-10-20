@@ -32,10 +32,10 @@ interface Props {
 const MoveList = ({ moves }: Props) => {
   return (
     <Box>
-      <Typography variant="h5" marginY={3}>
+      <Typography variant="h5" marginY="1em">
         Guesses
       </Typography>
-      <TableContainer sx={{ maxHeight: 800 }}>
+      <TableContainer sx={{ maxHeight: '65vh' }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
@@ -72,22 +72,21 @@ const ResultRow = ({ move }: { move: Move }) => {
 
   return (
     <TableRow hover>
-      <Cell fontSize="large" maxWidth="8rem" correctAnswer={correctAnswer}>
+      <Cell fontSize="large" correctAnswer={correctAnswer}>
         {move.guessedCountry.name}
       </Cell>
       <RegionCell
-        maxWidth="8rem"
         correctAnswer={correctAnswer}
         region={country.region}
         regionCorrect={comp.regionEqual}
         subregion={country.subregion}
         subregionCorrect={comp.subregionEqual}
       />
-      <Cell maxWidth="8rem" correctAnswer={correctAnswer}>
+      <Cell correctAnswer={correctAnswer}>
         <DiffAsIcon diff={comp.areaDifference} />
         {prefixNumber(country.area, 0)} km²
       </Cell>
-      <Cell maxWidth="8rem" correctAnswer={correctAnswer}>
+      <Cell correctAnswer={correctAnswer}>
         <DiffAsIcon diff={comp.populationDifference} />
         {prefixNumber(country.population, 0)}
       </Cell>
@@ -99,7 +98,7 @@ const ResultRow = ({ move }: { move: Move }) => {
         correctValues={comp.sameLanguages}
         correctAnswer={correctAnswer}
       />
-      <Cell maxWidth="4rem">
+      <Cell>
         {angle && (
           <Arrow
             fontSize="large"
@@ -115,15 +114,14 @@ const ResultRow = ({ move }: { move: Move }) => {
 
 interface CellProps {
   children?: React.ReactNode;
-  maxWidth?: string;
   fontSize?: 'small' | 'medium' | 'large';
   correctAnswer?: boolean;
 }
 
-const Cell = ({ children, maxWidth, fontSize, correctAnswer }: CellProps) => {
+const Cell = ({ children, fontSize, correctAnswer }: CellProps) => {
   const fontWeight = correctAnswer === true ? 'bold' : undefined;
   return (
-    <TableCell sx={{ maxWidth: maxWidth }}>
+    <TableCell>
       <Stack
         direction="row"
         alignItems="center"
@@ -137,7 +135,6 @@ const Cell = ({ children, maxWidth, fontSize, correctAnswer }: CellProps) => {
 };
 
 interface RegionCellProps {
-  maxWidth: string;
   correctAnswer: boolean;
   region: string;
   regionCorrect: boolean;
@@ -146,7 +143,6 @@ interface RegionCellProps {
 }
 
 const RegionCell = ({
-  maxWidth,
   correctAnswer,
   region,
   regionCorrect,
@@ -158,7 +154,7 @@ const RegionCell = ({
   };
 
   return (
-    <Cell maxWidth={maxWidth} correctAnswer={correctAnswer}>
+    <Cell correctAnswer={correctAnswer}>
       <Stack>
         <Box display="flex" alignItems="center" color={color(regionCorrect)}>
           {boolToIcon(regionCorrect)}
@@ -167,7 +163,7 @@ const RegionCell = ({
         <Box
           display="flex"
           alignItems="center"
-          marginLeft="1rem"
+          marginLeft="15%"
           color={color(subregionCorrect)}
         >
           {boolToIcon(subregionCorrect)}
@@ -187,7 +183,7 @@ const ArrayCell = ({ correctValues, correctAnswer }: ArrayCellProps) => {
   const fontWeight = correctAnswer === true ? 'bold' : undefined;
 
   return (
-    <TableCell sx={{ maxWidth: '12rem' }}>
+    <TableCell>
       <Box fontWeight={fontWeight}>
         {correctValues.length !== 0 ? correctValues.join(', ') : 'None'}
       </Box>

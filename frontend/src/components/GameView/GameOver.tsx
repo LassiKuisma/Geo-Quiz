@@ -12,9 +12,9 @@ const GameOver = ({ show, turns, startNewGame }: Props) => {
   }
 
   return (
-    <Box marginTop={3}>
+    <Box>
       <Typography variant="h4">You got it!</Typography>
-      <Box margin={0.5}>You guessed the correct answer in {turns} turns.</Box>
+      <Box>You guessed the correct answer in {turns} turns.</Box>
       <Button variant="contained" onClick={startNewGame}>
         Play again?
       </Button>

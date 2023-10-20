@@ -217,7 +217,9 @@ const Layout = ({
         theme={theme}
         switchToTheme={switchToTheme}
       />
-      <Outlet />
+      <Box width="100vw" maxWidth="1024px" margin="auto">
+        <Outlet />
+      </Box>
     </Box>
   );
 };
