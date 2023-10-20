@@ -9,6 +9,7 @@ import {
   TableRow,
   Typography,
   styled,
+  useMediaQuery,
 } from '@mui/material';
 import { Difference, Move } from '../../types';
 import CheckIcon from '@mui/icons-material/Check';
@@ -29,12 +30,22 @@ interface Props {
   moves: Array<Move>;
 }
 
+const leftArrow = '\u{2190}'; // ←
+const rightArrow = '\u{2192}'; // →
+
 const MoveList = ({ moves }: Props) => {
+  const wideDevice = useMediaQuery('(min-width: 768px)');
+
   return (
     <Box>
-      <Typography variant="h5" marginY="1em">
+      <Typography variant="h5" marginY="0.5em">
         Guesses
       </Typography>
+      {!wideDevice && (
+        <Box>
+          {leftArrow} Scroll sideways {rightArrow}
+        </Box>
+      )}
       <TableContainer sx={{ maxHeight: '65vh' }}>
         <Table stickyHeader>
           <TableHead>
