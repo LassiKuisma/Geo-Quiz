@@ -1,9 +1,11 @@
 import 'dotenv/config';
 
 const dbUrl =
-  process.env.NODE_ENV === 'test'
-    ? process.env.TEST_DATABASE_URL
-    : process.env.DATABASE_URL;
+  process.env.NODE_ENV === 'production'
+    ? process.env.DATABASE_URL_PRODUCTION
+    : process.env.NODE_ENV === 'development'
+    ? process.env.DATABASE_URL_DEVELOPMENT
+    : process.env.DATABASE_URL_TEST;
 
 if (!dbUrl) {
   console.log('Database url missing');
