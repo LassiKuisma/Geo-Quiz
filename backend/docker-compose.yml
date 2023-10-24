@@ -1,0 +1,15 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: gq_db
+      POSTGRES_USER: gq_user
+      POSTGRES_PASSWORD: gqpassword
+    ports:
+      - 5432:5432
+volumes:
+  postgres-data:
