@@ -4,7 +4,7 @@ import { isString } from '../util/utils';
 import bcrypt from 'bcrypt';
 import { findUser } from '../services/userService';
 import { createToken } from '../util/authentication';
-import { UserWithToken } from '../util/types';
+import { UserWithToken } from '../types/shared';
 
 const router = express.Router();
 

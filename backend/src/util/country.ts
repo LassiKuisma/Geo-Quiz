@@ -1,11 +1,5 @@
-import {
-  Comparison,
-  Country,
-  Difference,
-  Hint,
-  HintThresholds,
-  Hints,
-} from './types';
+import { HintThresholds } from './types';
+import { Comparison, Country, Difference, Hint, Hints } from '../types/shared';
 import { approxEqual } from './utils';
 
 export const compareCountries = (

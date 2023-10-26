@@ -1,6 +1,7 @@
 import { CountryModel, GameModel, UserModel } from '../models';
 
-import { Game, NewGame, Ok, Result, User } from '../util/types';
+import { Game, Ok, Result, User } from '../util/types';
+import { NewGame } from '../types/shared';
 import { defaultThresholds } from '../util/gameSettings';
 import { getHints } from '../util/country';
 import { countryOptions, CountryJoined, modelToCountry } from '../util/models';

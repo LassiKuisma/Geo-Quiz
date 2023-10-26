@@ -6,7 +6,7 @@ import {
   Continent,
   Language,
 } from '../models';
-import { Country } from './types';
+import { Country } from '../types/shared';
 import { isSide, isString } from './utils';
 
 // country model with all fields joined. Use with countryOptions in queries

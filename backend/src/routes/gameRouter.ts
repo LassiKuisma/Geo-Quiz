@@ -1,7 +1,7 @@
 import express from 'express';
 import { isNumber } from '../util/utils';
 import { getCountry } from '../services/countryService';
-import { MoveResult, NewGame } from '../util/types';
+import { MoveResult, NewGame } from '../types/shared';
 import { compareCountries, getHints } from '../util/country';
 import { defaultThresholds } from '../util/gameSettings';
 import {

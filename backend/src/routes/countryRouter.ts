@@ -1,6 +1,6 @@
 import express from 'express';
 import { getAllCountries, getCountry } from '../services/countryService';
-import { Country } from '../util/types';
+import { Country } from '../types/shared';
 
 const router = express.Router();
 

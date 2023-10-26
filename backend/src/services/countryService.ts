@@ -1,5 +1,6 @@
 import { CountryModel } from '../models';
-import { Country, Result } from '../util/types';
+import { Result } from '../util/types';
+import { Country } from '../types/shared';
 import { error, ok } from '../util/utils';
 import { countryOptions, CountryJoined, modelToCountry } from '../util/models';
 

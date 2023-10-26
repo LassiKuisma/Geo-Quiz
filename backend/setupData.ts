@@ -18,7 +18,7 @@ import {
   isString,
   isStringArray,
 } from './src/util/utils';
-import { Country, Side } from './src/util/types';
+import { Country, Side } from './src/types/shared';
 
 const url = 'https://restcountries.com/v3.1/all';
 

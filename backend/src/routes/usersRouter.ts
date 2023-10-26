@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { validateUserInfo } from '../util/newUser';
 import { createUser } from '../services/userService';
 import { createToken } from '../util/authentication';
-import { UserWithToken } from '../util/types';
+import { UserWithToken } from '../types/shared';
 
 const router = express.Router();
 
