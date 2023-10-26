@@ -6,6 +6,7 @@ import { CountryNeighbour } from './countryNeighbour';
 import { DrivingSide } from './drivingSide';
 import { GameModel } from './game';
 import { Language } from './language';
+import { MoveModel } from './move';
 import { Region } from './region';
 import { Subregion } from './subregion';
 import { UserModel } from './user';
@@ -36,6 +37,11 @@ GameModel.belongsTo(CountryModel);
 
 GameModel.belongsTo(UserModel);
 
+MoveModel.belongsTo(GameModel, { foreignKey: 'gameId' });
+GameModel.hasMany(MoveModel, { foreignKey: 'gameId' });
+
+MoveModel.belongsTo(CountryModel, { foreignKey: 'guessedCountry' });
+
 export {
   Continent,
   CountryContinent,
@@ -45,6 +51,7 @@ export {
   DrivingSide,
   GameModel,
   Language,
+  MoveModel,
   Region,
   Subregion,
   UserModel,

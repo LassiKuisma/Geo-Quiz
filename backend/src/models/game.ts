@@ -17,7 +17,6 @@ class GameModel extends Model<
   declare gameId: CreationOptional<number>;
   declare countryId: ForeignKey<CountryModel['id']>;
 
-  declare guessCount: CreationOptional<number>;
   declare userId: ForeignKey<UserModel['id']>;
 }
 
@@ -33,11 +32,6 @@ GameModel.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: { model: 'countries', key: 'id' },
-    },
-    guessCount: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      defaultValue: 0,
     },
   },
   {
