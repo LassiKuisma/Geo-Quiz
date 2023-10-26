@@ -6,7 +6,13 @@ import { error, ok } from '../util/utils';
 import { getAllCountries } from './countryService';
 
 import { Game, Ok, Result, User } from '../types/internal';
-import { GameLoaded, GameMove, GameSummary, NewGame } from '../types/shared';
+import {
+  Country,
+  GameLoaded,
+  GameMove,
+  GameSummary,
+  NewGame,
+} from '../types/shared';
 
 export const generateGame = async (
   user?: UserModel
@@ -44,8 +50,7 @@ export const generateGame = async (
 
     return ok(newGame);
   } catch (err) {
-    const msg = 'Db error';
-    return error(msg);
+    return dbError();
   }
 };
 
@@ -166,36 +171,15 @@ export const loadGame = async (
       return dbError();
     }
 
-    const moves = result.moves
-      .map((move) => {
-        const playerGuess = modelToCountry(move.country);
-        if (!playerGuess) {
-          return undefined;
-        }
-
-        const result: GameMove = {
-          guessedCountry: playerGuess,
-          correct: playerGuess.id === correctAnswer.id,
-          comparison: compareCountries(playerGuess, correctAnswer),
-        };
-
-        return result;
-      })
-      .filter((move): move is GameMove => !!move);
-
-    const guessedIds = moves.reduce((set, move) => {
-      set.add(move.guessedCountry.id);
-      return set;
-    }, new Set<number>());
-
+    const { moves, guessedIds } = parseMoveModels(result.moves, correctAnswer);
     const isGameOver = guessedIds.has(correctAnswer.id);
 
-    const countriesResult = await getAllCountries();
-    if (countriesResult.k === 'error') {
+    const countriesLoaded = await getAllCountries();
+    if (countriesLoaded.k === 'error') {
       return dbError();
     }
 
-    const countries = countriesResult.value.filter(
+    const countries = countriesLoaded.value.filter(
       (country) => !guessedIds.has(country.id)
     );
 
@@ -258,4 +242,33 @@ const dbError = (): GameError => {
     statusCode: 500,
     message: 'Unknown database error',
   };
+};
+
+const parseMoveModels = (
+  moveModels: Array<MoveJoined>,
+  correctAnswer: Country
+): { moves: Array<GameMove>; guessedIds: Set<number> } => {
+  const moves = moveModels
+    .map((move) => {
+      const playerGuess = modelToCountry(move.country);
+      if (!playerGuess) {
+        return undefined;
+      }
+
+      const result: GameMove = {
+        guessedCountry: playerGuess,
+        correct: playerGuess.id === correctAnswer.id,
+        comparison: compareCountries(playerGuess, correctAnswer),
+      };
+
+      return result;
+    })
+    .filter((move): move is GameMove => !!move);
+
+  const guessedIds = moves.reduce((guesses, move) => {
+    guesses.add(move.guessedCountry.id);
+    return guesses;
+  }, new Set<number>());
+
+  return { moves, guessedIds };
 };
