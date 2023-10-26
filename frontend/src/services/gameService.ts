@@ -4,7 +4,7 @@ import { apiBaseUrl } from '../constants';
 import { error, ok } from '../util/utils';
 
 import { Result } from '../types/internal';
-import { GameLoaded, MoveResult } from '../types/shared';
+import { GameLoaded, GameSummary, MoveResult } from '../types/shared';
 
 export const startNewGame = async (
   token?: string
@@ -65,4 +65,47 @@ const config = (token?: string) => {
         headers: { Authorization: `bearer ${token}` },
       }
     : undefined;
+};
+
+export const loadGame = async (gameId: number): Promise<Result<GameLoaded>> => {
+  try {
+    const { data } = await axios.get<GameLoaded>(
+      `${apiBaseUrl}/game/load/${gameId}`
+    );
+
+    return ok(data);
+  } catch (err) {
+    if (err instanceof AxiosError) {
+      if (err.code === 'ERR_NETWORK') {
+        return error("Can't connect to server");
+      } else {
+        const msg = err.response?.data || err.message;
+        return error(msg);
+      }
+    }
+    return error('Unknown error');
+  }
+};
+
+export const getUserGames = async (
+  token: string
+): Promise<Result<Array<GameSummary>>> => {
+  try {
+    const { data } = await axios.get<Array<GameSummary>>(
+      `${apiBaseUrl}/game/mygames`,
+      config(token)
+    );
+
+    return ok(data);
+  } catch (err) {
+    if (err instanceof AxiosError) {
+      if (err.code === 'ERR_NETWORK') {
+        return error("Can't connect to server");
+      } else {
+        const msg = err.response?.data || err.message;
+        return error(msg);
+      }
+    }
+    return error('Unknown error');
+  }
 };

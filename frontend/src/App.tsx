@@ -188,7 +188,10 @@ const App = () => {
               path="create-account"
               element={<CreateAccountPage setUser={handleLogin} />}
             />
-            <Route path="my-games" element={<UserGamesView />} />
+            <Route
+              path="my-games"
+              element={<UserGamesView user={user} setGame={setGame} />}
+            />
 
             <Route path="*" element={<NoMatch />} />
           </Route>
