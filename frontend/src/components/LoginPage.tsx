@@ -14,7 +14,7 @@ import {
 import { FormEvent, useState } from 'react';
 import { tryLogin } from '../services/loginService';
 import { useNavigate } from 'react-router-dom';
-import { UserWithToken } from '../types';
+import { UserWithToken } from '../types/shared';
 
 interface Props {
   setUser: (uwt: UserWithToken) => void;

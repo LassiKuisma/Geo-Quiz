@@ -10,7 +10,7 @@ import {
   styled,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-import { Country } from '../../types';
+import { Country } from '../../types/shared';
 import { useMemo, useState } from 'react';
 import { locationToStr, prefixNumber } from '../../util/utils';
 

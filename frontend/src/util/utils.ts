@@ -1,4 +1,5 @@
-import { Err, Ok, Result, UserWithToken } from '../types';
+import { Err, Ok, Result } from '../types';
+import { UserWithToken } from '../types/shared';
 
 /**
  * Helper function for Result type.

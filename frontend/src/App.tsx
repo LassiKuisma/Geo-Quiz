@@ -5,14 +5,8 @@ import HomePage from './components/HomePage';
 import GameView from './components/GameView';
 import { useEffect, useState } from 'react';
 import { startNewGame } from './services/gameService';
-import {
-  AppTheme,
-  Country,
-  GameObject,
-  GameStatus,
-  Move,
-  UserWithToken,
-} from './types';
+import { AppTheme, GameObject, GameStatus, Move } from './types';
+import { Country, UserWithToken } from './types/shared';
 import CountryList from './components/CountryList';
 import LoginPage from './components/LoginPage';
 import CreateAccountPage from './components/CreateAccountPage';

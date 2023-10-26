@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { apiBaseUrl } from '../constants';
-import { Country, Result } from '../types';
+import { Result } from '../types';
+import { Country } from '../types/shared';
 import { error, ok } from '../util/utils';
 
 export const getAllCountries = async (): Promise<Result<Country[]>> => {

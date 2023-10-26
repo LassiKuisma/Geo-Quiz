@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { apiBaseUrl } from '../constants';
-import { Result, UserWithToken } from '../types';
+import { Result } from '../types';
+import { UserWithToken } from '../types/shared';
 import { error, ok } from '../util/utils';
 
 export const tryCreateAccount = async (

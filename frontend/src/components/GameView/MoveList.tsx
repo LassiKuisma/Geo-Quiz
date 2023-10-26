@@ -10,7 +10,8 @@ import {
   Typography,
   styled,
 } from '@mui/material';
-import { Difference, Move } from '../../types';
+import { Move } from '../../types';
+import { Difference } from '../../types/shared';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
