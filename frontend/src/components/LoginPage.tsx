@@ -12,8 +12,10 @@ import {
   Typography,
 } from '@mui/material';
 import { FormEvent, useState } from 'react';
-import { tryLogin } from '../services/loginService';
 import { useNavigate } from 'react-router-dom';
+
+import { tryLogin } from '../services/loginService';
+
 import { UserWithToken } from '../types/shared';
 
 interface Props {

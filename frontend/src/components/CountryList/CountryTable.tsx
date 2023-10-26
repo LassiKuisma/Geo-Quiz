@@ -1,18 +1,20 @@
 import {
-  TableContainer,
+  Box,
   Table,
-  TableHead,
-  TableRow,
   TableBody,
   TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TableSortLabel,
-  Box,
   styled,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-import { Country } from '../../types/shared';
 import { useMemo, useState } from 'react';
+
 import { locationToStr, prefixNumber } from '../../util/utils';
+
+import { Country } from '../../types/shared';
 
 type Order = 'asc' | 'desc';
 

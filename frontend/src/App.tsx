@@ -1,17 +1,3 @@
-import { Routes, Route, Link, Outlet, useNavigate } from 'react-router-dom';
-
-import NavigationBar from './components/NavigationBar';
-import HomePage from './components/HomePage';
-import GameView from './components/GameView';
-import { useEffect, useState } from 'react';
-import { startNewGame } from './services/gameService';
-import { AppTheme, GameObject, GameStatus, Move } from './types/internal';
-import { Country, UserWithToken } from './types/shared';
-import CountryList from './components/CountryList';
-import LoginPage from './components/LoginPage';
-import CreateAccountPage from './components/CreateAccountPage';
-import { PREFERRED_THEME_PATH, USER_STORAGE_PATH } from './constants';
-import { userFromJson } from './util/utils';
 import {
   Box,
   CssBaseline,
@@ -19,6 +5,22 @@ import {
   createTheme,
   useMediaQuery,
 } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Link, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
+
+import CountryList from './components/CountryList';
+import CreateAccountPage from './components/CreateAccountPage';
+import GameView from './components/GameView';
+import HomePage from './components/HomePage';
+import LoginPage from './components/LoginPage';
+import NavigationBar from './components/NavigationBar';
+
+import { PREFERRED_THEME_PATH, USER_STORAGE_PATH } from './constants';
+import { startNewGame } from './services/gameService';
+import { userFromJson } from './util/utils';
+
+import { AppTheme, GameObject, GameStatus, Move } from './types/internal';
+import { Country, UserWithToken } from './types/shared';
 
 const lightTheme = createTheme({
   palette: {

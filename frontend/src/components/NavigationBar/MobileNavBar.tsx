@@ -1,3 +1,5 @@
+import { DarkMode, LightMode } from '@mui/icons-material';
+import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
   Box,
@@ -15,12 +17,10 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+
 import { AppTheme, Page } from '../../types/internal';
-import React from 'react';
-import { DarkMode, LightMode } from '@mui/icons-material';
 
 interface Props {
   pages: Array<Page>;

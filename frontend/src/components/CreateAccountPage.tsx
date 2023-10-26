@@ -1,20 +1,22 @@
-import { VisibilityOff, Visibility } from '@mui/icons-material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
+  Alert,
   Box,
-  Typography,
+  Button,
+  CircularProgress,
   FormControl,
+  FormHelperText,
+  IconButton,
+  InputAdornment,
   InputLabel,
   OutlinedInput,
-  InputAdornment,
-  IconButton,
-  CircularProgress,
-  Button,
-  Alert,
-  FormHelperText,
+  Typography,
 } from '@mui/material';
 import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+
 import { tryCreateAccount } from '../services/accountService';
+
 import { UserWithToken } from '../types/shared';
 
 const minLength = 3;
