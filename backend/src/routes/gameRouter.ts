@@ -3,6 +3,7 @@ import { getCountry } from '../services/countryService';
 import {
   generateGame,
   getGame,
+  getGamesFromUser,
   loadGame,
   saveMove,
 } from '../services/gameService';
@@ -12,7 +13,7 @@ import { compareCountries, getHints } from '../util/country';
 import { defaultThresholds } from '../util/gameSettings';
 import { isNumber } from '../util/utils';
 
-import { GameLoaded, MoveResult, NewGame } from '../types/shared';
+import { GameLoaded, GameSummary, MoveResult, NewGame } from '../types/shared';
 
 const router = express.Router();
 
@@ -110,6 +111,28 @@ router.get('/load/:id', async (req, res) => {
 
   const game: GameLoaded = result.value;
   return res.status(200).send(game);
+});
+
+router.get('/mygames', async (req, res) => {
+  const userResult = await extractUser(req);
+  if (userResult.k === 'error') {
+    return res.status(500).send(userResult.message);
+  }
+  if (userResult.k === 'invalid-token' || userResult.k === 'user-not-found') {
+    return res.status(400).send('Invalid token');
+  }
+  if (userResult.k === 'token-missing') {
+    return res.status(403).send('Not logged in');
+  }
+
+  const user = userResult.value;
+  const gamesResult = await getGamesFromUser(user.id);
+  if (gamesResult.k === 'error') {
+    return res.status(500).send(gamesResult.message);
+  }
+
+  const games: Array<GameSummary> = gamesResult.value;
+  return res.status(200).send(games);
 });
 
 export default router;

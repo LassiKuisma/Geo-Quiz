@@ -6,7 +6,7 @@ import { error, ok } from '../util/utils';
 import { getAllCountries } from './countryService';
 
 import { Game, Ok, Result, User } from '../types/internal';
-import { GameLoaded, GameMove, NewGame } from '../types/shared';
+import { GameLoaded, GameMove, GameSummary, NewGame } from '../types/shared';
 
 export const generateGame = async (
   user?: UserModel
@@ -236,6 +236,40 @@ export const loadGame = async (
     return {
       k: 'error',
       statusCode: 500,
+      message: 'Unknown database error',
+    };
+  }
+};
+
+type GameModelWithMoves = GameModel & { moves: Array<MoveModel> };
+
+export const getGamesFromUser = async (
+  userId: number
+): Promise<Result<Array<GameSummary>>> => {
+  try {
+    const games = (await GameModel.findAll({
+      where: {
+        userId,
+      },
+      include: [
+        {
+          model: MoveModel,
+          attributes: ['moveId'],
+        },
+      ],
+    })) as Array<GameModelWithMoves>;
+
+    const gamesWithMoveCount = games.map((game) => {
+      return {
+        gameId: game.gameId,
+        guessCount: game.moves.length,
+      };
+    });
+
+    return ok(gamesWithMoveCount);
+  } catch (err) {
+    return {
+      k: 'error',
       message: 'Unknown database error',
     };
   }

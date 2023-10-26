@@ -79,3 +79,8 @@ export interface GameLoaded {
   hints: Hints;
   countries: Array<Country>;
 }
+
+export interface GameSummary {
+  gameId: number;
+  guessCount: number;
+}
