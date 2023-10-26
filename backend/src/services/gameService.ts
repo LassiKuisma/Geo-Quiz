@@ -82,11 +82,7 @@ export const getGame = async (id: number): Promise<ResultGame<Game>> => {
     })) as GameJoined | null;
 
     if (!result) {
-      return {
-        k: 'error',
-        statusCode: 404,
-        message: `Game with id ${id} not found`,
-      };
+      return gameNotFound(id);
     }
 
     const country = modelToCountry(result.country);
@@ -95,11 +91,7 @@ export const getGame = async (id: number): Promise<ResultGame<Game>> => {
         `Error fetching game id=${id}: query returned faulty sql model.`
       );
 
-      return {
-        k: 'error',
-        statusCode: 500,
-        message: 'Unknown database error',
-      };
+      return dbError();
     }
 
     const owner: User | undefined = !result.user
@@ -120,11 +112,7 @@ export const getGame = async (id: number): Promise<ResultGame<Game>> => {
   } catch (err) {
     console.log(`Error fetching game id=${id}:`, err);
 
-    return {
-      k: 'error',
-      statusCode: 500,
-      message: 'Unknown database error',
-    };
+    return dbError();
   }
 };
 
@@ -140,7 +128,7 @@ export const saveMove = async (
 
     return ok(undefined);
   } catch (err) {
-    return error('Unknown database error');
+    return dbError();
   }
 };
 
@@ -170,20 +158,12 @@ export const loadGame = async (
     })) as GameJoined | null;
 
     if (!result) {
-      return {
-        k: 'error',
-        statusCode: 404,
-        message: `Game with id ${gameId} not found`,
-      };
+      return gameNotFound(gameId);
     }
 
     const correctAnswer = modelToCountry(result.country);
     if (!correctAnswer) {
-      return {
-        k: 'error',
-        statusCode: 500,
-        message: 'Unknown database error',
-      };
+      return dbError();
     }
 
     const moves = result.moves
@@ -212,11 +192,7 @@ export const loadGame = async (
 
     const countriesResult = await getAllCountries();
     if (countriesResult.k === 'error') {
-      return {
-        k: 'error',
-        statusCode: 500,
-        message: 'Unknown database error',
-      };
+      return dbError();
     }
 
     const countries = countriesResult.value.filter(
@@ -233,11 +209,7 @@ export const loadGame = async (
 
     return ok(gameWithMoves);
   } catch (err) {
-    return {
-      k: 'error',
-      statusCode: 500,
-      message: 'Unknown database error',
-    };
+    return dbError();
   }
 };
 
@@ -268,9 +240,22 @@ export const getGamesFromUser = async (
 
     return ok(gamesWithMoveCount);
   } catch (err) {
-    return {
-      k: 'error',
-      message: 'Unknown database error',
-    };
+    return dbError();
   }
+};
+
+const gameNotFound = (id: number): GameError => {
+  return {
+    k: 'error',
+    statusCode: 404,
+    message: `Game with id ${id} not found`,
+  };
+};
+
+const dbError = (): GameError => {
+  return {
+    k: 'error',
+    statusCode: 500,
+    message: 'Unknown database error',
+  };
 };
