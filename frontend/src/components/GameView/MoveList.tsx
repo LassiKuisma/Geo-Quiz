@@ -10,7 +10,7 @@ import {
   Typography,
   styled,
 } from '@mui/material';
-import { Move } from '../../types';
+import { Move } from '../../types/internal';
 import { Difference } from '../../types/shared';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';

@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { apiBaseUrl } from '../constants';
-import { Result } from '../types';
+import { Result } from '../types/internal';
 import { Country } from '../types/shared';
 import { error, ok } from '../util/utils';
 

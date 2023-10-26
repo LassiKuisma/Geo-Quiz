@@ -18,7 +18,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AppTheme, Page } from '../../types';
+import { AppTheme, Page } from '../../types/internal';
 import React from 'react';
 import { DarkMode, LightMode } from '@mui/icons-material';
 

@@ -1,4 +1,4 @@
-import { Err, Ok, Result } from '../types';
+import { Err, Ok, Result } from '../types/internal';
 import { UserWithToken } from '../types/shared';
 
 /**

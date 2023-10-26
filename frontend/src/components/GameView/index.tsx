@@ -1,5 +1,5 @@
 import { Alert, Box, Button, Typography } from '@mui/material';
-import { GameStatus, Move } from '../../types';
+import { GameStatus, Move } from '../../types/internal';
 import { Country, UserWithToken } from '../../types/shared';
 import MoveList from './MoveList';
 import HintsView from './HintsViews';

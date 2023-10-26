@@ -1,4 +1,4 @@
-import { AppTheme, Page } from '../../types';
+import { AppTheme, Page } from '../../types/internal';
 import DesktopNavBar from './DesktopNavBar';
 import MobileNavBar from './MobileNavBar';
 

@@ -1,6 +1,4 @@
-import { MoveResult } from './types/shared';
-import { Hints } from './types/shared';
-import { Country } from './types/shared';
+import { Country, MoveResult, Hints } from './shared';
 
 export type Err = { k: 'error'; message: string };
 export type Ok<T> = { k: 'ok'; value: T };

@@ -8,7 +8,7 @@ import {
   Switch,
   Typography,
 } from '@mui/material';
-import { AppTheme, Page } from '../../types';
+import { AppTheme, Page } from '../../types/internal';
 import { Link } from 'react-router-dom';
 
 interface Props {

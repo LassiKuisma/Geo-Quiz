@@ -7,7 +7,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useState } from 'react';
-import { GameObject } from '../../types';
+import { GameObject } from '../../types/internal';
 import { Country } from '../../types/shared';
 
 interface Props {
