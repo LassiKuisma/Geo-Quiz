@@ -16,6 +16,11 @@ const pages: Array<Page> = [
     name: 'Countries',
     to: '/countries',
   },
+  {
+    name: 'My games',
+    to: '/my-games',
+    loginRequired: true,
+  },
 ];
 
 interface AppBarProps {

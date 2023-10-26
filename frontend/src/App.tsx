@@ -14,6 +14,7 @@ import GameView from './components/GameView';
 import HomePage from './components/HomePage';
 import LoginPage from './components/LoginPage';
 import NavigationBar from './components/NavigationBar';
+import UserGamesView from './components/UserGames';
 
 import { PREFERRED_THEME_PATH, USER_STORAGE_PATH } from './constants';
 import { startNewGame } from './services/gameService';
@@ -187,6 +188,7 @@ const App = () => {
               path="create-account"
               element={<CreateAccountPage setUser={handleLogin} />}
             />
+            <Route path="my-games" element={<UserGamesView />} />
 
             <Route path="*" element={<NoMatch />} />
           </Route>

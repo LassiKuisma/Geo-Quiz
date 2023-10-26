@@ -39,11 +39,19 @@ const MobileNavBar = ({
 }: Props) => {
   const [open, setOpen] = useState(false);
 
+  const isLoggedIn = !!loggedInUser;
+  const pagesToShow = pages.filter((page) => {
+    const requireLogin = page.loginRequired || false;
+
+    const hide = requireLogin && !isLoggedIn;
+    return !hide;
+  });
+
   return (
     <Box>
       <TopBar setOpen={setOpen} user={loggedInUser} />
       <SideBar
-        pages={pages}
+        pages={pagesToShow}
         open={open}
         setOpen={setOpen}
         theme={theme}
