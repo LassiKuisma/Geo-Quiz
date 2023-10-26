@@ -3,7 +3,8 @@ import { getCountry } from '../services/countryService';
 import {
   generateGame,
   getGame,
-  increaseGuessCount,
+  loadGame,
+  saveMove,
 } from '../services/gameService';
 
 import { canPostMoves, extractUser } from '../util/authentication';
@@ -11,7 +12,7 @@ import { compareCountries, getHints } from '../util/country';
 import { defaultThresholds } from '../util/gameSettings';
 import { isNumber } from '../util/utils';
 
-import { MoveResult, NewGame } from '../types/shared';
+import { GameLoaded, MoveResult, NewGame } from '../types/shared';
 
 const router = express.Router();
 
@@ -88,12 +89,27 @@ router.post('/move', async (req, res) => {
     hints,
   };
 
-  const guessSaved = await increaseGuessCount(game.gameId);
-  if (guessSaved.k === 'error') {
-    return res.status(500).send(guessSaved.message);
+  const moveSaved = await saveMove(game.gameId, playerGuess.id);
+  if (moveSaved.k === 'error') {
+    return res.status(500).send(moveSaved.message);
   }
 
   return res.status(200).send(moveResult);
+});
+
+router.get('/load/:id', async (req, res) => {
+  const gameId = parseInt(req.params.id);
+  if (isNaN(gameId)) {
+    return res.status(400).send('Invalid game id');
+  }
+
+  const result = await loadGame(gameId);
+  if (result.k === 'error') {
+    return res.status(result.statusCode).send(result.message);
+  }
+
+  const game: GameLoaded = result.value;
+  return res.status(200).send(game);
 });
 
 export default router;

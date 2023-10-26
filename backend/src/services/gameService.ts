@@ -1,12 +1,12 @@
-import { CountryModel, GameModel, UserModel } from '../models';
-import { getHints } from '../util/country';
+import { CountryModel, GameModel, MoveModel, UserModel } from '../models';
+import { compareCountries, getHints } from '../util/country';
 import { defaultThresholds } from '../util/gameSettings';
 import { CountryJoined, countryOptions, modelToCountry } from '../util/models';
 import { error, ok } from '../util/utils';
 import { getAllCountries } from './countryService';
 
 import { Game, Ok, Result, User } from '../types/internal';
-import { NewGame } from '../types/shared';
+import { GameLoaded, GameMove, NewGame } from '../types/shared';
 
 export const generateGame = async (
   user?: UserModel
@@ -57,7 +57,11 @@ type GameError = {
 
 type ResultGame<T> = Ok<T> | GameError;
 
-type GameJoined = GameModel & { country: CountryJoined } & { user?: UserModel };
+type MoveJoined = MoveModel & { country: CountryJoined };
+
+type GameJoined = GameModel & { country: CountryJoined } & {
+  user?: UserModel;
+} & { moves: Array<MoveJoined> };
 
 export const getGame = async (id: number): Promise<ResultGame<Game>> => {
   try {
@@ -69,6 +73,10 @@ export const getGame = async (id: number): Promise<ResultGame<Game>> => {
         },
         {
           model: UserModel,
+        },
+        {
+          model: MoveModel,
+          attributes: ['moveId'],
         },
       ],
     })) as GameJoined | null;
@@ -104,7 +112,7 @@ export const getGame = async (id: number): Promise<ResultGame<Game>> => {
     const game: Game = {
       gameId: result.gameId,
       answer: country,
-      guesses: result.guessCount,
+      guesses: result.moves.length,
       owner,
     };
 
@@ -120,19 +128,115 @@ export const getGame = async (id: number): Promise<ResultGame<Game>> => {
   }
 };
 
-export const increaseGuessCount = async (id: number): Promise<Result<void>> => {
+export const saveMove = async (
+  gameId: number,
+  countryId: number
+): Promise<Result<undefined>> => {
   try {
-    const game = await GameModel.findByPk(id);
-    if (!game) {
-      return error('Game not found');
-    }
-
-    game.guessCount += 1;
-    await game.save();
+    await MoveModel.create({
+      gameId,
+      guessedCountry: countryId,
+    });
 
     return ok(undefined);
   } catch (err) {
-    console.log('Error updating guess count:', err);
-    return error('Error updating guess count');
+    return error('Unknown database error');
+  }
+};
+
+export const loadGame = async (
+  gameId: number
+): Promise<ResultGame<GameLoaded>> => {
+  try {
+    const result = (await GameModel.findByPk(gameId, {
+      include: [
+        {
+          model: CountryModel,
+          ...countryOptions(),
+        },
+        {
+          model: UserModel,
+        },
+        {
+          model: MoveModel,
+          include: [
+            {
+              model: CountryModel,
+              ...countryOptions(),
+            },
+          ],
+        },
+      ],
+    })) as GameJoined | null;
+
+    if (!result) {
+      return {
+        k: 'error',
+        statusCode: 404,
+        message: `Game with id ${gameId} not found`,
+      };
+    }
+
+    const correctAnswer = modelToCountry(result.country);
+    if (!correctAnswer) {
+      return {
+        k: 'error',
+        statusCode: 500,
+        message: 'Unknown database error',
+      };
+    }
+
+    const moves = result.moves
+      .map((move) => {
+        const playerGuess = modelToCountry(move.country);
+        if (!playerGuess) {
+          return undefined;
+        }
+
+        const result: GameMove = {
+          guessedCountry: playerGuess,
+          correct: playerGuess.id === correctAnswer.id,
+          comparison: compareCountries(playerGuess, correctAnswer),
+        };
+
+        return result;
+      })
+      .filter((move): move is GameMove => !!move);
+
+    const guessedIds = moves.reduce((set, move) => {
+      set.add(move.guessedCountry.id);
+      return set;
+    }, new Set<number>());
+
+    const isGameOver = guessedIds.has(correctAnswer.id);
+
+    const countriesResult = await getAllCountries();
+    if (countriesResult.k === 'error') {
+      return {
+        k: 'error',
+        statusCode: 500,
+        message: 'Unknown database error',
+      };
+    }
+
+    const countries = countriesResult.value.filter(
+      (country) => !guessedIds.has(country.id)
+    );
+
+    const gameWithMoves: GameLoaded = {
+      gameId,
+      moves,
+      hints: getHints(moves.length, correctAnswer, defaultThresholds),
+      isGameOver,
+      countries,
+    };
+
+    return ok(gameWithMoves);
+  } catch (err) {
+    return {
+      k: 'error',
+      statusCode: 500,
+      message: 'Unknown database error',
+    };
   }
 };

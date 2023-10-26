@@ -65,3 +65,17 @@ export interface UserWithToken {
   username: string;
   token: string;
 }
+
+export interface GameMove {
+  guessedCountry: Country;
+  correct: boolean;
+  comparison: Comparison;
+}
+
+export interface GameLoaded {
+  gameId: number;
+  moves: Array<GameMove>;
+  isGameOver: boolean;
+  hints: Hints;
+  countries: Array<Country>;
+}
