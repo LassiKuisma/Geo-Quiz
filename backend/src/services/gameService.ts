@@ -6,17 +6,11 @@ import { error, ok } from '../util/utils';
 import { getAllCountries } from './countryService';
 
 import { Game, Ok, Result, User } from '../types/internal';
-import {
-  Country,
-  GameLoaded,
-  GameMove,
-  GameSummary,
-  NewGame,
-} from '../types/shared';
+import { Country, GameLoaded, GameMove, GameSummary } from '../types/shared';
 
 export const generateGame = async (
   user?: UserModel
-): Promise<Result<NewGame>> => {
+): Promise<Result<GameLoaded>> => {
   const countriesResult = await getAllCountries();
   if (countriesResult.k === 'error') {
     const msg = 'unable to fetch country data';
@@ -42,10 +36,12 @@ export const generateGame = async (
       userId,
     });
 
-    const newGame = {
+    const newGame: GameLoaded = {
       gameId: created.gameId,
       countries,
       hints: getHints(0, country, defaultThresholds),
+      isGameOver: false,
+      moves: [],
     };
 
     return ok(newGame);

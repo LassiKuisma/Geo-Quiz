@@ -13,7 +13,7 @@ import { compareCountries, getHints } from '../util/country';
 import { defaultThresholds } from '../util/gameSettings';
 import { isNumber } from '../util/utils';
 
-import { GameLoaded, GameSummary, MoveResult, NewGame } from '../types/shared';
+import { GameLoaded, GameSummary, MoveResult } from '../types/shared';
 
 const router = express.Router();
 
@@ -36,7 +36,7 @@ router.post('/newgame', async (req, res) => {
     return res.status(500).send(gameResult.message);
   }
 
-  const newGame: NewGame = gameResult.value;
+  const newGame: GameLoaded = gameResult.value;
   return res.json(newGame);
 });
 
@@ -85,8 +85,11 @@ router.post('/move', async (req, res) => {
   const hints = getHints(game.guesses, correctAnswer, defaultThresholds);
 
   const moveResult: MoveResult = {
-    correct: playerGuess.id === correctAnswer.id,
-    comparison,
+    move: {
+      guessedCountry: playerGuess,
+      correct: playerGuess.id === correctAnswer.id,
+      comparison,
+    },
     hints,
   };
 

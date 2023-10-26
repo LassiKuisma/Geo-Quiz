@@ -50,14 +50,7 @@ export interface Comparison {
 }
 
 export interface MoveResult {
-  correct: boolean;
-  comparison: Comparison;
-  hints: Hints;
-}
-
-export interface NewGame {
-  gameId: number;
-  countries: Array<Country>;
+  move: GameMove;
   hints: Hints;
 }
 
