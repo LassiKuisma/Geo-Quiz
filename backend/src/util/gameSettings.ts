@@ -1,4 +1,4 @@
-import { HintThresholds } from './types';
+import { HintThresholds } from '../types/internal';
 
 export const defaultThresholds: HintThresholds = {
   landlocked: 2,

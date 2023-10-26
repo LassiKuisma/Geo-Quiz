@@ -1,4 +1,4 @@
-import { Err, Ok } from './types';
+import { Err, Ok } from '../types/internal';
 import { Side } from '../types/shared';
 
 /**

@@ -2,7 +2,7 @@ import { Request } from 'express';
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { JWT_SECRET } from './config';
 import { error, isNumber, ok } from './utils';
-import { Err, Ok } from './types';
+import { Err, Ok } from '../types/internal';
 import { UserWithToken } from '../types/shared';
 import { UserModel } from '../models';
 

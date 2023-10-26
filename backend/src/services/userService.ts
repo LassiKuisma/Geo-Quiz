@@ -1,5 +1,5 @@
 import { UserModel } from '../models';
-import { Result, User } from '../util/types';
+import { Result, User } from '../types/internal';
 import { error, ok } from '../util/utils';
 
 export const createUser = async (
