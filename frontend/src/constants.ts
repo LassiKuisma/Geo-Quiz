@@ -5,3 +5,4 @@ export const apiBaseUrl =
 
 export const USER_STORAGE_PATH = 'geo-quiz-app-user';
 export const PREFERRED_THEME_PATH = 'geo-quiz-theme';
+export const CURRENT_GAME_ID = 'geo-quiz-active-game';

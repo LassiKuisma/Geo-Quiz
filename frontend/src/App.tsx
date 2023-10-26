@@ -16,7 +16,11 @@ import LoginPage from './components/LoginPage';
 import NavigationBar from './components/NavigationBar';
 import UserGamesView from './components/UserGames';
 
-import { PREFERRED_THEME_PATH, USER_STORAGE_PATH } from './constants';
+import {
+  CURRENT_GAME_ID,
+  PREFERRED_THEME_PATH,
+  USER_STORAGE_PATH,
+} from './constants';
 import { startNewGame } from './services/gameService';
 import { createStatusManager } from './util/gameUtil';
 import { userFromJson } from './util/utils';
@@ -63,18 +67,40 @@ const App = () => {
   const hasSmallDevice = !useMediaQuery('(min-width: 768px)');
 
   useEffect(() => {
-    const storedUser = window.localStorage.getItem(USER_STORAGE_PATH);
-    if (!storedUser) {
-      return;
-    }
+    const loadUser = () => {
+      const storedUser = window.localStorage.getItem(USER_STORAGE_PATH);
+      if (!storedUser) {
+        return;
+      }
 
-    const parsed = userFromJson(storedUser);
-    if (parsed.k === 'error') {
-      console.log('Failed to get user from local storage:', parsed.message);
-      return;
-    }
+      const parsed = userFromJson(storedUser);
+      if (parsed.k === 'error') {
+        console.log('Failed to get user from local storage:', parsed.message);
+        return;
+      }
 
-    setUser(parsed.value);
+      setUser(parsed.value);
+    };
+
+    const loadActiveGame = () => {
+      const activeGameId = window.localStorage.getItem(CURRENT_GAME_ID);
+      if (!activeGameId) {
+        return;
+      }
+
+      const id = parseInt(activeGameId);
+      if (isNaN(id)) {
+        console.log(`Invalid game id in local storage: ${activeGameId}`);
+        return;
+      }
+
+      if (!game) {
+        gameStatus.setLoadableFromId(id);
+      }
+    };
+
+    loadUser();
+    loadActiveGame();
   }, []);
 
   const gameStatus = createStatusManager(setGame);
@@ -129,7 +155,7 @@ const App = () => {
     window.localStorage.setItem(PREFERRED_THEME_PATH, newTheme);
   };
 
-  const hasActiveGame = game?.k === 'ok';
+  const hasActiveGame = game?.k === 'ok' || game?.k === 'load-from-id';
   const currentTheme = theme === 'dark' ? darkTheme : lightTheme;
 
   return (

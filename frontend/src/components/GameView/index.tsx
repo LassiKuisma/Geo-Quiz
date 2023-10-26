@@ -1,13 +1,17 @@
 import { Alert, Box, Button, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { postMove } from '../../services/gameService';
+import { loadGame, postMove } from '../../services/gameService';
 import CountrySelect from './CountrySelect';
 import GameOver from './GameOver';
 import HintsView from './HintsViews';
 import MoveList from './MoveList';
 
-import { GameStatus, GameStatusManager } from '../../types/internal';
+import {
+  GameObject,
+  GameStatus,
+  GameStatusManager,
+} from '../../types/internal';
 import { Country, UserWithToken } from '../../types/shared';
 
 interface Props {
@@ -26,6 +30,39 @@ const GameView = ({
   hasSmallDevice,
 }: Props) => {
   const [error, setError] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (game?.k !== 'load-from-id') {
+      return;
+    }
+
+    const doLoadGame = async () => {
+      const gameId = game.gameId;
+      gameStatus.setLoading();
+
+      const loadResult = await loadGame(gameId);
+      if (loadResult.k === 'error') {
+        gameStatus.setError(loadResult.message);
+        return;
+      }
+
+      const loaded = loadResult.value;
+      loaded.countries.sort((a, b) => a.name.localeCompare(b.name));
+
+      const gameObject: GameObject = {
+        gameId: loaded.gameId,
+        guesses: loaded.moves,
+        isSubmittingMove: false,
+        gameOver: loaded.isGameOver,
+        hints: loaded.hints,
+        countries: loaded.countries,
+      };
+
+      gameStatus.setGameObject(gameObject);
+    };
+
+    doLoadGame();
+  }, [game?.k]);
 
   const submitMove = async (country: Country) => {
     if (!game || game.k !== 'ok') {
@@ -82,8 +119,8 @@ const GameView = ({
     );
   }
 
-  if (game.k === 'loading') {
-    return <Box margin={1}>Loading new game...</Box>;
+  if (game.k === 'loading' || game.k === 'load-from-id') {
+    return <Loading />;
   }
 
   if (game.k === 'error') {
@@ -126,6 +163,10 @@ const Error = ({ message }: { message: string | undefined }) => {
       Try again in a moment.
     </Alert>
   );
+};
+
+const Loading = () => {
+  return <Box margin={1}>Loading game...</Box>;
 };
 
 export default GameView;
