@@ -65,7 +65,7 @@ export const getGame = async (id: number): Promise<ResultGame<Game>> => {
       include: [
         {
           model: CountryModel,
-          ...countryOptions,
+          ...countryOptions(),
         },
         {
           model: UserModel,

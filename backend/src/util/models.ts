@@ -18,31 +18,33 @@ export type CountryJoined = CountryModel & { driving_side: DrivingSide } & {
 } & { neighbours: Array<CountryModel> };
 
 // options for querying countries, use with CountryJoined
-export const countryOptions = {
-  attributes: {
-    exclude: ['drivingSideId', 'regionId', 'subregionId'],
-  },
-  include: [
-    { model: DrivingSide, attributes: ['side'] },
-    { model: Region, attributes: ['regionName'] },
-    { model: Subregion, attributes: ['subregionName'] },
-    {
-      model: Continent,
-      attributes: ['continentName'],
-      through: { attributes: [] },
+export const countryOptions = () => {
+  return {
+    attributes: {
+      exclude: ['drivingSideId', 'regionId', 'subregionId'],
     },
-    {
-      model: Language,
-      attributes: ['languageName'],
-      through: { attributes: [] },
-    },
-    {
-      model: CountryModel,
-      attributes: ['name'],
-      as: 'neighbours',
-      through: { attributes: [] },
-    },
-  ],
+    include: [
+      { model: DrivingSide, attributes: ['side'] },
+      { model: Region, attributes: ['regionName'] },
+      { model: Subregion, attributes: ['subregionName'] },
+      {
+        model: Continent,
+        attributes: ['continentName'],
+        through: { attributes: [] },
+      },
+      {
+        model: Language,
+        attributes: ['languageName'],
+        through: { attributes: [] },
+      },
+      {
+        model: CountryModel,
+        attributes: ['name'],
+        as: 'neighbours',
+        through: { attributes: [] },
+      },
+    ],
+  };
 };
 
 export const modelToCountry = (model: CountryJoined): Country | null => {
