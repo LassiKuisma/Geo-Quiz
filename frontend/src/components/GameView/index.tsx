@@ -1,11 +1,14 @@
 import { Alert, Box, Button, Typography } from '@mui/material';
-import { Country, GameStatus, Move, UserWithToken } from '../../types';
-import MoveList from './MoveList';
-import HintsView from './HintsViews';
+import { useState } from 'react';
+
+import { postMove } from '../../services/gameService';
 import CountrySelect from './CountrySelect';
 import GameOver from './GameOver';
-import { useState } from 'react';
-import { postMove } from '../../services/gameService';
+import HintsView from './HintsViews';
+import MoveList from './MoveList';
+
+import { GameStatus, Move } from '../../types/internal';
+import { Country, UserWithToken } from '../../types/shared';
 
 interface Props {
   game: GameStatus;

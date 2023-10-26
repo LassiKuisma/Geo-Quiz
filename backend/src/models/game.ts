@@ -6,8 +6,8 @@ import {
   InferCreationAttributes,
   Model,
 } from 'sequelize';
-import { Country } from './country';
 import { sequelize } from '../util/db';
+import { CountryModel } from './country';
 import { UserModel } from './user';
 
 class GameModel extends Model<
@@ -15,7 +15,7 @@ class GameModel extends Model<
   InferCreationAttributes<GameModel>
 > {
   declare gameId: CreationOptional<number>;
-  declare countryId: ForeignKey<Country['id']>;
+  declare countryId: ForeignKey<CountryModel['id']>;
 
   declare guessCount: CreationOptional<number>;
   declare userId: ForeignKey<UserModel['id']>;

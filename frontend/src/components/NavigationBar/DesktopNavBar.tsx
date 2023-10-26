@@ -1,15 +1,16 @@
-import { LightMode, DarkMode } from '@mui/icons-material';
+import { DarkMode, LightMode } from '@mui/icons-material';
 import {
-  Box,
   AppBar,
-  Toolbar,
-  Divider,
+  Box,
   Button,
+  Divider,
   Switch,
+  Toolbar,
   Typography,
 } from '@mui/material';
-import { AppTheme, Page } from '../../types';
 import { Link } from 'react-router-dom';
+
+import { AppTheme, Page } from '../../types/internal';
 
 interface Props {
   pages: Array<Page>;

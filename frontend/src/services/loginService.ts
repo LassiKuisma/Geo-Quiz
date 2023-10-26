@@ -1,7 +1,10 @@
 import axios, { AxiosError } from 'axios';
+
 import { apiBaseUrl } from '../constants';
-import { Result, UserWithToken } from '../types';
 import { error, ok } from '../util/utils';
+
+import { Result } from '../types/internal';
+import { UserWithToken } from '../types/shared';
 
 export const tryLogin = async (
   username: string,

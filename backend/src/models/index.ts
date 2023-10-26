@@ -1,51 +1,51 @@
 import { Continent } from './continent';
-import { Country } from './country';
+import { CountryModel } from './country';
 import { CountryContinent } from './countryContinent';
 import { CountryLanguage } from './countryLanguage';
 import { CountryNeighbour } from './countryNeighbour';
 import { DrivingSide } from './drivingSide';
+import { GameModel } from './game';
 import { Language } from './language';
 import { Region } from './region';
 import { Subregion } from './subregion';
-import { GameModel } from './game';
 import { UserModel } from './user';
 
-Continent.belongsToMany(Country, { through: CountryContinent });
-Country.belongsToMany(Continent, { through: CountryContinent });
+Continent.belongsToMany(CountryModel, { through: CountryContinent });
+CountryModel.belongsToMany(Continent, { through: CountryContinent });
 
-Language.belongsToMany(Country, { through: CountryLanguage });
-Country.belongsToMany(Language, { through: CountryLanguage });
+Language.belongsToMany(CountryModel, { through: CountryLanguage });
+CountryModel.belongsToMany(Language, { through: CountryLanguage });
 
-Country.belongsTo(DrivingSide);
-Country.belongsTo(Region);
-Country.belongsTo(Subregion);
+CountryModel.belongsTo(DrivingSide);
+CountryModel.belongsTo(Region);
+CountryModel.belongsTo(Subregion);
 
-Country.belongsToMany(Country, {
+CountryModel.belongsToMany(CountryModel, {
   as: 'neighbours',
   foreignKey: 'firstCountryId',
   through: CountryNeighbour,
 });
 
-Country.belongsToMany(Country, {
+CountryModel.belongsToMany(CountryModel, {
   as: 'countryNeighbours',
   foreignKey: 'secondCountryId',
   through: CountryNeighbour,
 });
 
-GameModel.belongsTo(Country);
+GameModel.belongsTo(CountryModel);
 
 GameModel.belongsTo(UserModel);
 
 export {
   Continent,
-  Country as CountryModel,
   CountryContinent,
   CountryLanguage,
+  CountryModel,
   CountryNeighbour,
   DrivingSide,
+  GameModel,
   Language,
   Region,
   Subregion,
-  GameModel,
   UserModel,
 };

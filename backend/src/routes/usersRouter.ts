@@ -1,9 +1,12 @@
-import express from 'express';
-import { isString } from '../util/utils';
 import bcrypt from 'bcrypt';
-import { validateUserInfo } from '../util/newUser';
+import express from 'express';
+
 import { createUser } from '../services/userService';
 import { createToken } from '../util/authentication';
+import { validateUserInfo } from '../util/newUser';
+import { isString } from '../util/utils';
+
+import { UserWithToken } from '../types/shared';
 
 const router = express.Router();
 
@@ -40,7 +43,7 @@ router.post('/create', async (req, res) => {
   const user = saveResult.value;
 
   // sign them in
-  const userWithToken = createToken(user.username, user.id);
+  const userWithToken: UserWithToken = createToken(user.username, user.id);
   return res.status(200).send(userWithToken);
 });
 

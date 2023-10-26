@@ -1,9 +1,12 @@
 import { Request } from 'express';
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
+
+import { UserModel } from '../models';
 import { JWT_SECRET } from './config';
 import { error, isNumber, ok } from './utils';
-import { Err, Ok, UserWithToken } from './types';
-import { UserModel } from '../models';
+
+import { Err, Ok } from '../types/internal';
+import { UserWithToken } from '../types/shared';
 
 type TokenMissing = { k: 'token-missing' };
 type InvalidToken = { k: 'invalid-token' };

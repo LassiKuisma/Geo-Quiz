@@ -1,12 +1,12 @@
 import { CountryModel, GameModel, UserModel } from '../models';
-
-import { Game, NewGame, Ok, Result, User } from '../util/types';
-import { defaultThresholds } from '../util/gameSettings';
 import { getHints } from '../util/country';
-import { countryOptions, CountryJoined, modelToCountry } from '../util/models';
+import { defaultThresholds } from '../util/gameSettings';
+import { CountryJoined, countryOptions, modelToCountry } from '../util/models';
 import { error, ok } from '../util/utils';
-
 import { getAllCountries } from './countryService';
+
+import { Game, Ok, Result, User } from '../types/internal';
+import { NewGame } from '../types/shared';
 
 export const generateGame = async (
   user?: UserModel

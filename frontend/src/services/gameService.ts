@@ -1,7 +1,10 @@
 import axios, { AxiosError } from 'axios';
+
 import { apiBaseUrl } from '../constants';
-import { MoveResult, NewGame, Result } from '../types';
 import { error, ok } from '../util/utils';
+
+import { Result } from '../types/internal';
+import { MoveResult, NewGame } from '../types/shared';
 
 export const startNewGame = async (
   token?: string

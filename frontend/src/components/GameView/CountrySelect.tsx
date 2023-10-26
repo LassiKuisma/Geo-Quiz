@@ -1,13 +1,15 @@
 import {
-  Box,
-  Autocomplete,
-  TextField,
-  Button,
   Alert,
+  Autocomplete,
+  Box,
+  Button,
   CircularProgress,
+  TextField,
 } from '@mui/material';
 import { useState } from 'react';
-import { Country, GameObject } from '../../types';
+
+import { GameObject } from '../../types/internal';
+import { Country } from '../../types/shared';
 
 interface Props {
   game: GameObject;

@@ -1,7 +1,6 @@
-export type Err = { k: 'error'; message: string };
-export type Ok<T> = { k: 'ok'; value: T };
+// shared types between front and back (such as data sent via API)
 
-export type Result<T> = Ok<T> | Err;
+export type Side = 'left' | 'right';
 
 export interface Country {
   id: number;
@@ -22,7 +21,15 @@ export interface Country {
   neighbours: Array<string>;
 }
 
-export type Side = 'left' | 'right';
+export type Hint<T> =
+  | { locked: true; unlocksIn: number }
+  | { locked: false; value: T };
+
+export interface Hints {
+  landlocked: Hint<boolean>;
+  drivingSide: Hint<Side>;
+  capital: Hint<string | null>;
+}
 
 export type Difference = 'more' | 'less' | 'equal';
 
@@ -48,38 +55,10 @@ export interface MoveResult {
   hints: Hints;
 }
 
-export type Hint<T> =
-  | { locked: true; unlocksIn: number }
-  | { locked: false; value: T };
-
-export interface Hints {
-  landlocked: Hint<boolean>;
-  drivingSide: Hint<Side>;
-  capital: Hint<string | null>;
-}
-
 export interface NewGame {
   gameId: number;
   countries: Array<Country>;
   hints: Hints;
-}
-
-export interface HintThresholds {
-  landlocked: number;
-  drivingSide: number;
-  capital: number;
-}
-
-export interface Game {
-  gameId: number;
-  answer: Country;
-  guesses: number;
-  owner?: User;
-}
-
-export interface User {
-  username: string;
-  id: number;
 }
 
 export interface UserWithToken {

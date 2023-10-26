@@ -1,3 +1,8 @@
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import Arrow from '@mui/icons-material/TrendingFlat';
 import {
   Box,
   Stack,
@@ -10,14 +15,12 @@ import {
   Typography,
   styled,
 } from '@mui/material';
-import { Difference, Move } from '../../types';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import Arrow from '@mui/icons-material/TrendingFlat';
 import React from 'react';
+
 import { prefixNumber } from '../../util/utils';
+
+import { Move } from '../../types/internal';
+import { Difference } from '../../types/shared';
 
 const HeaderCell = styled(TableCell)(({ theme }) => ({
   fontSize: 'large',

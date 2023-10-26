@@ -1,15 +1,17 @@
 import express from 'express';
-import { isNumber } from '../util/utils';
 import { getCountry } from '../services/countryService';
-import { MoveResult } from '../util/types';
-import { compareCountries, getHints } from '../util/country';
-import { defaultThresholds } from '../util/gameSettings';
 import {
   generateGame,
   getGame,
   increaseGuessCount,
 } from '../services/gameService';
-import { extractUser, canPostMoves } from '../util/authentication';
+
+import { canPostMoves, extractUser } from '../util/authentication';
+import { compareCountries, getHints } from '../util/country';
+import { defaultThresholds } from '../util/gameSettings';
+import { isNumber } from '../util/utils';
+
+import { MoveResult, NewGame } from '../types/shared';
 
 const router = express.Router();
 
@@ -32,7 +34,7 @@ router.post('/newgame', async (req, res) => {
     return res.status(500).send(gameResult.message);
   }
 
-  const newGame = gameResult.value;
+  const newGame: NewGame = gameResult.value;
   return res.json(newGame);
 });
 

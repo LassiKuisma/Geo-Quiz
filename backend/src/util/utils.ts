@@ -1,4 +1,5 @@
-import { Err, Ok, Side } from './types';
+import { Err, Ok } from '../types/internal';
+import { Side } from '../types/shared';
 
 /**
  * Helper function for Result type.

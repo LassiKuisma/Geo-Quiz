@@ -1,8 +1,10 @@
 import { Box } from '@mui/material';
-import { Country } from '../../types';
 import { useEffect, useState } from 'react';
+
 import { getAllCountries } from '../../services/countryService';
 import CountryTable from './CountryTable';
+
+import { Country } from '../../types/shared';
 
 interface Props {
   countries: undefined | Array<Country>;

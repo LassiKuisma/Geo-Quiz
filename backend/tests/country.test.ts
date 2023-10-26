@@ -1,5 +1,5 @@
 import { compareCountries, getHints } from '../src/util/country';
-import { Country, Difference, Hint, Side } from '../src/util/types';
+import { Country, Difference, Hint, Side } from '../src/types/shared';
 
 describe('comparing countries', () => {
   test('works with two completely different countries', () => {

@@ -1,7 +1,9 @@
 import { CountryModel } from '../models';
-import { Country, Result } from '../util/types';
+import { CountryJoined, countryOptions, modelToCountry } from '../util/models';
 import { error, ok } from '../util/utils';
-import { countryOptions, CountryJoined, modelToCountry } from '../util/models';
+
+import { Result } from '../types/internal';
+import { Country } from '../types/shared';
 
 export const getAllCountries = async (): Promise<Result<Country[]>> => {
   try {
