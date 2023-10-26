@@ -50,18 +50,30 @@ export interface Comparison {
 }
 
 export interface MoveResult {
-  correct: boolean;
-  comparison: Comparison;
-  hints: Hints;
-}
-
-export interface NewGame {
-  gameId: number;
-  countries: Array<Country>;
+  move: GameMove;
   hints: Hints;
 }
 
 export interface UserWithToken {
   username: string;
   token: string;
+}
+
+export interface GameMove {
+  guessedCountry: Country;
+  correct: boolean;
+  comparison: Comparison;
+}
+
+export interface GameLoaded {
+  gameId: number;
+  moves: Array<GameMove>;
+  isGameOver: boolean;
+  hints: Hints;
+  countries: Array<Country>;
+}
+
+export interface GameSummary {
+  gameId: number;
+  guessCount: number;
 }

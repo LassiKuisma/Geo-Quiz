@@ -19,7 +19,7 @@ import { PREFERRED_THEME_PATH, USER_STORAGE_PATH } from './constants';
 import { startNewGame } from './services/gameService';
 import { userFromJson } from './util/utils';
 
-import { AppTheme, GameObject, GameStatus, Move } from './types/internal';
+import { AppTheme, GameObject, GameStatus } from './types/internal';
 import { Country, UserWithToken } from './types/shared';
 
 const lightTheme = createTheme({
@@ -93,7 +93,7 @@ const App = () => {
     const gameObj: GameObject = {
       gameId: newGame.gameId,
       countries: newGame.countries,
-      guesses: new Array<Move>(),
+      guesses: [],
       isSubmittingMove: false,
       hints: newGame.hints,
       gameOver: false,

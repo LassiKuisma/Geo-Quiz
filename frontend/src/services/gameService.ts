@@ -4,13 +4,13 @@ import { apiBaseUrl } from '../constants';
 import { error, ok } from '../util/utils';
 
 import { Result } from '../types/internal';
-import { MoveResult, NewGame } from '../types/shared';
+import { GameLoaded, MoveResult } from '../types/shared';
 
 export const startNewGame = async (
   token?: string
-): Promise<Result<NewGame>> => {
+): Promise<Result<GameLoaded>> => {
   try {
-    const { data } = await axios.post<NewGame>(
+    const { data } = await axios.post<GameLoaded>(
       `${apiBaseUrl}/game/newgame`,
       {},
       config(token)

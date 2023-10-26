@@ -7,7 +7,7 @@ import GameOver from './GameOver';
 import HintsView from './HintsViews';
 import MoveList from './MoveList';
 
-import { GameStatus, Move } from '../../types/internal';
+import { GameStatus } from '../../types/internal';
 import { Country, UserWithToken } from '../../types/shared';
 
 interface Props {
@@ -58,11 +58,7 @@ const GameView = ({
     setError(undefined);
 
     const result = moveResult.value;
-
-    const move: Move = {
-      guessedCountry: country,
-      result,
-    };
+    const move = result.move;
 
     setGame({
       k: 'ok',
@@ -72,7 +68,7 @@ const GameView = ({
         guesses: [move, ...gameObj.guesses],
         isSubmittingMove: false,
         hints: result.hints,
-        gameOver: gameObj.gameOver || result.correct,
+        gameOver: gameObj.gameOver || move.correct,
       },
     });
 

@@ -1,4 +1,4 @@
-import { Country, MoveResult, Hints } from './shared';
+import { Country, GameMove, Hints, MoveResult } from './shared';
 
 export type Err = { k: 'error'; message: string };
 export type Ok<T> = { k: 'ok'; value: T };
@@ -13,7 +13,7 @@ export interface Move {
 export interface GameObject {
   gameId: number;
   countries: Array<Country>;
-  guesses: Array<Move>;
+  guesses: Array<GameMove>;
   isSubmittingMove: boolean;
   hints: Hints;
   gameOver: boolean;
