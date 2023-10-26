@@ -1,9 +1,11 @@
-import express from 'express';
-import { isString } from '../util/utils';
 import bcrypt from 'bcrypt';
-import { validateUserInfo } from '../util/newUser';
+import express from 'express';
+
 import { createUser } from '../services/userService';
 import { createToken } from '../util/authentication';
+import { validateUserInfo } from '../util/newUser';
+import { isString } from '../util/utils';
+
 import { UserWithToken } from '../types/shared';
 
 const router = express.Router();

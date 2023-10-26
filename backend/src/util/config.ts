@@ -26,4 +26,4 @@ if (!jwt) {
 
 const JWT_SECRET = jwt;
 
-export { DATABASE_URL, PORT, JWT_SECRET };
+export { DATABASE_URL, JWT_SECRET, PORT };

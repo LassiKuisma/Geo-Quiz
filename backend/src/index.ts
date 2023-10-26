@@ -1,11 +1,11 @@
-import express from 'express';
-import 'dotenv/config';
 import cors from 'cors';
+import 'dotenv/config';
+import express from 'express';
 
 import countryRouter from './routes/countryRouter';
 import gameRouter from './routes/gameRouter';
-import usersRouter from './routes/usersRouter';
 import loginRouter from './routes/loginRouter';
+import usersRouter from './routes/usersRouter';
 
 import { PORT } from './util/config';
 import { connectToDatabase } from './util/db';

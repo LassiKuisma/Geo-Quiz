@@ -1,6 +1,7 @@
+import { approxEqual } from './utils';
+
 import { HintThresholds } from '../types/internal';
 import { Comparison, Country, Difference, Hint, Hints } from '../types/shared';
-import { approxEqual } from './utils';
 
 export const compareCountries = (
   playerGuess: Country,

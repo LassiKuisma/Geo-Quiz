@@ -6,8 +6,8 @@ import {
   InferCreationAttributes,
   Model,
 } from 'sequelize';
-import { Country } from './country';
 import { sequelize } from '../util/db';
+import { Country } from './country';
 import { UserModel } from './user';
 
 class GameModel extends Model<

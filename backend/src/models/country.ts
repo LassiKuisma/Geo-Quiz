@@ -8,9 +8,9 @@ import {
 } from 'sequelize';
 import { sequelize } from '../util/db';
 
+import { DrivingSide } from './drivingSide';
 import { Region } from './region';
 import { Subregion } from './subregion';
-import { DrivingSide } from './drivingSide';
 
 class Country extends Model<
   InferAttributes<Country>,

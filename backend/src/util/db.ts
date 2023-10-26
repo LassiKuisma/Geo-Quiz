@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize';
+import { SequelizeStorage, Umzug } from 'umzug';
+
 import { DATABASE_URL } from './config';
-import { Umzug, SequelizeStorage } from 'umzug';
 
 export const sequelize = new Sequelize(DATABASE_URL, {
   define: {

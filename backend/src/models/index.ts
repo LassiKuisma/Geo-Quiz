@@ -4,10 +4,10 @@ import { CountryContinent } from './countryContinent';
 import { CountryLanguage } from './countryLanguage';
 import { CountryNeighbour } from './countryNeighbour';
 import { DrivingSide } from './drivingSide';
+import { GameModel } from './game';
 import { Language } from './language';
 import { Region } from './region';
 import { Subregion } from './subregion';
-import { GameModel } from './game';
 import { UserModel } from './user';
 
 Continent.belongsToMany(Country, { through: CountryContinent });
@@ -38,14 +38,14 @@ GameModel.belongsTo(UserModel);
 
 export {
   Continent,
-  Country as CountryModel,
   CountryContinent,
   CountryLanguage,
+  Country as CountryModel,
   CountryNeighbour,
   DrivingSide,
+  GameModel,
   Language,
   Region,
   Subregion,
-  GameModel,
   UserModel,
 };

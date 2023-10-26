@@ -1,16 +1,16 @@
 import axios from 'axios';
-import { connectToDatabase } from './src/util/db';
 import {
   Continent,
+  CountryContinent,
+  CountryLanguage,
   CountryModel,
+  CountryNeighbour,
   DrivingSide,
   Language,
   Region,
   Subregion,
-  CountryLanguage,
-  CountryContinent,
-  CountryNeighbour,
 } from './src/models';
+import { connectToDatabase } from './src/util/db';
 import {
   isNumber,
   isNumberArray,
@@ -18,6 +18,7 @@ import {
   isString,
   isStringArray,
 } from './src/util/utils';
+
 import { Country, Side } from './src/types/shared';
 
 const url = 'https://restcountries.com/v3.1/all';

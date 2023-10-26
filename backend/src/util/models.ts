@@ -1,13 +1,14 @@
 import {
+  Continent,
   CountryModel,
   DrivingSide,
+  Language,
   Region,
   Subregion,
-  Continent,
-  Language,
 } from '../models';
-import { Country } from '../types/shared';
 import { isSide, isString } from './utils';
+
+import { Country } from '../types/shared';
 
 // country model with all fields joined. Use with countryOptions in queries
 export type CountryJoined = CountryModel & { driving_side: DrivingSide } & {
