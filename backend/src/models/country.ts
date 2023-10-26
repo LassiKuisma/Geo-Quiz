@@ -12,9 +12,9 @@ import { DrivingSide } from './drivingSide';
 import { Region } from './region';
 import { Subregion } from './subregion';
 
-class Country extends Model<
-  InferAttributes<Country>,
-  InferCreationAttributes<Country>
+class CountryModel extends Model<
+  InferAttributes<CountryModel>,
+  InferCreationAttributes<CountryModel>
 > {
   declare id: CreationOptional<number>;
   declare area: number;
@@ -31,7 +31,7 @@ class Country extends Model<
   declare drivingSideId: ForeignKey<DrivingSide['id']>;
 }
 
-Country.init(
+CountryModel.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -78,4 +78,4 @@ Country.init(
   }
 );
 
-export { Country };
+export { CountryModel };
