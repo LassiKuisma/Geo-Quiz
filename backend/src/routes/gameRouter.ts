@@ -1,7 +1,7 @@
 import express from 'express';
 import { isNumber } from '../util/utils';
 import { getCountry } from '../services/countryService';
-import { MoveResult } from '../util/types';
+import { MoveResult, NewGame } from '../util/types';
 import { compareCountries, getHints } from '../util/country';
 import { defaultThresholds } from '../util/gameSettings';
 import {
@@ -32,7 +32,7 @@ router.post('/newgame', async (req, res) => {
     return res.status(500).send(gameResult.message);
   }
 
-  const newGame = gameResult.value;
+  const newGame: NewGame = gameResult.value;
   return res.json(newGame);
 });
 
