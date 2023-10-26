@@ -10,12 +10,12 @@ import { useEffect, useState } from 'react';
 import { getUserGames } from '../../services/gameService';
 import GamesTable from './GamesTable';
 
-import { GameStatus } from '../../types/internal';
+import { GameStatusManager } from '../../types/internal';
 import { GameSummary, UserWithToken } from '../../types/shared';
 
 interface Props {
   user: UserWithToken | undefined;
-  setGame: (status: GameStatus) => void;
+  gameStatus: GameStatusManager;
 }
 
 interface GamesLoading {
@@ -31,7 +31,7 @@ interface GamesOk {
 }
 type GamesStatus = undefined | GamesLoading | GamesError | GamesOk;
 
-const UserGamesView = ({ user, setGame }: Props) => {
+const UserGamesView = ({ user, gameStatus }: Props) => {
   const [myGames, setMyGames] = useState<GamesStatus>(undefined);
 
   const loadGames = async () => {
@@ -72,7 +72,7 @@ const UserGamesView = ({ user, setGame }: Props) => {
       </Typography>
       {isLoading && <Loading />}
       {isError && <Error message={myGames.message} loadGames={loadGames} />}
-      {isOk && <GamesTable games={myGames.value} setGame={setGame} />}
+      {isOk && <GamesTable games={myGames.value} gameStatus={gameStatus} />}
     </Box>
   );
 };

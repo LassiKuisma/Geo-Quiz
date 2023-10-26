@@ -31,3 +31,10 @@ export interface Page {
   to: string;
   loginRequired?: boolean;
 }
+
+export interface GameStatusManager {
+  setLoading: () => void;
+  setError: (message: string) => void;
+  setGameObject: (game: GameObject) => void;
+  clear: () => void;
+}

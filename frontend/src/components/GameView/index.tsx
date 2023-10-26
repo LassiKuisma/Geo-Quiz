@@ -7,12 +7,12 @@ import GameOver from './GameOver';
 import HintsView from './HintsViews';
 import MoveList from './MoveList';
 
-import { GameStatus } from '../../types/internal';
+import { GameStatus, GameStatusManager } from '../../types/internal';
 import { Country, UserWithToken } from '../../types/shared';
 
 interface Props {
   game: GameStatus;
-  setGame: (game: GameStatus) => void;
+  gameStatus: GameStatusManager;
   startNewGame: () => void;
   user?: UserWithToken;
   hasSmallDevice: boolean;
@@ -20,7 +20,7 @@ interface Props {
 
 const GameView = ({
   game,
-  setGame,
+  gameStatus,
   startNewGame,
   user,
   hasSmallDevice,
@@ -34,23 +34,18 @@ const GameView = ({
 
     const gameObj = game.game;
 
-    setGame({
-      k: 'ok',
-      game: {
-        ...gameObj,
-        isSubmittingMove: true,
-      },
+    gameStatus.setGameObject({
+      ...gameObj,
+      isSubmittingMove: true,
     });
 
     const moveResult = await postMove(gameObj.gameId, country.id, user?.token);
     if (moveResult.k === 'error') {
       setError(moveResult.message);
-      setGame({
-        k: 'ok',
-        game: {
-          ...gameObj,
-          isSubmittingMove: false,
-        },
+
+      gameStatus.setGameObject({
+        ...gameObj,
+        isSubmittingMove: false,
       });
       return;
     }
@@ -60,16 +55,13 @@ const GameView = ({
     const result = moveResult.value;
     const move = result.move;
 
-    setGame({
-      k: 'ok',
-      game: {
-        gameId: gameObj.gameId,
-        countries: gameObj.countries.filter((c) => c.id !== country.id),
-        guesses: [move, ...gameObj.guesses],
-        isSubmittingMove: false,
-        hints: result.hints,
-        gameOver: gameObj.gameOver || move.correct,
-      },
+    gameStatus.setGameObject({
+      gameId: gameObj.gameId,
+      countries: gameObj.countries.filter((c) => c.id !== country.id),
+      guesses: [move, ...gameObj.guesses],
+      isSubmittingMove: false,
+      hints: result.hints,
+      gameOver: gameObj.gameOver || move.correct,
     });
 
     return;

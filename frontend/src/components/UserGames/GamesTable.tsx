@@ -12,25 +12,25 @@ import { useNavigate } from 'react-router-dom';
 
 import { loadGame } from '../../services/gameService';
 
-import { GameObject, GameStatus } from '../../types/internal';
+import { GameObject, GameStatusManager } from '../../types/internal';
 import { GameSummary } from '../../types/shared';
 
 interface Props {
   games: Array<GameSummary>;
-  setGame: (status: GameStatus) => void;
+  gameStatus: GameStatusManager;
 }
 
-const GamesTable = ({ games, setGame }: Props) => {
+const GamesTable = ({ games, gameStatus }: Props) => {
   const navigate = useNavigate();
 
   const playGame = async (gameId: number) => {
-    setGame({ k: 'loading' });
+    gameStatus.setLoading();
 
     navigate('/game');
 
     const gameLoaded = await loadGame(gameId);
     if (gameLoaded.k === 'error') {
-      setGame({ k: 'error', message: gameLoaded.message });
+      gameStatus.setError(gameLoaded.message);
       return;
     }
 
@@ -46,7 +46,7 @@ const GamesTable = ({ games, setGame }: Props) => {
       countries: game.countries,
     };
 
-    setGame({ k: 'ok', game: gameObject });
+    gameStatus.setGameObject(gameObject);
   };
 
   return (

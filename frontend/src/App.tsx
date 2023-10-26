@@ -18,6 +18,7 @@ import UserGamesView from './components/UserGames';
 
 import { PREFERRED_THEME_PATH, USER_STORAGE_PATH } from './constants';
 import { startNewGame } from './services/gameService';
+import { createStatusManager } from './util/gameUtil';
 import { userFromJson } from './util/utils';
 
 import { AppTheme, GameObject, GameStatus } from './types/internal';
@@ -76,15 +77,14 @@ const App = () => {
     setUser(parsed.value);
   }, []);
 
+  const gameStatus = createStatusManager(setGame);
+
   const startNewGameClicked = async () => {
-    setGame({ k: 'loading' });
+    gameStatus.setLoading();
     navigate('/game');
     const newGameResult = await startNewGame(user?.token);
     if (newGameResult.k === 'error') {
-      setGame({
-        k: 'error',
-        message: newGameResult.message,
-      });
+      gameStatus.setError(newGameResult.message);
       return;
     }
     const newGame = newGameResult.value;
@@ -100,10 +100,7 @@ const App = () => {
       gameOver: false,
     };
 
-    setGame({
-      k: 'ok',
-      game: gameObj,
-    });
+    gameStatus.setGameObject(gameObj);
   };
 
   const resumeCurrentGame = () => {
@@ -117,14 +114,14 @@ const App = () => {
     setUser(user);
     window.localStorage.setItem(USER_STORAGE_PATH, JSON.stringify(user));
 
-    setGame(undefined);
+    gameStatus.clear();
   };
 
   const handleLogout = () => {
     setUser(undefined);
     window.localStorage.removeItem(USER_STORAGE_PATH);
 
-    setGame(undefined);
+    gameStatus.clear();
   };
 
   const switchToTheme = (newTheme: AppTheme) => {
@@ -167,7 +164,7 @@ const App = () => {
               element={
                 <GameView
                   game={game}
-                  setGame={setGame}
+                  gameStatus={gameStatus}
                   startNewGame={startNewGameClicked}
                   user={user}
                   hasSmallDevice={hasSmallDevice}
@@ -190,7 +187,7 @@ const App = () => {
             />
             <Route
               path="my-games"
-              element={<UserGamesView user={user} setGame={setGame} />}
+              element={<UserGamesView user={user} gameStatus={gameStatus} />}
             />
 
             <Route path="*" element={<NoMatch />} />
