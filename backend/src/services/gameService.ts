@@ -193,8 +193,6 @@ export const loadGame = async (
   }
 };
 
-type GameModelWithMoves = GameModel & { moves: Array<MoveModel> };
-
 export const getGamesFromUser = async (
   userId: number
 ): Promise<Result<Array<GameSummary>>> => {
@@ -206,10 +204,15 @@ export const getGamesFromUser = async (
       include: [
         {
           model: MoveModel,
-          attributes: ['moveId'],
+          include: [
+            {
+              model: CountryModel,
+              ...countryOptions(),
+            },
+          ],
         },
       ],
-    })) as Array<GameModelWithMoves>;
+    })) as Array<GameJoined>;
 
     const gamesWithMoveCount = games.map((game) => {
       const str = game.created_at ? game.created_at.toString() : undefined;
@@ -222,10 +225,13 @@ export const getGamesFromUser = async (
         }
       }
 
+      const mostRecent = mostRecentGuess(game.moves);
+
       return {
         gameId: game.gameId,
         guessCount: game.moves.length,
         createdAt: date,
+        latestGuess: mostRecent,
       };
     });
 
@@ -289,4 +295,35 @@ const parseMoveModels = (
   }, new Set<number>());
 
   return { moves, guessedIds };
+};
+
+const mostRecentGuess = (moveList: Array<MoveJoined>): Country | undefined => {
+  let mostRecent: { move: MoveJoined; date: number } | undefined = undefined;
+
+  for (const move of moveList) {
+    const str = move.created_at ? move.created_at.toString() : undefined;
+    if (!str) {
+      continue;
+    }
+
+    const date = Date.parse(str);
+    if (isNaN(date)) {
+      continue;
+    }
+
+    const moreRecent = mostRecent ? date > mostRecent.date : true;
+
+    if (moreRecent) {
+      mostRecent = { move, date };
+    }
+  }
+
+  if (!mostRecent) {
+    return undefined;
+  }
+
+  const countryModel = mostRecent.move.country;
+  const country = modelToCountry(countryModel);
+
+  return country || undefined;
 };

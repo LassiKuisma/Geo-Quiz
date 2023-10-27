@@ -80,4 +80,5 @@ export interface GameSummary {
   guessCount: number;
   // date as epoch time
   createdAt: number | undefined;
+  latestGuess: Country | undefined;
 }
