@@ -212,9 +212,20 @@ export const getGamesFromUser = async (
     })) as Array<GameModelWithMoves>;
 
     const gamesWithMoveCount = games.map((game) => {
+      const str = game.created_at ? game.created_at.toString() : undefined;
+      let date = undefined;
+
+      if (str) {
+        const parsed = Date.parse(str);
+        if (!isNaN(parsed)) {
+          date = parsed;
+        }
+      }
+
       return {
         gameId: game.gameId,
         guessCount: game.moves.length,
+        createdAt: date,
       };
     });
 
@@ -251,10 +262,21 @@ const parseMoveModels = (
         return undefined;
       }
 
+      const str = move.created_at ? move.created_at.toString() : undefined;
+      let date = undefined;
+
+      if (str) {
+        const parsed = Date.parse(str);
+        if (!isNaN(parsed)) {
+          date = parsed;
+        }
+      }
+
       const result: GameMove = {
         guessedCountry: playerGuess,
         correct: playerGuess.id === correctAnswer.id,
         comparison: compareCountries(playerGuess, correctAnswer),
+        timestamp: date,
       };
 
       return result;

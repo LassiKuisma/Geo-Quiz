@@ -89,6 +89,7 @@ router.post('/move', async (req, res) => {
       guessedCountry: playerGuess,
       correct: playerGuess.id === correctAnswer.id,
       comparison,
+      timestamp: Date.now(),
     },
     hints,
   };

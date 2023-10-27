@@ -18,6 +18,8 @@ class GameModel extends Model<
   declare countryId: ForeignKey<CountryModel['id']>;
 
   declare userId: ForeignKey<UserModel['id']>;
+
+  declare created_at: CreationOptional<DataTypes.DateDataType>;
 }
 
 GameModel.init(
@@ -33,10 +35,16 @@ GameModel.init(
       allowNull: false,
       references: { model: 'countries', key: 'id' },
     },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     sequelize,
     modelName: 'games',
+    createdAt: true,
   }
 );
 

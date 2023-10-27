@@ -63,6 +63,8 @@ export interface GameMove {
   guessedCountry: Country;
   correct: boolean;
   comparison: Comparison;
+  // date as epoch time
+  timestamp: number | undefined;
 }
 
 export interface GameLoaded {
@@ -76,4 +78,6 @@ export interface GameLoaded {
 export interface GameSummary {
   gameId: number;
   guessCount: number;
+  // date as epoch time
+  createdAt: number | undefined;
 }

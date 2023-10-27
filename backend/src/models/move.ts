@@ -17,6 +17,8 @@ class MoveModel extends Model<
   declare moveId: CreationOptional<number>;
   declare gameId: ForeignKey<GameModel['gameId']>;
   declare guessedCountry: ForeignKey<CountryModel['id']>;
+
+  declare created_at: CreationOptional<DataTypes.DateDataType>;
 }
 
 MoveModel.init(
@@ -37,10 +39,16 @@ MoveModel.init(
       allowNull: false,
       references: { model: 'countries', key: 'id' },
     },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     sequelize,
     modelName: 'moves',
+    createdAt: true,
   }
 );
 
