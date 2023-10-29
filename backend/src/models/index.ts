@@ -40,6 +40,9 @@ GameModel.belongsTo(UserModel);
 MoveModel.belongsTo(GameModel, { foreignKey: 'gameId' });
 GameModel.hasMany(MoveModel, { foreignKey: 'gameId' });
 
+// used to check if correct answer has been given
+GameModel.hasOne(MoveModel, { as: 'answer', foreignKey: 'gameId' });
+
 MoveModel.belongsTo(CountryModel, { foreignKey: 'guessedCountry' });
 
 export {

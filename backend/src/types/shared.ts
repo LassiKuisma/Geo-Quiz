@@ -73,6 +73,7 @@ export interface GameLoaded {
   isGameOver: boolean;
   hints: Hints;
   countries: Array<Country>;
+  result: GameResult;
 }
 
 export interface GameSummary {
@@ -81,4 +82,7 @@ export interface GameSummary {
   // date as epoch time
   createdAt: number | undefined;
   latestGuess: Country | undefined;
+  result: GameResult;
 }
+
+export type GameResult = 'unknown' | 'ongoing' | 'completed';

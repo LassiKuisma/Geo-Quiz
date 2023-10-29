@@ -1,3 +1,4 @@
+import { col, where } from 'sequelize';
 import { CountryModel, GameModel, MoveModel, UserModel } from '../models';
 import { compareCountries, getHints } from '../util/country';
 import { defaultThresholds } from '../util/gameSettings';
@@ -6,7 +7,13 @@ import { error, ok } from '../util/utils';
 import { getAllCountries } from './countryService';
 
 import { Game, Ok, Result, User } from '../types/internal';
-import { Country, GameLoaded, GameMove, GameSummary } from '../types/shared';
+import {
+  Country,
+  GameLoaded,
+  GameMove,
+  GameResult,
+  GameSummary,
+} from '../types/shared';
 
 export const generateGame = async (
   user?: UserModel
@@ -42,6 +49,7 @@ export const generateGame = async (
       hints: getHints(0, country, defaultThresholds),
       isGameOver: false,
       moves: [],
+      result: 'ongoing',
     };
 
     return ok(newGame);
@@ -62,7 +70,7 @@ type MoveJoined = MoveModel & { country: CountryJoined };
 
 type GameJoined = GameModel & { country: CountryJoined } & {
   user?: UserModel;
-} & { moves: Array<MoveJoined> };
+} & { moves: Array<MoveJoined> } & { answer: undefined | MoveModel };
 
 export const getGame = async (id: number): Promise<ResultGame<Game>> => {
   try {
@@ -137,7 +145,7 @@ export const loadGame = async (
   gameId: number
 ): Promise<ResultGame<GameLoaded>> => {
   try {
-    const result = (await GameModel.findByPk(gameId, {
+    const model = (await GameModel.findByPk(gameId, {
       include: [
         {
           model: CountryModel,
@@ -158,16 +166,16 @@ export const loadGame = async (
       ],
     })) as GameJoined | null;
 
-    if (!result) {
+    if (!model) {
       return gameNotFound(gameId);
     }
 
-    const correctAnswer = modelToCountry(result.country);
+    const correctAnswer = modelToCountry(model.country);
     if (!correctAnswer) {
       return dbError();
     }
 
-    const { moves, guessedIds } = parseMoveModels(result.moves, correctAnswer);
+    const { moves, guessedIds } = parseMoveModels(model.moves, correctAnswer);
     const isGameOver = guessedIds.has(correctAnswer.id);
 
     const countriesLoaded = await getAllCountries();
@@ -179,12 +187,15 @@ export const loadGame = async (
       (country) => !guessedIds.has(country.id)
     );
 
+    const gameResult = isGameOver ? 'completed' : 'ongoing';
+
     const gameWithMoves: GameLoaded = {
       gameId,
       moves,
       hints: getHints(moves.length, correctAnswer, defaultThresholds),
       isGameOver,
       countries,
+      result: gameResult,
     };
 
     return ok(gameWithMoves);
@@ -211,6 +222,16 @@ export const getGamesFromUser = async (
             },
           ],
         },
+        {
+          model: MoveModel,
+          as: 'answer',
+          required: false,
+          where: where(
+            col('games.countryId'),
+            '=',
+            col('answer.guessedCountry')
+          ),
+        },
       ],
     })) as Array<GameJoined>;
 
@@ -227,11 +248,15 @@ export const getGamesFromUser = async (
 
       const mostRecent = mostRecentGuess(game.moves);
 
+      const gameOver = !!game.answer;
+      const result: GameResult = gameOver ? 'completed' : 'ongoing';
+
       return {
         gameId: game.gameId,
         guessCount: game.moves.length,
         createdAt: date,
         latestGuess: mostRecent,
+        result,
       };
     });
 
