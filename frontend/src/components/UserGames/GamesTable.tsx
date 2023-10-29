@@ -1,3 +1,6 @@
+import TrophyIcon from '@mui/icons-material/EmojiEvents';
+import DotsIcon from '@mui/icons-material/MoreHoriz';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import {
   Box,
   Button,
@@ -8,12 +11,13 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
+import dateFormat from 'dateformat';
 import { useNavigate } from 'react-router-dom';
 
 import { loadGame } from '../../services/gameService';
 
 import { GameObject, GameStatusManager } from '../../types/internal';
-import { GameSummary } from '../../types/shared';
+import { Country, GameResult, GameSummary } from '../../types/shared';
 
 interface Props {
   games: Array<GameSummary>;
@@ -56,20 +60,50 @@ const GamesTable = ({ games, gameStatus }: Props) => {
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
-              <TableCell>Moves made</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Guesses</TableCell>
+              <TableCell>Last guess</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {games.map((game) => (
-              <TableRow key={game.gameId}>
-                <PlayButtonCell gameId={game.gameId} playGame={playGame} />
-                <TableCell>{game.guessCount}</TableCell>
-              </TableRow>
+              <GameRow key={game.gameId} game={game} playGame={playGame} />
             ))}
           </TableBody>
         </Table>
       </TableContainer>
     </Box>
+  );
+};
+
+interface GameRowProps {
+  game: GameSummary;
+  playGame: (id: number) => void;
+}
+
+const GameRow = ({ game, playGame }: GameRowProps) => {
+  // TODO: is game over, disable play again button (or change text)
+  // last guess
+
+  const formatString = 'dd-mm-yyyy';
+
+  const date = game.createdAt
+    ? dateFormat(new Date(game.createdAt), formatString)
+    : '';
+
+  return (
+    <TableRow>
+      <PlayButtonCell gameId={game.gameId} playGame={playGame} />
+      <TableCell>
+        <GameResultIcon result={game.result} />
+      </TableCell>
+      <TableCell>{date}</TableCell>
+      <TableCell>{game.guessCount}</TableCell>
+      <TableCell>
+        <LastMove country={game.latestGuess} />
+      </TableCell>
+    </TableRow>
   );
 };
 
@@ -87,6 +121,24 @@ const PlayButtonCell = ({
       </Button>
     </TableCell>
   );
+};
+
+const GameResultIcon = ({ result }: { result: GameResult }) => {
+  if (result === 'completed') {
+    return <TrophyIcon />;
+  } else if (result === 'ongoing') {
+    return <DotsIcon />;
+  } else {
+    return <QuestionMarkIcon />;
+  }
+};
+
+const LastMove = ({ country }: { country: Country | undefined }) => {
+  if (!country) {
+    return null;
+  }
+
+  return <>{country.name}</>;
 };
 
 export default GamesTable;

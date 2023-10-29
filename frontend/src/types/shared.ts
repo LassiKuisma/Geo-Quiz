@@ -63,6 +63,8 @@ export interface GameMove {
   guessedCountry: Country;
   correct: boolean;
   comparison: Comparison;
+  // date as epoch time
+  timestamp: number | undefined;
 }
 
 export interface GameLoaded {
@@ -71,9 +73,16 @@ export interface GameLoaded {
   isGameOver: boolean;
   hints: Hints;
   countries: Array<Country>;
+  result: GameResult;
 }
 
 export interface GameSummary {
   gameId: number;
   guessCount: number;
+  // date as epoch time
+  createdAt: number | undefined;
+  latestGuess: Country | undefined;
+  result: GameResult;
 }
+
+export type GameResult = 'unknown' | 'ongoing' | 'completed';
