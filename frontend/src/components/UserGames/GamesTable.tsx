@@ -10,6 +10,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
 } from '@mui/material';
 import dateFormat from 'dateformat';
 import { useNavigate } from 'react-router-dom';
@@ -60,7 +61,7 @@ const GamesTable = ({ games, gameStatus }: Props) => {
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
-              <TableCell>Status</TableCell>
+              <StatusHeaderCell />
               <TableCell>Date</TableCell>
               <TableCell>Guesses</TableCell>
               <TableCell>Last guess</TableCell>
@@ -94,7 +95,11 @@ const GameRow = ({ game, playGame }: GameRowProps) => {
 
   return (
     <TableRow>
-      <PlayButtonCell gameId={game.gameId} playGame={playGame} />
+      <PlayButtonCell
+        gameId={game.gameId}
+        playGame={playGame}
+        gameResult={game.result}
+      />
       <TableCell>
         <GameResultIcon result={game.result} />
       </TableCell>
@@ -110,14 +115,18 @@ const GameRow = ({ game, playGame }: GameRowProps) => {
 const PlayButtonCell = ({
   gameId,
   playGame,
+  gameResult,
 }: {
   gameId: number;
   playGame: (id: number) => void;
+  gameResult: GameResult;
 }) => {
+  const text = gameResult === 'ongoing' ? 'Continue playing' : 'View game';
+
   return (
     <TableCell>
       <Button variant="outlined" onClick={() => playGame(gameId)}>
-        Continue playing
+        {text}
       </Button>
     </TableCell>
   );
@@ -139,6 +148,32 @@ const LastMove = ({ country }: { country: Country | undefined }) => {
   }
 
   return <>{country.name}</>;
+};
+
+const StatusHeaderCell = () => {
+  return (
+    <Tooltip
+      title={
+        <Box display="flex" flexDirection="column">
+          <Box>
+            <TrophyIcon /> = victory
+          </Box>
+          <Box>
+            <DotsIcon /> = ongoing
+          </Box>
+        </Box>
+      }
+    >
+      <TableCell
+        sx={{
+          textDecorationStyle: 'dotted',
+          textDecorationLine: 'underline',
+        }}
+      >
+        Status
+      </TableCell>
+    </Tooltip>
+  );
 };
 
 export default GamesTable;
