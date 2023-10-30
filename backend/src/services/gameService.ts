@@ -221,6 +221,8 @@ export const getGamesFromUser = async (
               ...countryOptions(),
             },
           ],
+          order: [['created_at', 'DESC']],
+          limit: 1,
         },
         {
           model: MoveModel,
@@ -246,7 +248,13 @@ export const getGamesFromUser = async (
         }
       }
 
-      const mostRecent = mostRecentGuess(game.moves);
+      let mostRecent = undefined;
+      if (game.moves.length > 0) {
+        const country = modelToCountry(game.moves[0].country);
+        if (country) {
+          mostRecent = country;
+        }
+      }
 
       const gameOver = !!game.answer;
       const result: GameResult = gameOver ? 'completed' : 'ongoing';
@@ -320,35 +328,4 @@ const parseMoveModels = (
   }, new Set<number>());
 
   return { moves, guessedIds };
-};
-
-const mostRecentGuess = (moveList: Array<MoveJoined>): Country | undefined => {
-  let mostRecent: { move: MoveJoined; date: number } | undefined = undefined;
-
-  for (const move of moveList) {
-    const str = move.created_at ? move.created_at.toString() : undefined;
-    if (!str) {
-      continue;
-    }
-
-    const date = Date.parse(str);
-    if (isNaN(date)) {
-      continue;
-    }
-
-    const moreRecent = mostRecent ? date > mostRecent.date : true;
-
-    if (moreRecent) {
-      mostRecent = { move, date };
-    }
-  }
-
-  if (!mostRecent) {
-    return undefined;
-  }
-
-  const countryModel = mostRecent.move.country;
-  const country = modelToCountry(countryModel);
-
-  return country || undefined;
 };
