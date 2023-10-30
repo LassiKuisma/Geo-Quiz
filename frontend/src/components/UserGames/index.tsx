@@ -44,7 +44,14 @@ const UserGamesView = ({ user, gameStatus }: Props) => {
     if (games.k === 'error') {
       setMyGames({ k: 'error', message: games.message });
     } else {
-      setMyGames({ k: 'ok', value: games.value });
+      const list = games.value;
+      list.sort((a, b) => {
+        if (a.createdAt && b.createdAt) {
+          return a.createdAt - b.createdAt;
+        }
+        return a.gameId - b.gameId;
+      });
+      setMyGames({ k: 'ok', value: list });
     }
   };
 
