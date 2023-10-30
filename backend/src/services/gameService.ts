@@ -222,7 +222,6 @@ export const getGamesFromUser = async (
             },
           ],
           order: [['created_at', 'DESC']],
-          limit: 1,
         },
         {
           model: MoveModel,
