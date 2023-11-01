@@ -27,12 +27,20 @@ const DesktopNavBar = ({
   theme,
   switchToTheme,
 }: Props) => {
+  const isLoggedIn = !!loggedInUser;
+  const pagesToShow = pages.filter((page) => {
+    const requireLogin = page.loginRequired || false;
+
+    const hide = requireLogin && !isLoggedIn;
+    return !hide;
+  });
+
   return (
     <Box>
       <AppBar position="static">
         <Toolbar variant="dense">
           <Box display={'flex'}>
-            {pages.map((page) => (
+            {pagesToShow.map((page) => (
               <AppBarButton key={page.name} text={page.name} linkTo={page.to} />
             ))}
           </Box>

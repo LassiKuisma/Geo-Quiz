@@ -7,30 +7,34 @@ import {
   Model,
 } from 'sequelize';
 import { sequelize } from '../util/db';
+import { GameModel } from './game';
 import { CountryModel } from './country';
-import { UserModel } from './user';
 
-class GameModel extends Model<
-  InferAttributes<GameModel>,
-  InferCreationAttributes<GameModel>
+class MoveModel extends Model<
+  InferAttributes<MoveModel>,
+  InferCreationAttributes<MoveModel>
 > {
-  declare gameId: CreationOptional<number>;
-  declare countryId: ForeignKey<CountryModel['id']>;
-
-  declare userId: ForeignKey<UserModel['id']>;
+  declare moveId: CreationOptional<number>;
+  declare gameId: ForeignKey<GameModel['gameId']>;
+  declare guessedCountry: ForeignKey<CountryModel['id']>;
 
   declare created_at: CreationOptional<DataTypes.DateDataType>;
 }
 
-GameModel.init(
+MoveModel.init(
   {
-    gameId: {
+    moveId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       allowNull: true,
       autoIncrement: true,
     },
-    countryId: {
+    gameId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: 'games', key: 'gameId' },
+    },
+    guessedCountry: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: { model: 'countries', key: 'id' },
@@ -43,9 +47,9 @@ GameModel.init(
   },
   {
     sequelize,
-    modelName: 'games',
+    modelName: 'moves',
     createdAt: true,
   }
 );
 
-export { GameModel };
+export { MoveModel };

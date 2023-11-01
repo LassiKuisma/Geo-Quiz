@@ -1,18 +1,22 @@
 import { Alert, Box, Button, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { postMove } from '../../services/gameService';
+import { loadGame, postMove } from '../../services/gameService';
 import CountrySelect from './CountrySelect';
 import GameOver from './GameOver';
 import HintsView from './HintsViews';
 import MoveList from './MoveList';
 
-import { GameStatus, Move } from '../../types/internal';
+import {
+  GameObject,
+  GameStatus,
+  GameStatusManager,
+} from '../../types/internal';
 import { Country, UserWithToken } from '../../types/shared';
 
 interface Props {
   game: GameStatus;
-  setGame: (game: GameStatus) => void;
+  gameStatus: GameStatusManager;
   startNewGame: () => void;
   user?: UserWithToken;
   hasSmallDevice: boolean;
@@ -20,12 +24,45 @@ interface Props {
 
 const GameView = ({
   game,
-  setGame,
+  gameStatus,
   startNewGame,
   user,
   hasSmallDevice,
 }: Props) => {
   const [error, setError] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (game?.k !== 'load-from-id') {
+      return;
+    }
+
+    const doLoadGame = async () => {
+      const gameId = game.gameId;
+      gameStatus.setLoading();
+
+      const loadResult = await loadGame(gameId);
+      if (loadResult.k === 'error') {
+        gameStatus.setError(loadResult.message);
+        return;
+      }
+
+      const loaded = loadResult.value;
+      loaded.countries.sort((a, b) => a.name.localeCompare(b.name));
+
+      const gameObject: GameObject = {
+        gameId: loaded.gameId,
+        guesses: loaded.moves,
+        isSubmittingMove: false,
+        gameOver: loaded.isGameOver,
+        hints: loaded.hints,
+        countries: loaded.countries,
+      };
+
+      gameStatus.setGameObject(gameObject);
+    };
+
+    doLoadGame();
+  }, [game?.k]);
 
   const submitMove = async (country: Country) => {
     if (!game || game.k !== 'ok') {
@@ -34,23 +71,18 @@ const GameView = ({
 
     const gameObj = game.game;
 
-    setGame({
-      k: 'ok',
-      game: {
-        ...gameObj,
-        isSubmittingMove: true,
-      },
+    gameStatus.setGameObject({
+      ...gameObj,
+      isSubmittingMove: true,
     });
 
     const moveResult = await postMove(gameObj.gameId, country.id, user?.token);
     if (moveResult.k === 'error') {
       setError(moveResult.message);
-      setGame({
-        k: 'ok',
-        game: {
-          ...gameObj,
-          isSubmittingMove: false,
-        },
+
+      gameStatus.setGameObject({
+        ...gameObj,
+        isSubmittingMove: false,
       });
       return;
     }
@@ -58,22 +90,15 @@ const GameView = ({
     setError(undefined);
 
     const result = moveResult.value;
+    const move = result.move;
 
-    const move: Move = {
-      guessedCountry: country,
-      result,
-    };
-
-    setGame({
-      k: 'ok',
-      game: {
-        gameId: gameObj.gameId,
-        countries: gameObj.countries.filter((c) => c.id !== country.id),
-        guesses: [move, ...gameObj.guesses],
-        isSubmittingMove: false,
-        hints: result.hints,
-        gameOver: gameObj.gameOver || result.correct,
-      },
+    gameStatus.setGameObject({
+      gameId: gameObj.gameId,
+      countries: gameObj.countries.filter((c) => c.id !== country.id),
+      guesses: [move, ...gameObj.guesses],
+      isSubmittingMove: false,
+      hints: result.hints,
+      gameOver: gameObj.gameOver || move.correct,
     });
 
     return;
@@ -94,8 +119,8 @@ const GameView = ({
     );
   }
 
-  if (game.k === 'loading') {
-    return <Box margin={1}>Loading new game...</Box>;
+  if (game.k === 'loading' || game.k === 'load-from-id') {
+    return <Loading />;
   }
 
   if (game.k === 'error') {
@@ -138,6 +163,10 @@ const Error = ({ message }: { message: string | undefined }) => {
       Try again in a moment.
     </Alert>
   );
+};
+
+const Loading = () => {
+  return <Box margin={1}>Loading game...</Box>;
 };
 
 export default GameView;

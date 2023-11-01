@@ -1,4 +1,4 @@
-import { Country, MoveResult, Hints } from './shared';
+import { Country, GameMove, Hints, MoveResult } from './shared';
 
 export type Err = { k: 'error'; message: string };
 export type Ok<T> = { k: 'ok'; value: T };
@@ -13,7 +13,7 @@ export interface Move {
 export interface GameObject {
   gameId: number;
   countries: Array<Country>;
-  guesses: Array<Move>;
+  guesses: Array<GameMove>;
   isSubmittingMove: boolean;
   hints: Hints;
   gameOver: boolean;
@@ -22,11 +22,31 @@ export interface GameObject {
 type GameLoading = { k: 'loading' };
 type GameOk = { k: 'ok'; game: GameObject };
 type GameLoadError = { k: 'error'; message: string };
-export type GameStatus = undefined | GameLoading | GameOk | GameLoadError;
+type LoadFromId = { k: 'load-from-id'; gameId: number };
+export type GameStatus =
+  | undefined
+  | GameLoading
+  | GameOk
+  | GameLoadError
+  | LoadFromId;
 
 export type AppTheme = 'dark' | 'light';
 
 export interface Page {
   name: string;
   to: string;
+  loginRequired?: boolean;
+}
+
+export interface GameStatusManager {
+  setLoading: () => void;
+  setError: (message: string) => void;
+  setGameObject: (game: GameObject) => void;
+  clear: () => void;
+  /**
+   * When the page is loaded, if there is game id saved to local storage then
+   * the game status can be set to this value. Basically "load this game next time
+   * you open the game view".
+   */
+  setLoadableFromId: (id: number) => void;
 }

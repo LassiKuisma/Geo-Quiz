@@ -19,8 +19,7 @@ import React from 'react';
 
 import { prefixNumber } from '../../util/utils';
 
-import { Move } from '../../types/internal';
-import { Difference } from '../../types/shared';
+import { Difference, GameMove } from '../../types/shared';
 
 const HeaderCell = styled(TableCell)(({ theme }) => ({
   fontSize: 'large',
@@ -29,7 +28,7 @@ const HeaderCell = styled(TableCell)(({ theme }) => ({
 }));
 
 interface Props {
-  moves: Array<Move>;
+  moves: Array<GameMove>;
   hasSmallDevice: boolean;
 }
 
@@ -71,15 +70,15 @@ const MoveList = ({ moves, hasSmallDevice }: Props) => {
   );
 };
 
-const ResultRow = ({ move }: { move: Move }) => {
+const ResultRow = ({ move }: { move: GameMove }) => {
   // the icon I'm using is right-facing arrow. The angle returned by server
   // is 0=up, 90=right(east)
   const ARROW_ROTATION_OFFSET = -90;
 
   const country = move.guessedCountry;
-  const comp = move.result.comparison;
-  const correctAnswer = move.result.correct;
-  const direction = move.result.comparison.direction;
+  const comp = move.comparison;
+  const correctAnswer = move.correct;
+  const direction = move.comparison.direction;
   const angle = !direction ? undefined : direction + ARROW_ROTATION_OFFSET;
 
   return (

@@ -14,12 +14,18 @@ import GameView from './components/GameView';
 import HomePage from './components/HomePage';
 import LoginPage from './components/LoginPage';
 import NavigationBar from './components/NavigationBar';
+import UserGamesView from './components/UserGames';
 
-import { PREFERRED_THEME_PATH, USER_STORAGE_PATH } from './constants';
+import {
+  CURRENT_GAME_ID,
+  PREFERRED_THEME_PATH,
+  USER_STORAGE_PATH,
+} from './constants';
 import { startNewGame } from './services/gameService';
+import { createStatusManager } from './util/gameUtil';
 import { userFromJson } from './util/utils';
 
-import { AppTheme, GameObject, GameStatus, Move } from './types/internal';
+import { AppTheme, GameObject, GameStatus } from './types/internal';
 import { Country, UserWithToken } from './types/shared';
 
 const lightTheme = createTheme({
@@ -61,29 +67,50 @@ const App = () => {
   const hasSmallDevice = !useMediaQuery('(min-width: 768px)');
 
   useEffect(() => {
-    const storedUser = window.localStorage.getItem(USER_STORAGE_PATH);
-    if (!storedUser) {
-      return;
-    }
+    const loadUser = () => {
+      const storedUser = window.localStorage.getItem(USER_STORAGE_PATH);
+      if (!storedUser) {
+        return;
+      }
 
-    const parsed = userFromJson(storedUser);
-    if (parsed.k === 'error') {
-      console.log('Failed to get user from local storage:', parsed.message);
-      return;
-    }
+      const parsed = userFromJson(storedUser);
+      if (parsed.k === 'error') {
+        console.log('Failed to get user from local storage:', parsed.message);
+        return;
+      }
 
-    setUser(parsed.value);
+      setUser(parsed.value);
+    };
+
+    const loadActiveGame = () => {
+      const activeGameId = window.localStorage.getItem(CURRENT_GAME_ID);
+      if (!activeGameId) {
+        return;
+      }
+
+      const id = parseInt(activeGameId);
+      if (isNaN(id)) {
+        console.log(`Invalid game id in local storage: ${activeGameId}`);
+        return;
+      }
+
+      if (!game) {
+        gameStatus.setLoadableFromId(id);
+      }
+    };
+
+    loadUser();
+    loadActiveGame();
   }, []);
 
+  const gameStatus = createStatusManager(setGame);
+
   const startNewGameClicked = async () => {
-    setGame({ k: 'loading' });
+    gameStatus.setLoading();
     navigate('/game');
     const newGameResult = await startNewGame(user?.token);
     if (newGameResult.k === 'error') {
-      setGame({
-        k: 'error',
-        message: newGameResult.message,
-      });
+      gameStatus.setError(newGameResult.message);
       return;
     }
     const newGame = newGameResult.value;
@@ -93,16 +120,13 @@ const App = () => {
     const gameObj: GameObject = {
       gameId: newGame.gameId,
       countries: newGame.countries,
-      guesses: new Array<Move>(),
+      guesses: [],
       isSubmittingMove: false,
       hints: newGame.hints,
       gameOver: false,
     };
 
-    setGame({
-      k: 'ok',
-      game: gameObj,
-    });
+    gameStatus.setGameObject(gameObj);
   };
 
   const resumeCurrentGame = () => {
@@ -116,14 +140,14 @@ const App = () => {
     setUser(user);
     window.localStorage.setItem(USER_STORAGE_PATH, JSON.stringify(user));
 
-    setGame(undefined);
+    gameStatus.clear();
   };
 
   const handleLogout = () => {
     setUser(undefined);
     window.localStorage.removeItem(USER_STORAGE_PATH);
 
-    setGame(undefined);
+    gameStatus.clear();
   };
 
   const switchToTheme = (newTheme: AppTheme) => {
@@ -131,7 +155,7 @@ const App = () => {
     window.localStorage.setItem(PREFERRED_THEME_PATH, newTheme);
   };
 
-  const hasActiveGame = game?.k === 'ok';
+  const hasActiveGame = game?.k === 'ok' || game?.k === 'load-from-id';
   const currentTheme = theme === 'dark' ? darkTheme : lightTheme;
 
   return (
@@ -166,7 +190,7 @@ const App = () => {
               element={
                 <GameView
                   game={game}
-                  setGame={setGame}
+                  gameStatus={gameStatus}
                   startNewGame={startNewGameClicked}
                   user={user}
                   hasSmallDevice={hasSmallDevice}
@@ -186,6 +210,10 @@ const App = () => {
             <Route
               path="create-account"
               element={<CreateAccountPage setUser={handleLogin} />}
+            />
+            <Route
+              path="my-games"
+              element={<UserGamesView user={user} gameStatus={gameStatus} />}
             />
 
             <Route path="*" element={<NoMatch />} />

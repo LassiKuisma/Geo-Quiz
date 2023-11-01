@@ -50,14 +50,7 @@ export interface Comparison {
 }
 
 export interface MoveResult {
-  correct: boolean;
-  comparison: Comparison;
-  hints: Hints;
-}
-
-export interface NewGame {
-  gameId: number;
-  countries: Array<Country>;
+  move: GameMove;
   hints: Hints;
 }
 
@@ -65,3 +58,31 @@ export interface UserWithToken {
   username: string;
   token: string;
 }
+
+export interface GameMove {
+  guessedCountry: Country;
+  correct: boolean;
+  comparison: Comparison;
+  // date as epoch time
+  timestamp: number | undefined;
+}
+
+export interface GameLoaded {
+  gameId: number;
+  moves: Array<GameMove>;
+  isGameOver: boolean;
+  hints: Hints;
+  countries: Array<Country>;
+  result: GameResult;
+}
+
+export interface GameSummary {
+  gameId: number;
+  guessCount: number;
+  // date as epoch time
+  createdAt: number | undefined;
+  latestGuess: Country | undefined;
+  result: GameResult;
+}
+
+export type GameResult = 'unknown' | 'ongoing' | 'completed';
