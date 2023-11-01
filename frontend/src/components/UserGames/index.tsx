@@ -47,9 +47,9 @@ const UserGamesView = ({ user, gameStatus }: Props) => {
       const list = games.value;
       list.sort((a, b) => {
         if (a.createdAt && b.createdAt) {
-          return a.createdAt - b.createdAt;
+          return b.createdAt - a.createdAt;
         }
-        return a.gameId - b.gameId;
+        return b.gameId - a.gameId;
       });
       setMyGames({ k: 'ok', value: list });
     }
