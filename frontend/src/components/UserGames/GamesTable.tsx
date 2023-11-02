@@ -69,7 +69,7 @@ const GamesTable = ({ games, gameStatus, hasSmallDevice }: Props) => {
 
   return (
     <TableContainer>
-      <Table>
+      <Table size={hasSmallDevice ? 'small' : 'medium'}>
         <TableHead>
           <TableRow>
             <TableCell></TableCell>
@@ -160,7 +160,10 @@ const PlayButtonCell = ({
   gameResult: GameResult;
   hasSmallDevice: boolean;
 }) => {
-  const text = gameResult === 'ongoing' ? 'Continue playing' : 'View game';
+  const textContinue = hasSmallDevice ? 'Continue' : 'Continue playing';
+  const textView = hasSmallDevice ? 'View' : 'View game';
+
+  const text = gameResult === 'ongoing' ? textContinue : textView;
   const buttonSize = hasSmallDevice ? 'small' : 'medium';
 
   return (
@@ -169,6 +172,8 @@ const PlayButtonCell = ({
         variant="outlined"
         size={buttonSize}
         onClick={() => playGame(gameId)}
+        sx={{ whiteSpace: 'nowrap' }}
+        fullWidth={hasSmallDevice}
       >
         {text}
       </Button>
