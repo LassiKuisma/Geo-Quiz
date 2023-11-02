@@ -3,6 +3,7 @@ import {
   CssBaseline,
   ThemeProvider,
   createTheme,
+  responsiveFontSizes,
   useMediaQuery,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -28,23 +29,27 @@ import { userFromJson } from './util/utils';
 import { AppTheme, GameObject, GameStatus } from './types/internal';
 import { Country, UserWithToken } from './types/shared';
 
-const lightTheme = createTheme({
-  palette: {
-    mode: 'light',
-  },
-  typography: {
-    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-  },
-});
+const typography = {
+  fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+};
 
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-  typography: {
-    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-  },
-});
+const lightTheme = responsiveFontSizes(
+  createTheme({
+    palette: {
+      mode: 'light',
+    },
+    typography,
+  })
+);
+
+const darkTheme = responsiveFontSizes(
+  createTheme({
+    palette: {
+      mode: 'dark',
+    },
+    typography,
+  })
+);
 
 const App = () => {
   const [game, setGame] = useState<GameStatus>(undefined);
@@ -192,7 +197,6 @@ const App = () => {
                 gameStatus={gameStatus}
                 startNewGame={startNewGameClicked}
                 user={user}
-                hasSmallDevice={hasSmallDevice}
               />
             }
           />
@@ -209,7 +213,13 @@ const App = () => {
           />
           <Route
             path="my-games"
-            element={<UserGamesView user={user} gameStatus={gameStatus} />}
+            element={
+              <UserGamesView
+                user={user}
+                gameStatus={gameStatus}
+                hasSmallDevice={hasSmallDevice}
+              />
+            }
           />
 
           <Route path="*" element={<NoMatch />} />

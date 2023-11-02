@@ -19,16 +19,9 @@ interface Props {
   gameStatus: GameStatusManager;
   startNewGame: () => void;
   user?: UserWithToken;
-  hasSmallDevice: boolean;
 }
 
-const GameView = ({
-  game,
-  gameStatus,
-  startNewGame,
-  user,
-  hasSmallDevice,
-}: Props) => {
+const GameView = ({ game, gameStatus, startNewGame, user }: Props) => {
   const [error, setError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -129,11 +122,9 @@ const GameView = ({
 
   const gameObj = game.game;
 
-  const headerVariant = hasSmallDevice ? 'h4' : 'h3';
-
   return (
     <Box display="flex" flexDirection="column" height="100%">
-      <Typography variant={headerVariant}>Guess a country</Typography>
+      <Typography variant="h3">Guess a country</Typography>
       <CountrySelect game={gameObj} submitMove={submitMove} />
       <Error message={error} />
       <HintsView hints={gameObj.hints} />

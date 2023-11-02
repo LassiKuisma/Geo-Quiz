@@ -16,6 +16,7 @@ import { GameSummary, UserWithToken } from '../../types/shared';
 interface Props {
   user: UserWithToken | undefined;
   gameStatus: GameStatusManager;
+  hasSmallDevice: boolean;
 }
 
 interface GamesLoading {
@@ -31,7 +32,7 @@ interface GamesOk {
 }
 type GamesStatus = undefined | GamesLoading | GamesError | GamesOk;
 
-const UserGamesView = ({ user, gameStatus }: Props) => {
+const UserGamesView = ({ user, gameStatus, hasSmallDevice }: Props) => {
   const [myGames, setMyGames] = useState<GamesStatus>(undefined);
 
   const loadGames = async () => {
@@ -74,12 +75,16 @@ const UserGamesView = ({ user, gameStatus }: Props) => {
 
   return (
     <Box>
-      <Typography variant="h3" marginY={'1em'}>
-        My games
-      </Typography>
+      <Typography variant="h3">My games</Typography>
       {isLoading && <Loading />}
       {isError && <Error message={myGames.message} loadGames={loadGames} />}
-      {isOk && <GamesTable games={myGames.value} gameStatus={gameStatus} />}
+      {isOk && (
+        <GamesTable
+          games={myGames.value}
+          gameStatus={gameStatus}
+          hasSmallDevice={hasSmallDevice}
+        />
+      )}
     </Box>
   );
 };

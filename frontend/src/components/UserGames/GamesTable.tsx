@@ -31,9 +31,10 @@ import { Country, GameResult, GameSummary } from '../../types/shared';
 interface Props {
   games: Array<GameSummary>;
   gameStatus: GameStatusManager;
+  hasSmallDevice: boolean;
 }
 
-const GamesTable = ({ games, gameStatus }: Props) => {
+const GamesTable = ({ games, gameStatus, hasSmallDevice }: Props) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const navigate = useNavigate();
@@ -80,7 +81,12 @@ const GamesTable = ({ games, gameStatus }: Props) => {
         </TableHead>
         <TableBody>
           {gamesToShow.map((game) => (
-            <GameRow key={game.gameId} game={game} playGame={playGame} />
+            <GameRow
+              key={game.gameId}
+              game={game}
+              playGame={playGame}
+              hasSmallDevice={hasSmallDevice}
+            />
           ))}
         </TableBody>
         <TableFooter>
@@ -113,9 +119,10 @@ const GamesTable = ({ games, gameStatus }: Props) => {
 interface GameRowProps {
   game: GameSummary;
   playGame: (id: number) => void;
+  hasSmallDevice: boolean;
 }
 
-const GameRow = ({ game, playGame }: GameRowProps) => {
+const GameRow = ({ game, playGame, hasSmallDevice }: GameRowProps) => {
   const formatString = 'dd-mm-yyyy';
 
   const date = game.createdAt
@@ -128,6 +135,7 @@ const GameRow = ({ game, playGame }: GameRowProps) => {
         gameId={game.gameId}
         playGame={playGame}
         gameResult={game.result}
+        hasSmallDevice={hasSmallDevice}
       />
       <TableCell>
         <GameResultIcon result={game.result} />
@@ -145,16 +153,23 @@ const PlayButtonCell = ({
   gameId,
   playGame,
   gameResult,
+  hasSmallDevice,
 }: {
   gameId: number;
   playGame: (id: number) => void;
   gameResult: GameResult;
+  hasSmallDevice: boolean;
 }) => {
   const text = gameResult === 'ongoing' ? 'Continue playing' : 'View game';
+  const buttonSize = hasSmallDevice ? 'small' : 'medium';
 
   return (
     <TableCell>
-      <Button variant="outlined" onClick={() => playGame(gameId)}>
+      <Button
+        variant="outlined"
+        size={buttonSize}
+        onClick={() => playGame(gameId)}
+      >
         {text}
       </Button>
     </TableCell>
