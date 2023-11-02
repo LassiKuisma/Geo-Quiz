@@ -1,8 +1,4 @@
 import TrophyIcon from '@mui/icons-material/EmojiEvents';
-import FirstPageIcon from '@mui/icons-material/FirstPage';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import LastPageIcon from '@mui/icons-material/LastPage';
 import DotsIcon from '@mui/icons-material/MoreHoriz';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import {
@@ -12,13 +8,11 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
   TableHead,
   TablePagination,
   TableRow,
   Tooltip,
 } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
 import dateFormat from 'dateformat';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -68,51 +62,51 @@ const GamesTable = ({ games, gameStatus, hasSmallDevice }: Props) => {
   const gamesToShow = games.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
 
   return (
-    <TableContainer>
-      <Table size={hasSmallDevice ? 'small' : 'medium'}>
-        <TableHead>
-          <TableRow>
-            <TableCell></TableCell>
-            <StatusHeaderCell />
-            <TableCell>Date</TableCell>
-            <TableCell>Guesses</TableCell>
-            <TableCell>Last guess</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {gamesToShow.map((game) => (
-            <GameRow
-              key={game.gameId}
-              game={game}
-              playGame={playGame}
-              hasSmallDevice={hasSmallDevice}
-            />
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              count={games.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: {
-                  'aria-label': 'rows per page',
-                },
-                native: true,
-              }}
-              onPageChange={(_, newPage) => setPage(newPage)}
-              onRowsPerPageChange={(event) => {
-                setRowsPerPage(parseInt(event.target.value, 10));
-                setPage(0);
-              }}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+    <Box display="contents">
+      <TableContainer
+        sx={{
+          flexGrow: 1,
+          flexShrink: 1,
+          flexBasis: 'auto',
+        }}
+      >
+        <Table size={hasSmallDevice ? 'small' : 'medium'} stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell></TableCell>
+              <StatusHeaderCell />
+              <TableCell>Date</TableCell>
+              <TableCell>Guesses</TableCell>
+              <TableCell>Last guess</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {gamesToShow.map((game) => (
+              <GameRow
+                key={game.gameId}
+                game={game}
+                playGame={playGame}
+                hasSmallDevice={hasSmallDevice}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Box flexGrow={0} flexShrink={1}>
+        <TablePagination
+          component="div"
+          rowsPerPageOptions={[5, 10, 25]}
+          count={games.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={(_, newPage) => setPage(newPage)}
+          onRowsPerPageChange={(event) => {
+            setRowsPerPage(parseInt(event.target.value, 10));
+            setPage(0);
+          }}
+        />
+      </Box>
+    </Box>
   );
 };
 
@@ -222,80 +216,6 @@ const StatusHeaderCell = () => {
         Status
       </TableCell>
     </Tooltip>
-  );
-};
-
-interface TablePaginationActionsProps {
-  count: number;
-  page: number;
-  rowsPerPage: number;
-  onPageChange: (
-    event: React.MouseEvent<HTMLButtonElement>,
-    newPage: number
-  ) => void;
-}
-
-const TablePaginationActions = ({
-  count,
-  page,
-  rowsPerPage,
-  onPageChange,
-}: TablePaginationActionsProps) => {
-  const handleFirstPageButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    onPageChange(event, 0);
-  };
-
-  const handleBackButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    onPageChange(event, page - 1);
-  };
-
-  const handleNextButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    onPageChange(event, page + 1);
-  };
-
-  const handleLastPageButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-  };
-
-  return (
-    <Box sx={{ flexShrink: 0 }}>
-      <IconButton
-        onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
-        aria-label="first page"
-      >
-        <FirstPageIcon />
-      </IconButton>
-      <IconButton
-        onClick={handleBackButtonClick}
-        disabled={page === 0}
-        aria-label="previous page"
-      >
-        <KeyboardArrowLeft />
-      </IconButton>
-      <IconButton
-        onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="next page"
-      >
-        <KeyboardArrowRight />
-      </IconButton>
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="last page"
-      >
-        <LastPageIcon />
-      </IconButton>
-    </Box>
   );
 };
 

@@ -74,7 +74,7 @@ const UserGamesView = ({ user, gameStatus, hasSmallDevice }: Props) => {
   const isOk = myGames?.k === 'ok';
 
   return (
-    <Box>
+    <Box display="flex" flexDirection="column" height="100%">
       <Typography variant="h3">My games</Typography>
       {isLoading && <Loading />}
       {isError && <Error message={myGames.message} loadGames={loadGames} />}
