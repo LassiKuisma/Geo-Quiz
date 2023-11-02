@@ -67,48 +67,46 @@ const GamesTable = ({ games, gameStatus }: Props) => {
   const gamesToShow = games.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
 
   return (
-    <Box>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell></TableCell>
-              <StatusHeaderCell />
-              <TableCell>Date</TableCell>
-              <TableCell>Guesses</TableCell>
-              <TableCell>Last guess</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {gamesToShow.map((game) => (
-              <GameRow key={game.gameId} game={game} playGame={playGame} />
-            ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                count={games.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    'aria-label': 'rows per page',
-                  },
-                  native: true,
-                }}
-                onPageChange={(_, newPage) => setPage(newPage)}
-                onRowsPerPageChange={(event) => {
-                  setRowsPerPage(parseInt(event.target.value, 10));
-                  setPage(0);
-                }}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
-    </Box>
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell></TableCell>
+            <StatusHeaderCell />
+            <TableCell>Date</TableCell>
+            <TableCell>Guesses</TableCell>
+            <TableCell>Last guess</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {gamesToShow.map((game) => (
+            <GameRow key={game.gameId} game={game} playGame={playGame} />
+          ))}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              count={games.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: {
+                  'aria-label': 'rows per page',
+                },
+                native: true,
+              }}
+              onPageChange={(_, newPage) => setPage(newPage)}
+              onRowsPerPageChange={(event) => {
+                setRowsPerPage(parseInt(event.target.value, 10));
+                setPage(0);
+              }}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </TableContainer>
   );
 };
 

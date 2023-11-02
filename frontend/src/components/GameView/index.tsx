@@ -130,15 +130,15 @@ const GameView = ({
   const gameObj = game.game;
 
   return (
-    <Box margin="0.25em">
-      <Box>
+    <>
+      <>
         <Typography variant="h3">
           {game.game.guesses.length === 0
             ? 'Take a blind guess!'
             : 'Guess a country'}
         </Typography>
         <CountrySelect game={gameObj} submitMove={submitMove} />
-      </Box>
+      </>
       <Error message={error} />
       <HintsView hints={gameObj.hints} />
       <GameOver
@@ -147,7 +147,7 @@ const GameView = ({
         startNewGame={startNewGame}
       />
       <MoveList moves={gameObj.guesses} hasSmallDevice={hasSmallDevice} />
-    </Box>
+    </>
   );
 };
 

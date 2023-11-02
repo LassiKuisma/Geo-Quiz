@@ -37,7 +37,7 @@ const rightArrow = '\u{2192}'; // →
 
 const MoveList = ({ moves, hasSmallDevice }: Props) => {
   return (
-    <Box>
+    <>
       <Typography variant="h5" marginY="0.5em">
         Guesses
       </Typography>
@@ -66,7 +66,7 @@ const MoveList = ({ moves, hasSmallDevice }: Props) => {
           </TableBody>
         </Table>
       </TableContainer>
-    </Box>
+    </>
   );
 };
 
@@ -194,10 +194,8 @@ const ArrayCell = ({ correctValues, correctAnswer }: ArrayCellProps) => {
   const fontWeight = correctAnswer === true ? 'bold' : undefined;
 
   return (
-    <TableCell>
-      <Box fontWeight={fontWeight}>
-        {correctValues.length !== 0 ? correctValues.join(', ') : 'None'}
-      </Box>
+    <TableCell sx={{ fontWeight }}>
+      {correctValues.length !== 0 ? correctValues.join(', ') : 'None'}
     </TableCell>
   );
 };

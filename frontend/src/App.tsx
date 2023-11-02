@@ -161,65 +161,60 @@ const App = () => {
   return (
     <ThemeProvider theme={currentTheme}>
       <CssBaseline />
-      <Box>
-        <Routes>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Layout
+              hasSmallDevice={hasSmallDevice}
+              loggedInUser={user?.username}
+              setUser={handleLogout}
+              theme={theme}
+              switchToTheme={switchToTheme}
+            />
+          }
+        >
           <Route
-            path="/"
+            index
             element={
-              <Layout
-                hasSmallDevice={hasSmallDevice}
-                loggedInUser={user?.username}
-                setUser={handleLogout}
-                theme={theme}
-                switchToTheme={switchToTheme}
+              <HomePage
+                startNewGame={startNewGameClicked}
+                resumeCurrentGame={resumeCurrentGame}
+                hasActiveGame={hasActiveGame}
               />
             }
-          >
-            <Route
-              index
-              element={
-                <HomePage
-                  startNewGame={startNewGameClicked}
-                  resumeCurrentGame={resumeCurrentGame}
-                  hasActiveGame={hasActiveGame}
-                />
-              }
-            />
-            <Route
-              path="game"
-              element={
-                <GameView
-                  game={game}
-                  gameStatus={gameStatus}
-                  startNewGame={startNewGameClicked}
-                  user={user}
-                  hasSmallDevice={hasSmallDevice}
-                />
-              }
-            />
-            <Route
-              path="countries"
-              element={
-                <CountryList
-                  countries={countries}
-                  setCountries={setCountries}
-                />
-              }
-            />
-            <Route path="login" element={<LoginPage setUser={handleLogin} />} />
-            <Route
-              path="create-account"
-              element={<CreateAccountPage setUser={handleLogin} />}
-            />
-            <Route
-              path="my-games"
-              element={<UserGamesView user={user} gameStatus={gameStatus} />}
-            />
+          />
+          <Route
+            path="game"
+            element={
+              <GameView
+                game={game}
+                gameStatus={gameStatus}
+                startNewGame={startNewGameClicked}
+                user={user}
+                hasSmallDevice={hasSmallDevice}
+              />
+            }
+          />
+          <Route
+            path="countries"
+            element={
+              <CountryList countries={countries} setCountries={setCountries} />
+            }
+          />
+          <Route path="login" element={<LoginPage setUser={handleLogin} />} />
+          <Route
+            path="create-account"
+            element={<CreateAccountPage setUser={handleLogin} />}
+          />
+          <Route
+            path="my-games"
+            element={<UserGamesView user={user} gameStatus={gameStatus} />}
+          />
 
-            <Route path="*" element={<NoMatch />} />
-          </Route>
-        </Routes>
-      </Box>
+          <Route path="*" element={<NoMatch />} />
+        </Route>
+      </Routes>
     </ThemeProvider>
   );
 };
@@ -240,7 +235,7 @@ const Layout = ({
   switchToTheme,
 }: LayoutProps) => {
   return (
-    <Box>
+    <>
       <NavigationBar
         hasSmallDevice={hasSmallDevice}
         loggedInUser={loggedInUser}
@@ -251,7 +246,7 @@ const Layout = ({
       <Box width="100vw" maxWidth="1024px" margin="auto">
         <Outlet />
       </Box>
-    </Box>
+    </>
   );
 };
 
