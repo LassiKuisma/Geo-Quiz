@@ -1,5 +1,9 @@
-// required for umzug migration
-require('ts-node/register');
+const usingTs =
+  process.env.TS_NODE === 'true' || process.env.TS_NODE_DEV === 'true';
+if (!usingTs) {
+  // required for umzug migration
+  require('ts-node/register');
+}
 
 import cors from 'cors';
 import 'dotenv/config';
