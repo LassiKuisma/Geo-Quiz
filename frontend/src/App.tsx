@@ -234,8 +234,10 @@ const Layout = ({
   theme,
   switchToTheme,
 }: LayoutProps) => {
+  const navbarHeight = '56px';
+
   return (
-    <>
+    <Box height="100vh">
       <NavigationBar
         hasSmallDevice={hasSmallDevice}
         loggedInUser={loggedInUser}
@@ -243,10 +245,17 @@ const Layout = ({
         theme={theme}
         switchToTheme={switchToTheme}
       />
-      <Box width="100vw" maxWidth="1024px" margin="auto">
+      <Box
+        width="100vw"
+        maxWidth="1024px"
+        margin="auto"
+        padding="0.5rem"
+        paddingTop="2rem"
+        height={`calc(100vh - ${navbarHeight})`}
+      >
         <Outlet />
       </Box>
-    </>
+    </Box>
   );
 };
 

@@ -129,16 +129,12 @@ const GameView = ({
 
   const gameObj = game.game;
 
+  const headerVariant = hasSmallDevice ? 'h4' : 'h3';
+
   return (
-    <>
-      <>
-        <Typography variant="h3">
-          {game.game.guesses.length === 0
-            ? 'Take a blind guess!'
-            : 'Guess a country'}
-        </Typography>
-        <CountrySelect game={gameObj} submitMove={submitMove} />
-      </>
+    <Box display="flex" flexDirection="column" height="100%">
+      <Typography variant={headerVariant}>Guess a country</Typography>
+      <CountrySelect game={gameObj} submitMove={submitMove} />
       <Error message={error} />
       <HintsView hints={gameObj.hints} />
       <GameOver
@@ -146,8 +142,8 @@ const GameView = ({
         turns={gameObj.guesses.length}
         startNewGame={startNewGame}
       />
-      <MoveList moves={gameObj.guesses} hasSmallDevice={hasSmallDevice} />
-    </>
+      <MoveList moves={gameObj.guesses} />
+    </Box>
   );
 };
 

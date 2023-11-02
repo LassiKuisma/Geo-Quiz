@@ -29,24 +29,15 @@ const HeaderCell = styled(TableCell)(({ theme }) => ({
 
 interface Props {
   moves: Array<GameMove>;
-  hasSmallDevice: boolean;
 }
 
-const leftArrow = '\u{2190}'; // ←
-const rightArrow = '\u{2192}'; // →
-
-const MoveList = ({ moves, hasSmallDevice }: Props) => {
+const MoveList = ({ moves }: Props) => {
   return (
-    <>
+    <Box display="contents">
       <Typography variant="h5" marginY="0.5em">
         Guesses
       </Typography>
-      {hasSmallDevice && (
-        <Box>
-          {leftArrow} Scroll sideways {rightArrow}
-        </Box>
-      )}
-      <TableContainer sx={{ maxHeight: '65vh' }}>
+      <TableContainer sx={{ flexGrow: 1, flexShrink: 1, flexBasis: 'auto' }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
@@ -66,7 +57,7 @@ const MoveList = ({ moves, hasSmallDevice }: Props) => {
           </TableBody>
         </Table>
       </TableContainer>
-    </>
+    </Box>
   );
 };
 
