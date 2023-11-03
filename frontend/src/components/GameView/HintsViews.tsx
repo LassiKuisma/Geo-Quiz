@@ -22,36 +22,34 @@ interface Props {
 
 const HintsView = ({ hints }: Props) => {
   return (
-    <Box width="400px" maxWidth="100%" marginY="1em">
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Hints</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <TableContainer>
-            <Table size="small">
-              <TableBody>
-                <HintRow
-                  name="Landlocked"
-                  hint={hints.landlocked}
-                  hintToStr={(hint) => boolToStr(hint)}
-                />
-                <HintRow
-                  name="Driving side"
-                  hint={hints.drivingSide}
-                  hintToStr={(s) => s}
-                />
-                <HintRow
-                  name="Capital city"
-                  hint={hints.capital}
-                  hintToStr={(capital) => (!capital ? 'Unknown' : capital)}
-                />
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </AccordionDetails>
-      </Accordion>
-    </Box>
+    <Accordion sx={{ width: '400px', maxWidth: '100%', marginY: '1em' }}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography>Hints</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <TableContainer>
+          <Table size="small">
+            <TableBody>
+              <HintRow
+                name="Landlocked"
+                hint={hints.landlocked}
+                hintToStr={(hint) => boolToStr(hint)}
+              />
+              <HintRow
+                name="Driving side"
+                hint={hints.drivingSide}
+                hintToStr={(s) => s}
+              />
+              <HintRow
+                name="Capital city"
+                hint={hints.capital}
+                hintToStr={(capital) => (!capital ? 'Unknown' : capital)}
+              />
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </AccordionDetails>
+    </Accordion>
   );
 };
 

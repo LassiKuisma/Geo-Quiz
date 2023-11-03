@@ -12,6 +12,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
   styled,
 } from '@mui/material';
@@ -25,36 +26,47 @@ const HeaderCell = styled(TableCell)(({ theme }) => ({
   fontSize: 'large',
   fontWeight: 'bold',
   background: theme.palette.primary.contrastText,
+  borderColor: theme.palette.primary.light,
+  border: 0,
+  borderTop: '1px solid',
+  ':first-of-type': {
+    borderLeft: '1px solid',
+  },
+  ':last-child': {
+    borderRight: '1px solid',
+  },
+}));
+
+const StyledCell = styled(TableCell)(({ theme }) => ({
+  ':first-of-type': {
+    borderLeft: '1px solid',
+    borderLeftColor: theme.palette.primary.light,
+  },
+  ':last-child': {
+    borderRight: '1px solid',
+    borderRightColor: theme.palette.primary.light,
+  },
 }));
 
 interface Props {
   moves: Array<GameMove>;
-  hasSmallDevice: boolean;
 }
 
-const leftArrow = '\u{2190}'; // ←
-const rightArrow = '\u{2192}'; // →
-
-const MoveList = ({ moves, hasSmallDevice }: Props) => {
+const MoveList = ({ moves }: Props) => {
   return (
-    <Box>
+    <Box display="contents">
       <Typography variant="h5" marginY="0.5em">
         Guesses
       </Typography>
-      {hasSmallDevice && (
-        <Box>
-          {leftArrow} Scroll sideways {rightArrow}
-        </Box>
-      )}
-      <TableContainer sx={{ maxHeight: '65vh' }}>
+      <TableContainer sx={{ flexGrow: 1, flexShrink: 1, flexBasis: 'auto' }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
               <HeaderCell>Country</HeaderCell>
               <HeaderCell>Region</HeaderCell>
-              <HeaderCell>Area</HeaderCell>
-              <HeaderCell>Population</HeaderCell>
-              <HeaderCell>Same neighbours</HeaderCell>
+              <TooltipHeader type="area">Area</TooltipHeader>
+              <TooltipHeader type="population">Population</TooltipHeader>
+              <HeaderCell>Common neighbours</HeaderCell>
               <HeaderCell>Same languages</HeaderCell>
               <HeaderCell>Direction</HeaderCell>
             </TableRow>
@@ -81,34 +93,42 @@ const ResultRow = ({ move }: { move: GameMove }) => {
   const direction = move.comparison.direction;
   const angle = !direction ? undefined : direction + ARROW_ROTATION_OFFSET;
 
+  const fontWeight = correctAnswer === true ? 'bold' : undefined;
+
   return (
-    <TableRow hover>
-      <Cell fontSize="large" correctAnswer={correctAnswer}>
-        {move.guessedCountry.name}
-      </Cell>
+    <TableRow
+      hover
+      sx={{
+        '& > td': {
+          fontWeight,
+        },
+      }}
+    >
+      <Cell fontSize="large">{move.guessedCountry.name}</Cell>
       <RegionCell
-        correctAnswer={correctAnswer}
         region={country.region}
         regionCorrect={comp.regionEqual}
         subregion={country.subregion}
         subregionCorrect={comp.subregionEqual}
       />
-      <Cell correctAnswer={correctAnswer}>
+      <Cell>
         <DiffAsIcon diff={comp.areaDifference} />
         {prefixNumber(country.area, 0)} km²
       </Cell>
-      <Cell correctAnswer={correctAnswer}>
+      <Cell>
         <DiffAsIcon diff={comp.populationDifference} />
         {prefixNumber(country.population, 0)}
       </Cell>
-      <ArrayCell
-        correctValues={comp.sameNeighbours}
-        correctAnswer={correctAnswer}
-      />
-      <ArrayCell
-        correctValues={comp.sameLanguages}
-        correctAnswer={correctAnswer}
-      />
+      <Cell wrapText>
+        {comp.sameNeighbours.length !== 0
+          ? comp.sameNeighbours.join(', ')
+          : 'None'}
+      </Cell>
+      <Cell wrapText>
+        {comp.sameLanguages.length !== 0
+          ? comp.sameLanguages.join(', ')
+          : 'None'}
+      </Cell>
       <Cell>
         {angle && (
           <Arrow
@@ -126,27 +146,25 @@ const ResultRow = ({ move }: { move: GameMove }) => {
 interface CellProps {
   children?: React.ReactNode;
   fontSize?: 'small' | 'medium' | 'large';
-  correctAnswer?: boolean;
+  wrapText?: boolean;
 }
 
-const Cell = ({ children, fontSize, correctAnswer }: CellProps) => {
-  const fontWeight = correctAnswer === true ? 'bold' : undefined;
+const Cell = ({ children, fontSize, wrapText }: CellProps) => {
   return (
-    <TableCell>
-      <Stack
-        direction="row"
-        alignItems="center"
-        fontSize={fontSize}
-        fontWeight={fontWeight}
-      >
+    <StyledCell
+      sx={{
+        whiteSpace: wrapText ? 'normal' : 'nowrap',
+        fontSize,
+      }}
+    >
+      <Box display="flex" alignItems="center">
         {children}
-      </Stack>
-    </TableCell>
+      </Box>
+    </StyledCell>
   );
 };
 
 interface RegionCellProps {
-  correctAnswer: boolean;
   region: string;
   regionCorrect: boolean;
   subregion: string;
@@ -154,7 +172,6 @@ interface RegionCellProps {
 }
 
 const RegionCell = ({
-  correctAnswer,
   region,
   regionCorrect,
   subregion,
@@ -165,40 +182,30 @@ const RegionCell = ({
   };
 
   return (
-    <Cell correctAnswer={correctAnswer}>
+    <Cell>
       <Stack>
-        <Box display="flex" alignItems="center" color={color(regionCorrect)}>
+        <Box
+          display="flex"
+          alignItems="center"
+          color={color(regionCorrect)}
+          whiteSpace="nowrap"
+        >
           {boolToIcon(regionCorrect)}
           {region}
         </Box>
         <Box
           display="flex"
           alignItems="center"
-          marginLeft="15%"
           color={color(subregionCorrect)}
+          whiteSpace="nowrap"
+          fontSize="small"
+          marginLeft="0.3em"
         >
-          {boolToIcon(subregionCorrect)}
+          {boolToIcon(subregionCorrect, true)}
           {subregion}
         </Box>
       </Stack>
     </Cell>
-  );
-};
-
-interface ArrayCellProps {
-  correctValues: Array<string>;
-  correctAnswer?: boolean;
-}
-
-const ArrayCell = ({ correctValues, correctAnswer }: ArrayCellProps) => {
-  const fontWeight = correctAnswer === true ? 'bold' : undefined;
-
-  return (
-    <TableCell>
-      <Box fontWeight={fontWeight}>
-        {correctValues.length !== 0 ? correctValues.join(', ') : 'None'}
-      </Box>
-    </TableCell>
   );
 };
 
@@ -212,8 +219,49 @@ const DiffAsIcon = ({ diff }: { diff: Difference }) => {
   }
 };
 
-const boolToIcon = (b: boolean) => {
-  return b ? <CheckIcon /> : <CloseIcon />;
+const boolToIcon = (b: boolean, small?: boolean) => {
+  return b ? (
+    <CheckIcon fontSize={small ? 'small' : 'medium'} />
+  ) : (
+    <CloseIcon fontSize={small ? 'small' : 'medium'} />
+  );
+};
+
+interface TooltipHeaderProps {
+  children?: React.ReactNode;
+  type: 'area' | 'population';
+}
+
+const TooltipHeader = ({ children, type }: TooltipHeaderProps) => {
+  const explanations =
+    type === 'area'
+      ? ['larger area', 'smaller area']
+      : ['more population', 'less population'];
+
+  return (
+    <Tooltip
+      title={
+        <Box display="flex" flexDirection="column">
+          The correct answer has...
+          <Box display="flex" flexDirection="row" alignItems="center">
+            <ArrowDropUpIcon /> = {explanations[0]}
+          </Box>
+          <Box display="flex" flexDirection="row" alignItems="center">
+            <ArrowDropDownIcon /> = {explanations[1]}
+          </Box>
+        </Box>
+      }
+    >
+      <HeaderCell
+        sx={{
+          textDecorationStyle: 'dotted',
+          textDecorationLine: 'underline',
+        }}
+      >
+        {children}
+      </HeaderCell>
+    </Tooltip>
+  );
 };
 
 export default MoveList;

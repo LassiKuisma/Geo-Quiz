@@ -45,7 +45,13 @@ const CountryList = ({ countries, setCountries }: Props) => {
     return <Box>Loading...</Box>;
   }
 
-  return <CountryTable countries={countries} />;
+  return (
+    <Box display="flex" flexDirection="column" height="100%">
+      <Box display="contents">
+        <CountryTable countries={countries} />
+      </Box>
+    </Box>
+  );
 };
 
 export default CountryList;

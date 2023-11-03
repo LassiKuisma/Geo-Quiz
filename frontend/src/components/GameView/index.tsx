@@ -19,16 +19,9 @@ interface Props {
   gameStatus: GameStatusManager;
   startNewGame: () => void;
   user?: UserWithToken;
-  hasSmallDevice: boolean;
 }
 
-const GameView = ({
-  game,
-  gameStatus,
-  startNewGame,
-  user,
-  hasSmallDevice,
-}: Props) => {
+const GameView = ({ game, gameStatus, startNewGame, user }: Props) => {
   const [error, setError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -130,15 +123,9 @@ const GameView = ({
   const gameObj = game.game;
 
   return (
-    <Box margin="0.25em">
-      <Box>
-        <Typography variant="h3">
-          {game.game.guesses.length === 0
-            ? 'Take a blind guess!'
-            : 'Guess a country'}
-        </Typography>
-        <CountrySelect game={gameObj} submitMove={submitMove} />
-      </Box>
+    <Box display="flex" flexDirection="column" height="100%">
+      <Typography variant="h3">Guess a country</Typography>
+      <CountrySelect game={gameObj} submitMove={submitMove} />
       <Error message={error} />
       <HintsView hints={gameObj.hints} />
       <GameOver
@@ -146,7 +133,7 @@ const GameView = ({
         turns={gameObj.guesses.length}
         startNewGame={startNewGame}
       />
-      <MoveList moves={gameObj.guesses} hasSmallDevice={hasSmallDevice} />
+      <MoveList moves={gameObj.guesses} />
     </Box>
   );
 };

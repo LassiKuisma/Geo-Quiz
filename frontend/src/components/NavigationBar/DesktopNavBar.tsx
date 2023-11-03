@@ -36,25 +36,23 @@ const DesktopNavBar = ({
   });
 
   return (
-    <Box>
-      <AppBar position="static">
-        <Toolbar variant="dense">
-          <Box display={'flex'}>
-            {pagesToShow.map((page) => (
-              <AppBarButton key={page.name} text={page.name} linkTo={page.to} />
-            ))}
-          </Box>
-          <LoginItems loggedInUser={loggedInUser} setUser={setUser} />
-          <Divider
-            orientation="vertical"
-            flexItem
-            variant="middle"
-            sx={{ marginX: 1 }}
-          />
-          <ThemeSelect theme={theme} switchToTheme={switchToTheme} />
-        </Toolbar>
-      </AppBar>
-    </Box>
+    <AppBar position="static">
+      <Toolbar variant="dense">
+        <Box display={'flex'}>
+          {pagesToShow.map((page) => (
+            <AppBarButton key={page.name} text={page.name} linkTo={page.to} />
+          ))}
+        </Box>
+        <LoginItems loggedInUser={loggedInUser} setUser={setUser} />
+        <Divider
+          orientation="vertical"
+          flexItem
+          variant="middle"
+          sx={{ marginX: 1 }}
+        />
+        <ThemeSelect theme={theme} switchToTheme={switchToTheme} />
+      </Toolbar>
+    </AppBar>
   );
 };
 

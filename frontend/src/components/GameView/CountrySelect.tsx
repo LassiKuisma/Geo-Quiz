@@ -38,7 +38,7 @@ const CountrySelect = ({ game, submitMove }: Props) => {
   const disableInput = game.gameOver || game.isSubmittingMove;
 
   return (
-    <Box>
+    <>
       <Box display={'flex'} alignItems={'center'}>
         <Autocomplete
           id="country-select-combo-box"
@@ -77,7 +77,7 @@ const CountrySelect = ({ game, submitMove }: Props) => {
         <LoadingIcon visible={game.isSubmittingMove} />
       </Box>
       <ErrorDisplay errorMessage={errorMessage} />
-    </Box>
+    </>
   );
 };
 

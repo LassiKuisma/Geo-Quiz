@@ -48,7 +48,7 @@ const MobileNavBar = ({
   });
 
   return (
-    <Box>
+    <>
       <TopBar setOpen={setOpen} user={loggedInUser} />
       <SideBar
         pages={pagesToShow}
@@ -59,7 +59,7 @@ const MobileNavBar = ({
         user={loggedInUser}
         setUser={setUser}
       />
-    </Box>
+    </>
   );
 };
 

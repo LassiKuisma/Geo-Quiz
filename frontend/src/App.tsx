@@ -3,6 +3,7 @@ import {
   CssBaseline,
   ThemeProvider,
   createTheme,
+  responsiveFontSizes,
   useMediaQuery,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -28,23 +29,27 @@ import { userFromJson } from './util/utils';
 import { AppTheme, GameObject, GameStatus } from './types/internal';
 import { Country, UserWithToken } from './types/shared';
 
-const lightTheme = createTheme({
-  palette: {
-    mode: 'light',
-  },
-  typography: {
-    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-  },
-});
+const typography = {
+  fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+};
 
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-  typography: {
-    fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-  },
-});
+const lightTheme = responsiveFontSizes(
+  createTheme({
+    palette: {
+      mode: 'light',
+    },
+    typography,
+  })
+);
+
+const darkTheme = responsiveFontSizes(
+  createTheme({
+    palette: {
+      mode: 'dark',
+    },
+    typography,
+  })
+);
 
 const App = () => {
   const [game, setGame] = useState<GameStatus>(undefined);
@@ -161,65 +166,65 @@ const App = () => {
   return (
     <ThemeProvider theme={currentTheme}>
       <CssBaseline />
-      <Box>
-        <Routes>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Layout
+              hasSmallDevice={hasSmallDevice}
+              loggedInUser={user?.username}
+              setUser={handleLogout}
+              theme={theme}
+              switchToTheme={switchToTheme}
+            />
+          }
+        >
           <Route
-            path="/"
+            index
             element={
-              <Layout
-                hasSmallDevice={hasSmallDevice}
-                loggedInUser={user?.username}
-                setUser={handleLogout}
-                theme={theme}
-                switchToTheme={switchToTheme}
+              <HomePage
+                startNewGame={startNewGameClicked}
+                resumeCurrentGame={resumeCurrentGame}
+                hasActiveGame={hasActiveGame}
               />
             }
-          >
-            <Route
-              index
-              element={
-                <HomePage
-                  startNewGame={startNewGameClicked}
-                  resumeCurrentGame={resumeCurrentGame}
-                  hasActiveGame={hasActiveGame}
-                />
-              }
-            />
-            <Route
-              path="game"
-              element={
-                <GameView
-                  game={game}
-                  gameStatus={gameStatus}
-                  startNewGame={startNewGameClicked}
-                  user={user}
-                  hasSmallDevice={hasSmallDevice}
-                />
-              }
-            />
-            <Route
-              path="countries"
-              element={
-                <CountryList
-                  countries={countries}
-                  setCountries={setCountries}
-                />
-              }
-            />
-            <Route path="login" element={<LoginPage setUser={handleLogin} />} />
-            <Route
-              path="create-account"
-              element={<CreateAccountPage setUser={handleLogin} />}
-            />
-            <Route
-              path="my-games"
-              element={<UserGamesView user={user} gameStatus={gameStatus} />}
-            />
+          />
+          <Route
+            path="game"
+            element={
+              <GameView
+                game={game}
+                gameStatus={gameStatus}
+                startNewGame={startNewGameClicked}
+                user={user}
+              />
+            }
+          />
+          <Route
+            path="countries"
+            element={
+              <CountryList countries={countries} setCountries={setCountries} />
+            }
+          />
+          <Route path="login" element={<LoginPage setUser={handleLogin} />} />
+          <Route
+            path="create-account"
+            element={<CreateAccountPage setUser={handleLogin} />}
+          />
+          <Route
+            path="my-games"
+            element={
+              <UserGamesView
+                user={user}
+                gameStatus={gameStatus}
+                hasSmallDevice={hasSmallDevice}
+              />
+            }
+          />
 
-            <Route path="*" element={<NoMatch />} />
-          </Route>
-        </Routes>
-      </Box>
+          <Route path="*" element={<NoMatch />} />
+        </Route>
+      </Routes>
     </ThemeProvider>
   );
 };
@@ -239,8 +244,10 @@ const Layout = ({
   theme,
   switchToTheme,
 }: LayoutProps) => {
+  const navbarHeight = '56px';
+
   return (
-    <Box>
+    <Box height="100vh">
       <NavigationBar
         hasSmallDevice={hasSmallDevice}
         loggedInUser={loggedInUser}
@@ -248,7 +255,14 @@ const Layout = ({
         theme={theme}
         switchToTheme={switchToTheme}
       />
-      <Box width="100vw" maxWidth="1024px" margin="auto">
+      <Box
+        width="100vw"
+        maxWidth="1024px"
+        margin="auto"
+        padding="0.5rem"
+        paddingTop="2rem"
+        height={`calc(100vh - ${navbarHeight})`}
+      >
         <Outlet />
       </Box>
     </Box>
