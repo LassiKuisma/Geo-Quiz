@@ -28,7 +28,7 @@ const HeaderCell = styled(TableCell)(({ theme }) => ({
   borderColor: theme.palette.primary.light,
   border: 0,
   borderTop: '1px solid',
-  ':first-child': {
+  ':first-of-type': {
     borderLeft: '1px solid',
   },
   ':last-child': {
@@ -37,7 +37,7 @@ const HeaderCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const StyledCell = styled(TableCell)(({ theme }) => ({
-  ':first-child': {
+  ':first-of-type': {
     borderLeft: '1px solid',
     borderLeftColor: theme.palette.primary.light,
   },
