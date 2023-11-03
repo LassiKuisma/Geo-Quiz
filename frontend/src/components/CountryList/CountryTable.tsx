@@ -90,33 +90,31 @@ const CountryTable = ({ countries }: Props) => {
   );
 
   return (
-    <Box height="90vh">
-      <TableContainer sx={{ maxHeight: '85vh' }}>
-        <Table stickyHeader>
-          <HeaderRow
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
-          />
-          <TableBody>
-            {rowsSorted.map((country) => (
-              <TableRow key={country.Country}>
-                <TableCell>{country.Country}</TableCell>
-                <TableCell>{country.Region}</TableCell>
-                <TableCell>{country.Subregion}</TableCell>
-                <TableCell>{prefixNumber(country.Area, 0)} km²</TableCell>
-                <TableCell>{prefixNumber(country.Population, 0)}</TableCell>
-                <TableCell>{country.Neighbours}</TableCell>
-                <TableCell>{country.Languages}</TableCell>
-                <TableCell>
-                  {locationToStr(country.Location.lat, country.Location.lng)}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+    <TableContainer sx={{ flexGrow: 1, flexShrink: 1, flexBasis: 'auto' }}>
+      <Table stickyHeader>
+        <HeaderRow
+          order={order}
+          orderBy={orderBy}
+          onRequestSort={handleRequestSort}
+        />
+        <TableBody>
+          {rowsSorted.map((country) => (
+            <TableRow key={country.Country}>
+              <TableCell>{country.Country}</TableCell>
+              <TableCell>{country.Region}</TableCell>
+              <TableCell>{country.Subregion}</TableCell>
+              <TableCell>{prefixNumber(country.Area, 0)} km²</TableCell>
+              <TableCell>{prefixNumber(country.Population, 0)}</TableCell>
+              <TableCell>{country.Neighbours}</TableCell>
+              <TableCell>{country.Languages}</TableCell>
+              <TableCell>
+                {locationToStr(country.Location.lat, country.Location.lng)}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
