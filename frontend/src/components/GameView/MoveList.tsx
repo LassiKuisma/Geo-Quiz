@@ -118,12 +118,12 @@ const ResultRow = ({ move }: { move: GameMove }) => {
         <DiffAsIcon diff={comp.populationDifference} />
         {prefixNumber(country.population, 0)}
       </Cell>
-      <Cell>
+      <Cell wrapText>
         {comp.sameNeighbours.length !== 0
           ? comp.sameNeighbours.join(', ')
           : 'None'}
       </Cell>
-      <Cell>
+      <Cell wrapText>
         {comp.sameLanguages.length !== 0
           ? comp.sameLanguages.join(', ')
           : 'None'}
@@ -145,14 +145,20 @@ const ResultRow = ({ move }: { move: GameMove }) => {
 interface CellProps {
   children?: React.ReactNode;
   fontSize?: 'small' | 'medium' | 'large';
+  wrapText?: boolean;
 }
 
-const Cell = ({ children, fontSize }: CellProps) => {
+const Cell = ({ children, fontSize, wrapText }: CellProps) => {
   return (
-    <StyledCell>
-      <Stack direction="row" alignItems="center" fontSize={fontSize}>
+    <StyledCell
+      sx={{
+        whiteSpace: wrapText ? 'normal' : 'nowrap',
+        fontSize,
+      }}
+    >
+      <Box display="flex" alignItems="center">
         {children}
-      </Stack>
+      </Box>
     </StyledCell>
   );
 };
@@ -177,17 +183,24 @@ const RegionCell = ({
   return (
     <Cell>
       <Stack>
-        <Box display="flex" alignItems="center" color={color(regionCorrect)}>
+        <Box
+          display="flex"
+          alignItems="center"
+          color={color(regionCorrect)}
+          whiteSpace="nowrap"
+        >
           {boolToIcon(regionCorrect)}
           {region}
         </Box>
         <Box
           display="flex"
           alignItems="center"
-          marginLeft="15%"
           color={color(subregionCorrect)}
+          whiteSpace="nowrap"
+          fontSize="small"
+          marginLeft="0.3em"
         >
-          {boolToIcon(subregionCorrect)}
+          {boolToIcon(subregionCorrect, true)}
           {subregion}
         </Box>
       </Stack>
@@ -205,8 +218,12 @@ const DiffAsIcon = ({ diff }: { diff: Difference }) => {
   }
 };
 
-const boolToIcon = (b: boolean) => {
-  return b ? <CheckIcon /> : <CloseIcon />;
+const boolToIcon = (b: boolean, small?: boolean) => {
+  return b ? (
+    <CheckIcon fontSize={small ? 'small' : 'medium'} />
+  ) : (
+    <CloseIcon fontSize={small ? 'small' : 'medium'} />
+  );
 };
 
 export default MoveList;
