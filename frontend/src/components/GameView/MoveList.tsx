@@ -25,6 +25,26 @@ const HeaderCell = styled(TableCell)(({ theme }) => ({
   fontSize: 'large',
   fontWeight: 'bold',
   background: theme.palette.primary.contrastText,
+  borderColor: theme.palette.primary.light,
+  border: 0,
+  borderTop: '1px solid',
+  ':first-child': {
+    borderLeft: '1px solid',
+  },
+  ':last-child': {
+    borderRight: '1px solid',
+  },
+}));
+
+const StyledCell = styled(TableCell)(({ theme }) => ({
+  ':first-child': {
+    borderLeft: '1px solid',
+    borderLeftColor: theme.palette.primary.light,
+  },
+  ':last-child': {
+    borderRight: '1px solid',
+    borderRightColor: theme.palette.primary.light,
+  },
 }));
 
 interface Props {
@@ -92,14 +112,16 @@ const ResultRow = ({ move }: { move: GameMove }) => {
         <DiffAsIcon diff={comp.populationDifference} />
         {prefixNumber(country.population, 0)}
       </Cell>
-      <ArrayCell
-        correctValues={comp.sameNeighbours}
-        correctAnswer={correctAnswer}
-      />
-      <ArrayCell
-        correctValues={comp.sameLanguages}
-        correctAnswer={correctAnswer}
-      />
+      <Cell correctAnswer={correctAnswer}>
+        {comp.sameNeighbours.length !== 0
+          ? comp.sameNeighbours.join(', ')
+          : 'None'}
+      </Cell>
+      <Cell correctAnswer={correctAnswer}>
+        {comp.sameLanguages.length !== 0
+          ? comp.sameLanguages.join(', ')
+          : 'None'}
+      </Cell>
       <Cell>
         {angle && (
           <Arrow
@@ -123,7 +145,7 @@ interface CellProps {
 const Cell = ({ children, fontSize, correctAnswer }: CellProps) => {
   const fontWeight = correctAnswer === true ? 'bold' : undefined;
   return (
-    <TableCell>
+    <StyledCell>
       <Stack
         direction="row"
         alignItems="center"
@@ -132,7 +154,7 @@ const Cell = ({ children, fontSize, correctAnswer }: CellProps) => {
       >
         {children}
       </Stack>
-    </TableCell>
+    </StyledCell>
   );
 };
 
@@ -173,21 +195,6 @@ const RegionCell = ({
         </Box>
       </Stack>
     </Cell>
-  );
-};
-
-interface ArrayCellProps {
-  correctValues: Array<string>;
-  correctAnswer?: boolean;
-}
-
-const ArrayCell = ({ correctValues, correctAnswer }: ArrayCellProps) => {
-  const fontWeight = correctAnswer === true ? 'bold' : undefined;
-
-  return (
-    <TableCell sx={{ fontWeight }}>
-      {correctValues.length !== 0 ? correctValues.join(', ') : 'None'}
-    </TableCell>
   );
 };
 
