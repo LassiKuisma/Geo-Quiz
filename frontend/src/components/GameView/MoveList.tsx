@@ -12,6 +12,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
   styled,
 } from '@mui/material';
@@ -63,9 +64,9 @@ const MoveList = ({ moves }: Props) => {
             <TableRow>
               <HeaderCell>Country</HeaderCell>
               <HeaderCell>Region</HeaderCell>
-              <HeaderCell>Area</HeaderCell>
-              <HeaderCell>Population</HeaderCell>
-              <HeaderCell>Same neighbours</HeaderCell>
+              <TooltipHeader type="area">Area</TooltipHeader>
+              <TooltipHeader type="population">Population</TooltipHeader>
+              <HeaderCell>Common neighbours</HeaderCell>
               <HeaderCell>Same languages</HeaderCell>
               <HeaderCell>Direction</HeaderCell>
             </TableRow>
@@ -223,6 +224,43 @@ const boolToIcon = (b: boolean, small?: boolean) => {
     <CheckIcon fontSize={small ? 'small' : 'medium'} />
   ) : (
     <CloseIcon fontSize={small ? 'small' : 'medium'} />
+  );
+};
+
+interface TooltipHeaderProps {
+  children?: React.ReactNode;
+  type: 'area' | 'population';
+}
+
+const TooltipHeader = ({ children, type }: TooltipHeaderProps) => {
+  const explanations =
+    type === 'area'
+      ? ['larger area', 'smaller area']
+      : ['more population', 'less population'];
+
+  return (
+    <Tooltip
+      title={
+        <Box display="flex" flexDirection="column">
+          The correct answer has...
+          <Box display="flex" flexDirection="row" alignItems="center">
+            <ArrowDropUpIcon /> = {explanations[0]}
+          </Box>
+          <Box display="flex" flexDirection="row" alignItems="center">
+            <ArrowDropDownIcon /> = {explanations[1]}
+          </Box>
+        </Box>
+      }
+    >
+      <HeaderCell
+        sx={{
+          textDecorationStyle: 'dotted',
+          textDecorationLine: 'underline',
+        }}
+      >
+        {children}
+      </HeaderCell>
+    </Tooltip>
   );
 };
 
