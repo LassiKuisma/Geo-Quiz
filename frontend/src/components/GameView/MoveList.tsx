@@ -92,32 +92,38 @@ const ResultRow = ({ move }: { move: GameMove }) => {
   const direction = move.comparison.direction;
   const angle = !direction ? undefined : direction + ARROW_ROTATION_OFFSET;
 
+  const fontWeight = correctAnswer === true ? 'bold' : undefined;
+
   return (
-    <TableRow hover>
-      <Cell fontSize="large" correctAnswer={correctAnswer}>
-        {move.guessedCountry.name}
-      </Cell>
+    <TableRow
+      hover
+      sx={{
+        '& > td': {
+          fontWeight,
+        },
+      }}
+    >
+      <Cell fontSize="large">{move.guessedCountry.name}</Cell>
       <RegionCell
-        correctAnswer={correctAnswer}
         region={country.region}
         regionCorrect={comp.regionEqual}
         subregion={country.subregion}
         subregionCorrect={comp.subregionEqual}
       />
-      <Cell correctAnswer={correctAnswer}>
+      <Cell>
         <DiffAsIcon diff={comp.areaDifference} />
         {prefixNumber(country.area, 0)} km²
       </Cell>
-      <Cell correctAnswer={correctAnswer}>
+      <Cell>
         <DiffAsIcon diff={comp.populationDifference} />
         {prefixNumber(country.population, 0)}
       </Cell>
-      <Cell correctAnswer={correctAnswer}>
+      <Cell>
         {comp.sameNeighbours.length !== 0
           ? comp.sameNeighbours.join(', ')
           : 'None'}
       </Cell>
-      <Cell correctAnswer={correctAnswer}>
+      <Cell>
         {comp.sameLanguages.length !== 0
           ? comp.sameLanguages.join(', ')
           : 'None'}
@@ -139,19 +145,12 @@ const ResultRow = ({ move }: { move: GameMove }) => {
 interface CellProps {
   children?: React.ReactNode;
   fontSize?: 'small' | 'medium' | 'large';
-  correctAnswer?: boolean;
 }
 
-const Cell = ({ children, fontSize, correctAnswer }: CellProps) => {
-  const fontWeight = correctAnswer === true ? 'bold' : undefined;
+const Cell = ({ children, fontSize }: CellProps) => {
   return (
     <StyledCell>
-      <Stack
-        direction="row"
-        alignItems="center"
-        fontSize={fontSize}
-        fontWeight={fontWeight}
-      >
+      <Stack direction="row" alignItems="center" fontSize={fontSize}>
         {children}
       </Stack>
     </StyledCell>
@@ -159,7 +158,6 @@ const Cell = ({ children, fontSize, correctAnswer }: CellProps) => {
 };
 
 interface RegionCellProps {
-  correctAnswer: boolean;
   region: string;
   regionCorrect: boolean;
   subregion: string;
@@ -167,7 +165,6 @@ interface RegionCellProps {
 }
 
 const RegionCell = ({
-  correctAnswer,
   region,
   regionCorrect,
   subregion,
@@ -178,7 +175,7 @@ const RegionCell = ({
   };
 
   return (
-    <Cell correctAnswer={correctAnswer}>
+    <Cell>
       <Stack>
         <Box display="flex" alignItems="center" color={color(regionCorrect)}>
           {boolToIcon(regionCorrect)}
