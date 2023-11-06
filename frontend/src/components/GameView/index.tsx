@@ -6,6 +6,7 @@ import CountrySelect from './CountrySelect';
 import GameOver from './GameOver';
 import HintsView from './HintsViews';
 import MoveList from './MoveList';
+import WorldMap from './WorldMap';
 
 import {
   GameObject,
@@ -128,6 +129,7 @@ const GameView = ({ game, gameStatus, startNewGame, user }: Props) => {
       <CountrySelect game={gameObj} submitMove={submitMove} />
       <Error message={error} />
       <HintsView hints={gameObj.hints} />
+      <WorldMap countries={gameObj.countries} guessed={gameObj.guesses} />
       <GameOver
         show={gameObj.gameOver}
         turns={gameObj.guesses.length}
