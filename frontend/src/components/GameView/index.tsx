@@ -1,28 +1,36 @@
 import { Alert, Box, Button, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { loadGame, postMove } from '../../services/gameService';
 import CountrySelect from './CountrySelect';
 import GameOver from './GameOver';
 import HintsView from './HintsViews';
 import MoveList from './MoveList';
-import WorldMap from './WorldMap';
 
 import {
   GameObject,
   GameStatus,
   GameStatusManager,
 } from '../../types/internal';
-import { Country, UserWithToken } from '../../types/shared';
+import { Country, Hints, UserWithToken } from '../../types/shared';
+import WorldMap from './WorldMap';
 
 interface Props {
   game: GameStatus;
   gameStatus: GameStatusManager;
   startNewGame: () => void;
   user?: UserWithToken;
+  hasSmallDevice: boolean;
 }
 
-const GameView = ({ game, gameStatus, startNewGame, user }: Props) => {
+const GameView = ({
+  game,
+  gameStatus,
+  startNewGame,
+  user,
+  hasSmallDevice,
+}: Props) => {
   const [error, setError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -125,11 +133,20 @@ const GameView = ({ game, gameStatus, startNewGame, user }: Props) => {
 
   return (
     <Box display="flex" flexDirection="column" height="100%">
-      <Typography variant="h3">Guess a country</Typography>
-      <CountrySelect game={gameObj} submitMove={submitMove} />
-      <Error message={error} />
-      <HintsView hints={gameObj.hints} />
-      <WorldMap countries={gameObj.countries} guessed={gameObj.guesses} />
+      <Box display="flex" flexDirection="row">
+        <Box maxWidth="100%">
+          <Typography variant="h3">Guess a country</Typography>
+          <CountrySelect game={gameObj} submitMove={submitMove} />
+          <Error message={error} />
+          <HintsContainer
+            hasSmallDevice={hasSmallDevice}
+            hints={gameObj.hints}
+          />
+        </Box>
+        {!hasSmallDevice && (
+          <WorldMap countries={gameObj.countries} guessed={gameObj.guesses} />
+        )}
+      </Box>
       <GameOver
         show={gameObj.gameOver}
         turns={gameObj.guesses.length}
@@ -156,6 +173,28 @@ const Error = ({ message }: { message: string | undefined }) => {
 
 const Loading = () => {
   return <Box margin={1}>Loading game...</Box>;
+};
+
+interface HintsContainerProps {
+  hasSmallDevice: boolean;
+  hints: Hints;
+}
+
+const HintsContainer = ({ hasSmallDevice, hints }: HintsContainerProps) => {
+  if (!hasSmallDevice) {
+    return <HintsView hints={hints} />;
+  }
+
+  return (
+    <Box display="flex" flexDirection="row" marginTop="1em" columnGap="1em">
+      <HintsView hints={hints} />
+      <Box>
+        <Button variant="contained" component={Link} to="/game/map">
+          Open map
+        </Button>
+      </Box>
+    </Box>
+  );
 };
 
 export default GameView;

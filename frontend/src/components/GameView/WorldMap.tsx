@@ -47,7 +47,9 @@ const WorldMap = ({ countries, guessed }: WorldMapProps) => {
     <>
       <ComposableMap>
         <ZoomableGroup>
-          <Geographies geography="./ne_110m_admin_0_countries.geojson">
+          <Geographies
+            geography={require('../../ne_110m_admin_0_countries.geojson')}
+          >
             {({ geographies }) =>
               geographies.map((geo) => {
                 const code = geo.properties.ISO_A3_EH;
