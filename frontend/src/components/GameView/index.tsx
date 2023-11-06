@@ -182,7 +182,11 @@ interface HintsContainerProps {
 
 const HintsContainer = ({ hasSmallDevice, hints }: HintsContainerProps) => {
   if (!hasSmallDevice) {
-    return <HintsView hints={hints} />;
+    return (
+      <Box marginTop="1em">
+        <HintsView hints={hints} />
+      </Box>
+    );
   }
 
   return (

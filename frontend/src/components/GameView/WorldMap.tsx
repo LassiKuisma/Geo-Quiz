@@ -46,7 +46,7 @@ const WorldMap = ({ countries, guessed }: WorldMapProps) => {
   );
 
   return (
-    <Box width="100%" height="100%">
+    <Box width="100%">
       <ComposableMap>
         <ZoomableGroup>
           <Geographies

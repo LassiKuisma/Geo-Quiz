@@ -58,7 +58,14 @@ const MoveList = ({ moves }: Props) => {
       <Typography variant="h5" marginY="0.5em">
         Guesses
       </Typography>
-      <TableContainer sx={{ flexGrow: 1, flexShrink: 1, flexBasis: 'auto' }}>
+      <TableContainer
+        sx={{
+          flexGrow: 1,
+          flexShrink: 1,
+          flexBasis: 'auto',
+          minHeight: '40vh',
+        }}
+      >
         <Table stickyHeader>
           <TableHead>
             <TableRow>
