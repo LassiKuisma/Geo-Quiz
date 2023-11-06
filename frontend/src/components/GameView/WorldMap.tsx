@@ -1,3 +1,5 @@
+import CircleIcon from '@mui/icons-material/Circle';
+import { Box, Typography } from '@mui/material';
 import {
   ComposableMap,
   Geographies,
@@ -44,7 +46,7 @@ const WorldMap = ({ countries, guessed }: WorldMapProps) => {
   );
 
   return (
-    <>
+    <Box width="100%" height="100%">
       <ComposableMap>
         <ZoomableGroup>
           <Geographies
@@ -82,8 +84,9 @@ const WorldMap = ({ countries, guessed }: WorldMapProps) => {
           </Geographies>
         </ZoomableGroup>
       </ComposableMap>
+      <MapLegend colorScheme={colorScheme} />
       <Tooltip id="country-tooltip" />
-    </>
+    </Box>
   );
 };
 
@@ -137,6 +140,38 @@ const getColors = (
   }
 
   return scheme.default;
+};
+
+const MapLegend = ({ colorScheme }: { colorScheme: ColorScheme }) => {
+  return (
+    <Box
+      display="flex"
+      flexDirection="row"
+      columnGap="20px"
+      alignItems="center"
+    >
+      <Tooltip id="map-legend" />
+      <Typography>Colors:</Typography>
+      <CircleIcon
+        fontSize="large"
+        sx={{ color: colorScheme.default.default }}
+        data-tooltip-id="map-legend"
+        data-tooltip-content="Country"
+      />
+      <CircleIcon
+        fontSize="large"
+        sx={{ color: colorScheme.guessed.default }}
+        data-tooltip-id="map-legend"
+        data-tooltip-content="Guessed country"
+      />
+      <CircleIcon
+        fontSize="large"
+        sx={{ color: colorScheme.nonIndependent.default }}
+        data-tooltip-id="map-legend"
+        data-tooltip-content="Non-independent country or region"
+      />
+    </Box>
+  );
 };
 
 export default WorldMap;
