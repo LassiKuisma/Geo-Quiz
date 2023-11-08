@@ -170,6 +170,17 @@ const MapLegend = ({ colorScheme }: { colorScheme: ColorScheme }) => {
         data-tooltip-id="map-legend"
         data-tooltip-content="Non-independent country or region"
       />
+      <Box fontSize="small" marginLeft="auto">
+        Map source:
+        <br />
+        <a
+          href="https://www.naturalearthdata.com/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Natural Earth
+        </a>
+      </Box>
     </Box>
   );
 };
