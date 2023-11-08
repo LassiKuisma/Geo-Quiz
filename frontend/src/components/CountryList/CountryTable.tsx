@@ -79,7 +79,11 @@ const CountryTable = ({ countries }: Props) => {
     Subregion: country.subregion,
     Area: country.area,
     Population: country.population,
-    Neighbours: country.neighbours.slice().sort().join(', '),
+    Neighbours: country.neighbours
+      .slice()
+      .map((c) => c.name)
+      .sort()
+      .join(', '),
     Languages: country.languages.slice().sort().join(', '),
     Location: { lat: country.location_lat, lng: country.location_lng },
   }));

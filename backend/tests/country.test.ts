@@ -1,5 +1,12 @@
 import { compareCountries, getHints } from '../src/util/country';
-import { Country, Difference, Hint, Side } from '../src/types/shared';
+
+import {
+  Country,
+  Difference,
+  Hint,
+  Neighbour,
+  Side,
+} from '../src/types/shared';
 
 describe('comparing countries', () => {
   test('works with two completely different countries', () => {
@@ -18,7 +25,10 @@ describe('comparing countries', () => {
       capital: 'Great Test',
       languages: ['Blabbish', 'Binary'],
       continents: ['Con'],
-      neighbours: ['West Testia', 'Jestia'],
+      neighbours: [
+        { name: 'West Testia', countryCode: 'AAA' },
+        { name: 'Jestia', countryCode: 'BBB' },
+      ],
     };
 
     const countryB: Country = {
@@ -36,7 +46,11 @@ describe('comparing countries', () => {
       capital: 'Johannesbug',
       languages: ['Js', 'Ts'],
       continents: ['Tinent'],
-      neighbours: ['Canaxico', 'Mexida', 'Divided states of Ecma'],
+      neighbours: [
+        { name: 'Canaxico', countryCode: 'CCC' },
+        { name: 'Mexida', countryCode: 'DDD' },
+        { name: 'Divided states of Ecma', countryCode: 'EEE' },
+      ],
     };
 
     const comparison = compareCountries(countryA, countryB);
@@ -67,7 +81,10 @@ describe('comparing countries', () => {
       capital: 'Great Test',
       languages: ['Blabbish', 'Binary'],
       continents: ['Con'],
-      neighbours: ['West Testia', 'Jestia'],
+      neighbours: [
+        { name: 'West Testia', countryCode: 'WWW' },
+        { name: 'Jestia', countryCode: 'JJJ' },
+      ],
     };
 
     const countryB: Country = {
@@ -85,7 +102,10 @@ describe('comparing countries', () => {
       capital: 'Johannesbug',
       languages: ['Js', 'Ts', 'Blabbish', 'Binary'],
       continents: ['Con', 'Tinent'],
-      neighbours: ['Jestia', 'Qwertia'],
+      neighbours: [
+        { name: 'Jestia', countryCode: 'JJJ' },
+        { name: 'Qwertia', countryCode: 'QQQ' },
+      ],
     };
 
     const comparison = compareCountries(countryA, countryB);
@@ -100,7 +120,9 @@ describe('comparing countries', () => {
       'Blabbish',
       'Binary',
     ]);
-    expect(comparison.sameNeighbours).toEqual<Array<string>>(['Jestia']);
+    expect(comparison.sameNeighbours).toEqual<Array<Neighbour>>([
+      { name: 'Jestia', countryCode: 'JJJ' },
+    ]);
   });
 });
 

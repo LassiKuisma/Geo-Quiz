@@ -128,7 +128,7 @@ const ResultRow = ({ move }: { move: GameMove }) => {
       </Cell>
       <Cell wrapText>
         {comp.sameNeighbours.length !== 0
-          ? comp.sameNeighbours.join(', ')
+          ? comp.sameNeighbours.map((n) => n.name).join(', ')
           : 'None'}
       </Cell>
       <Cell wrapText>

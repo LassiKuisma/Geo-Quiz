@@ -2,6 +2,11 @@
 
 export type Side = 'left' | 'right';
 
+export interface Neighbour {
+  name: string;
+  countryCode: string;
+}
+
 export interface Country {
   id: number;
   area: number;
@@ -18,7 +23,7 @@ export interface Country {
   subregion: string;
   languages: Array<string>;
   continents: Array<string>;
-  neighbours: Array<string>;
+  neighbours: Array<Neighbour>;
 }
 
 export type Hint<T> =
@@ -43,7 +48,7 @@ export interface Comparison {
 
   sameContinents: Array<string>;
   sameLanguages: Array<string>;
-  sameNeighbours: Array<string>;
+  sameNeighbours: Array<Neighbour>;
 
   // angle in degrees, pointing towards the target, 0 being north, 90 east
   direction: number | undefined;
