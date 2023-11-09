@@ -25,7 +25,7 @@ const WorldMap = ({ countries, guessed }: WorldMapProps) => {
       <ComposableMap>
         <ZoomableGroup>
           <Geographies
-            geography={require('../../ne_110m_admin_0_countries.geojson')}
+            geography={require('../../ne_110m_admin_0_countries_minified.geojson')}
           >
             {({ geographies }) =>
               geographies.map((geo) => {
