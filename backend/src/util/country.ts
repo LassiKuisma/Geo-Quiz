@@ -16,7 +16,7 @@ export const compareCountries = (
   );
 
   const sameNeighbours = correctAnswer.neighbours.filter((neighbour) =>
-    playerGuess.neighbours.includes(neighbour)
+    playerGuess.neighbours.some((p) => p.countryCode === neighbour.countryCode)
   );
 
   return {

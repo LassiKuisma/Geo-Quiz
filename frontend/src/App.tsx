@@ -12,6 +12,7 @@ import { Link, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 import CountryList from './components/CountryList';
 import CreateAccountPage from './components/CreateAccountPage';
 import GameView from './components/GameView';
+import MobileWorldMap from './components/GameView/MobileWorldMap';
 import HomePage from './components/HomePage';
 import LoginPage from './components/LoginPage';
 import NavigationBar from './components/NavigationBar';
@@ -197,6 +198,7 @@ const App = () => {
                 gameStatus={gameStatus}
                 startNewGame={startNewGameClicked}
                 user={user}
+                hasSmallDevice={hasSmallDevice}
               />
             }
           />
@@ -220,6 +222,10 @@ const App = () => {
                 hasSmallDevice={hasSmallDevice}
               />
             }
+          />
+          <Route
+            path="game/map"
+            element={<MobileWorldMap gameStatus={game} />}
           />
 
           <Route path="*" element={<NoMatch />} />

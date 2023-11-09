@@ -52,3 +52,5 @@ Currently I'm not accepting any pull requests as this is my personal project. Ho
 [Full Stack open](https://fullstackopen.com/en/) - for amazing course on web development
 
 [restcountries.com](https://restcountries.com/) - for providing country data
+
+[Natural Earth](https://www.naturalearthdata.com/) - world map

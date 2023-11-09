@@ -58,7 +58,14 @@ const MoveList = ({ moves }: Props) => {
       <Typography variant="h5" marginY="0.5em">
         Guesses
       </Typography>
-      <TableContainer sx={{ flexGrow: 1, flexShrink: 1, flexBasis: 'auto' }}>
+      <TableContainer
+        sx={{
+          flexGrow: 1,
+          flexShrink: 1,
+          flexBasis: 'auto',
+          minHeight: '40vh',
+        }}
+      >
         <Table stickyHeader>
           <TableHead>
             <TableRow>
@@ -121,7 +128,7 @@ const ResultRow = ({ move }: { move: GameMove }) => {
       </Cell>
       <Cell wrapText>
         {comp.sameNeighbours.length !== 0
-          ? comp.sameNeighbours.join(', ')
+          ? comp.sameNeighbours.map((n) => n.name).join(', ')
           : 'None'}
       </Cell>
       <Cell wrapText>

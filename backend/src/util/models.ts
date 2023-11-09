@@ -39,7 +39,7 @@ export const countryOptions = () => {
       },
       {
         model: CountryModel,
-        attributes: ['name'],
+        attributes: ['name', 'countryCode'],
         as: 'neighbours',
         through: { attributes: [] },
       },
@@ -60,7 +60,10 @@ export const modelToCountry = (model: CountryJoined): Country | null => {
   const subregion = model.subregion.subregionName;
   const continents = model.continents.map((c) => c.continentName);
   const languages = model.languages.map((l) => l.languageName);
-  const neighbours = model.neighbours.map((n) => n.name);
+  const neighbours = model.neighbours.map((n) => ({
+    name: n.name,
+    countryCode: n.countryCode,
+  }));
 
   return {
     id: model.id,
