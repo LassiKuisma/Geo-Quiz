@@ -79,6 +79,7 @@ export interface GameLoaded {
   hints: Hints;
   countries: Array<Country>;
   result: GameResult;
+  difficulty: Difficulty;
 }
 
 export interface GameSummary {
@@ -88,6 +89,9 @@ export interface GameSummary {
   createdAt: number | undefined;
   latestGuess: Country | undefined;
   result: GameResult;
+  difficulty: Difficulty;
 }
 
 export type GameResult = 'unknown' | 'ongoing' | 'completed';
+
+export type Difficulty = 'easy' | 'medium' | 'hard';

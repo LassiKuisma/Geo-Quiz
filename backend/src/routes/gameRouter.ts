@@ -11,13 +11,30 @@ import {
 import { canPostMoves, extractUser } from '../util/authentication';
 import { compareCountries, getHints } from '../util/country';
 import { defaultThresholds } from '../util/gameSettings';
-import { isNumber } from '../util/utils';
+import { isDifficulty, isNumber } from '../util/utils';
 
-import { GameLoaded, GameSummary, MoveResult } from '../types/shared';
+import {
+  Difficulty,
+  GameLoaded,
+  GameSummary,
+  MoveResult,
+} from '../types/shared';
 
 const router = express.Router();
 
 router.post('/newgame', async (req, res) => {
+  let difficulty: Difficulty = 'easy';
+
+  const rDifficulty: unknown = req.body.difficulty;
+  if (rDifficulty !== undefined) {
+    // only throw error if invalid difficulty is given. No difficulty given -> use default
+    if (!isDifficulty(rDifficulty)) {
+      return res.status(400).send('invalid difficulty');
+    }
+
+    difficulty = rDifficulty;
+  }
+
   // user id can be added to games, but it's not required
   // only return error if token is invalid or user missing (token missing is ok)
   const userResult = await extractUser(req);
@@ -31,7 +48,7 @@ router.post('/newgame', async (req, res) => {
 
   const user = userResult.k === 'ok' ? userResult.value : undefined;
 
-  const gameResult = await generateGame(user);
+  const gameResult = await generateGame(user, difficulty);
   if (gameResult.k === 'error') {
     return res.status(500).send(gameResult.message);
   }
@@ -81,7 +98,11 @@ router.post('/move', async (req, res) => {
   const playerGuess = countryResult.value;
   const correctAnswer = game.answer;
 
-  const comparison = compareCountries(playerGuess, correctAnswer);
+  const comparison = compareCountries(
+    playerGuess,
+    correctAnswer,
+    game.difficulty
+  );
   const hints = getHints(game.guesses, correctAnswer, defaultThresholds);
 
   const moveResult: MoveResult = {
