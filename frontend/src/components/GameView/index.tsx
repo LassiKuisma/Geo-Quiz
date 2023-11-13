@@ -156,7 +156,8 @@ const GameView = ({
       <GameOver
         show={gameObj.gameOver}
         turns={gameObj.guesses.length}
-        startNewGame={() => startNewGame(gameObj.difficulty)}
+        startNewGame={startNewGame}
+        difficulty={gameObj.difficulty}
       />
       <MoveList moves={gameObj.guesses} />
     </Box>
