@@ -3,12 +3,18 @@ import { CountryModel, GameModel, MoveModel, UserModel } from '../models';
 import { compareCountries, getHints } from '../util/country';
 import { defaultThresholds } from '../util/gameSettings';
 import { CountryJoined, countryOptions, modelToCountry } from '../util/models';
-import { error, ok } from '../util/utils';
+import {
+  difficultyAsNumber,
+  difficultyFromNumber,
+  error,
+  ok,
+} from '../util/utils';
 import { getAllCountries } from './countryService';
 
 import { Game, Ok, Result, User } from '../types/internal';
 import {
   Country,
+  Difficulty,
   GameLoaded,
   GameMove,
   GameResult,
@@ -16,7 +22,8 @@ import {
 } from '../types/shared';
 
 export const generateGame = async (
-  user?: UserModel
+  user: UserModel | undefined,
+  difficulty: Difficulty
 ): Promise<Result<GameLoaded>> => {
   const countriesResult = await getAllCountries();
   if (countriesResult.k === 'error') {
@@ -41,6 +48,7 @@ export const generateGame = async (
     const created = await GameModel.create({
       countryId,
       userId,
+      difficulty: difficultyAsNumber(difficulty),
     });
 
     const newGame: GameLoaded = {
@@ -50,6 +58,7 @@ export const generateGame = async (
       isGameOver: false,
       moves: [],
       result: 'ongoing',
+      difficulty,
     };
 
     return ok(newGame);
@@ -110,11 +119,20 @@ export const getGame = async (id: number): Promise<ResultGame<Game>> => {
           id: result.userId,
         };
 
+    let difficulty = difficultyFromNumber(result.difficulty);
+    if (!difficulty) {
+      console.log(
+        `Error in game ${id}, invalid difficulty: '${result.difficulty}'. Defaulting to easy difficulty.`
+      );
+      difficulty = 'easy';
+    }
+
     const game: Game = {
       gameId: result.gameId,
       answer: country,
       guesses: result.moves.length,
       owner,
+      difficulty,
     };
 
     return ok(game);
@@ -175,7 +193,19 @@ export const loadGame = async (
       return dbError();
     }
 
-    const { moves, guessedIds } = parseMoveModels(model.moves, correctAnswer);
+    let difficulty = difficultyFromNumber(model.difficulty);
+    if (!difficulty) {
+      console.log(
+        `Error in game ${gameId}, invalid difficulty: '${model.difficulty}'. Defaulting to easy difficulty.`
+      );
+      difficulty = 'easy';
+    }
+
+    const { moves, guessedIds } = parseMoveModels(
+      model.moves,
+      correctAnswer,
+      difficulty
+    );
     const isGameOver = guessedIds.has(correctAnswer.id);
 
     const countriesLoaded = await getAllCountries();
@@ -196,6 +226,7 @@ export const loadGame = async (
       isGameOver,
       countries,
       result: gameResult,
+      difficulty,
     };
 
     return ok(gameWithMoves);
@@ -258,12 +289,21 @@ export const getGamesFromUser = async (
       const gameOver = !!game.answer;
       const result: GameResult = gameOver ? 'completed' : 'ongoing';
 
+      let difficulty = difficultyFromNumber(game.difficulty);
+      if (!difficulty) {
+        console.log(
+          `Error in game ${game.gameId}, invalid difficulty: '${game.difficulty}'. Defaulting to easy difficulty.`
+        );
+        difficulty = 'easy';
+      }
+
       return {
         gameId: game.gameId,
         guessCount: game.moves.length,
         createdAt: date,
         latestGuess: mostRecent,
         result,
+        difficulty,
       };
     });
 
@@ -291,7 +331,8 @@ const dbError = (): GameError => {
 
 const parseMoveModels = (
   moveModels: Array<MoveJoined>,
-  correctAnswer: Country
+  correctAnswer: Country,
+  difficulty: Difficulty
 ): { moves: Array<GameMove>; guessedIds: Set<number> } => {
   const moves = moveModels
     .map((move) => {
@@ -313,7 +354,7 @@ const parseMoveModels = (
       const result: GameMove = {
         guessedCountry: playerGuess,
         correct: playerGuess.id === correctAnswer.id,
-        comparison: compareCountries(playerGuess, correctAnswer),
+        comparison: compareCountries(playerGuess, correctAnswer, difficulty),
         timestamp: date,
       };
 

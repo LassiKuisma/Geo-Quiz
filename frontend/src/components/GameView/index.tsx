@@ -13,13 +13,13 @@ import {
   GameStatus,
   GameStatusManager,
 } from '../../types/internal';
-import { Country, Hints, UserWithToken } from '../../types/shared';
+import { Country, Difficulty, Hints, UserWithToken } from '../../types/shared';
 import WorldMap from './WorldMap';
 
 interface Props {
   game: GameStatus;
   gameStatus: GameStatusManager;
-  startNewGame: () => void;
+  startNewGame: (difficulty: Difficulty) => void;
   user?: UserWithToken;
   hasSmallDevice: boolean;
 }
@@ -58,6 +58,7 @@ const GameView = ({
         gameOver: loaded.isGameOver,
         hints: loaded.hints,
         countries: loaded.countries,
+        difficulty: loaded.difficulty,
       };
 
       gameStatus.setGameObject(gameObject);
@@ -101,6 +102,7 @@ const GameView = ({
       isSubmittingMove: false,
       hints: result.hints,
       gameOver: gameObj.gameOver || move.correct,
+      difficulty: gameObj.difficulty,
     });
 
     return;
@@ -113,7 +115,7 @@ const GameView = ({
         <Button
           variant="contained"
           sx={{ marginY: 1, padding: 1 }}
-          onClick={startNewGame}
+          onClick={() => startNewGame('easy')}
         >
           Start new game
         </Button>
@@ -144,15 +146,23 @@ const GameView = ({
           />
         </Box>
         {!hasSmallDevice && (
-          <WorldMap countries={gameObj.countries} guessed={gameObj.guesses} />
+          <WorldMap
+            countries={gameObj.countries}
+            guessed={gameObj.guesses}
+            difficulty={gameObj.difficulty}
+          />
         )}
       </Box>
       <GameOver
         show={gameObj.gameOver}
         turns={gameObj.guesses.length}
         startNewGame={startNewGame}
+        difficulty={gameObj.difficulty}
       />
-      <MoveList moves={gameObj.guesses} />
+      <MoveList
+        moves={gameObj.guesses}
+        directionVisible={gameObj.difficulty !== 'hard'}
+      />
     </Box>
   );
 };

@@ -11,6 +11,7 @@ import { Link, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 
 import CountryList from './components/CountryList';
 import CreateAccountPage from './components/CreateAccountPage';
+import DifficultySelect from './components/DifficultySelect';
 import GameView from './components/GameView';
 import MobileWorldMap from './components/GameView/MobileWorldMap';
 import HomePage from './components/HomePage';
@@ -28,7 +29,7 @@ import { createStatusManager } from './util/gameUtil';
 import { userFromJson } from './util/utils';
 
 import { AppTheme, GameObject, GameStatus } from './types/internal';
-import { Country, UserWithToken } from './types/shared';
+import { Country, Difficulty, UserWithToken } from './types/shared';
 
 const typography = {
   fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
@@ -111,10 +112,10 @@ const App = () => {
 
   const gameStatus = createStatusManager(setGame);
 
-  const startNewGameClicked = async () => {
+  const startNewGameClicked = async (difficulty: Difficulty) => {
     gameStatus.setLoading();
     navigate('/game');
-    const newGameResult = await startNewGame(user?.token);
+    const newGameResult = await startNewGame(user?.token, difficulty);
     if (newGameResult.k === 'error') {
       gameStatus.setError(newGameResult.message);
       return;
@@ -130,6 +131,7 @@ const App = () => {
       isSubmittingMove: false,
       hints: newGame.hints,
       gameOver: false,
+      difficulty: newGame.difficulty,
     };
 
     gameStatus.setGameObject(gameObj);
@@ -226,6 +228,10 @@ const App = () => {
           <Route
             path="game/map"
             element={<MobileWorldMap gameStatus={game} />}
+          />
+          <Route
+            path="select-difficulty"
+            element={<DifficultySelect startNewGame={startNewGameClicked} />}
           />
 
           <Route path="*" element={<NoMatch />} />

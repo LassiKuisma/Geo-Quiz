@@ -1,4 +1,4 @@
-import { Country } from './shared';
+import { Country, Difficulty } from './shared';
 
 // types that are used internally by backend. These should not be sent across
 // the API as they can contain secrets
@@ -19,6 +19,7 @@ export interface Game {
   answer: Country;
   guesses: number;
   owner?: User;
+  difficulty: Difficulty;
 }
 
 export interface User {

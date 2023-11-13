@@ -53,7 +53,7 @@ describe('comparing countries', () => {
       ],
     };
 
-    const comparison = compareCountries(countryA, countryB);
+    const comparison = compareCountries(countryA, countryB, 'easy');
     expect(comparison.areaDifference).toEqual<Difference>('more');
     expect(comparison.populationDifference).toEqual<Difference>('less');
     expect(comparison.locationLatDifference).toEqual<Difference>('more');
@@ -108,7 +108,7 @@ describe('comparing countries', () => {
       ],
     };
 
-    const comparison = compareCountries(countryA, countryB);
+    const comparison = compareCountries(countryA, countryB, 'easy');
     expect(comparison.areaDifference).toEqual<Difference>('equal');
     expect(comparison.populationDifference).toEqual<Difference>('equal');
     expect(comparison.locationLatDifference).toEqual<Difference>('equal');
@@ -322,9 +322,9 @@ describe('comparing locations', () => {
     const items = [north, south, east, west];
 
     test.each(items)('$name', ({ country, expected }) => {
-      expect(compareCountries(country, correctAnswer).direction).toBeCloseTo(
-        expected
-      );
+      expect(
+        compareCountries(country, correctAnswer, 'easy').direction
+      ).toBeCloseTo(expected);
     });
   });
 
@@ -332,7 +332,7 @@ describe('comparing locations', () => {
     const correctAnswer = country(0, 170);
     const playerGuess = country(0, -170);
 
-    const comparison = compareCountries(playerGuess, correctAnswer);
+    const comparison = compareCountries(playerGuess, correctAnswer, 'easy');
     expect(comparison.direction).toBeCloseTo(270);
   });
 
@@ -340,7 +340,7 @@ describe('comparing locations', () => {
     const correctAnswer = country(25, -165);
     const playerGuess = country(-10, 160);
 
-    const comparison = compareCountries(playerGuess, correctAnswer);
+    const comparison = compareCountries(playerGuess, correctAnswer, 'easy');
     expect(comparison.direction).toBeCloseTo(45);
   });
 
@@ -348,7 +348,7 @@ describe('comparing locations', () => {
     const correctAnswer = country(12.34, -123.98);
     const playerGuess = country(12.34, -123.98);
 
-    const comparison = compareCountries(playerGuess, correctAnswer);
+    const comparison = compareCountries(playerGuess, correctAnswer, 'easy');
     expect(comparison.direction).toBe(undefined);
   });
 
@@ -356,7 +356,7 @@ describe('comparing locations', () => {
     const correctAnswer = country(-77.888, 3.33333);
     const playerGuess = country(-77.887, 3.33332);
 
-    const comparison = compareCountries(playerGuess, correctAnswer);
+    const comparison = compareCountries(playerGuess, correctAnswer, 'easy');
     expect(comparison.direction).toBe(undefined);
   });
 
@@ -442,7 +442,7 @@ describe('comparing locations', () => {
         if (!loc2) throw new Error(`${name2} not found`);
         const country2 = country(loc2[0], loc2[1]);
 
-        const angle = compareCountries(country1, country2).direction;
+        const angle = compareCountries(country1, country2, 'easy').direction;
         if (!angle) {
           throw new Error(`angle is undefined between ${name1} and ${name2}`);
         }
@@ -458,5 +458,81 @@ describe('comparing locations', () => {
         }
       }
     );
+  });
+
+  describe('on different difficulty settings', () => {
+    const c1: Country = {
+      id: 1,
+      region: 'Region A',
+      subregion: 'Subregion A',
+      location_lat: 10,
+      location_lng: 10,
+      name: 'A',
+      countryCode: 'A',
+      area: 0,
+      capital: null,
+      drivingSide: 'right',
+      landlocked: false,
+      population: 0,
+      languages: [],
+      continents: [],
+      neighbours: [],
+    };
+
+    const c2: Country = {
+      id: 2,
+      region: 'Region A',
+      subregion: 'Subregion B',
+      location_lat: 20,
+      location_lng: 20,
+      name: 'B',
+      countryCode: 'B',
+      area: 0,
+      capital: null,
+      drivingSide: 'right',
+      landlocked: false,
+      population: 0,
+      languages: [],
+      continents: [],
+      neighbours: [],
+    };
+
+    const c3: Country = {
+      id: 3,
+      region: 'Region C',
+      subregion: 'Subregion C',
+      location_lat: -40,
+      location_lng: -50,
+      name: 'C',
+      countryCode: 'C',
+      area: 0,
+      capital: null,
+      drivingSide: 'right',
+      landlocked: false,
+      population: 0,
+      languages: [],
+      continents: [],
+      neighbours: [],
+    };
+
+    test('on easy direction hint is always given', () => {
+      const result = compareCountries(c1, c3, 'easy');
+      expect(result.direction).not.toBe(undefined);
+    });
+
+    test('on medium direction hint is given when in the same region', () => {
+      const result = compareCountries(c1, c2, 'medium');
+      expect(result.direction).not.toBe(undefined);
+    });
+
+    test('on medium direction hint is not given when not in the same region', () => {
+      const result = compareCountries(c1, c3, 'medium');
+      expect(result.direction).toBe(undefined);
+    });
+
+    test('on hard direction hint is never given', () => {
+      const result = compareCountries(c1, c2, 'hard');
+      expect(result.direction).toBe(undefined);
+    });
   });
 });

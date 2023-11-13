@@ -20,6 +20,8 @@ class GameModel extends Model<
   declare userId: ForeignKey<UserModel['id']>;
 
   declare created_at: CreationOptional<DataTypes.DateDataType>;
+
+  declare difficulty: CreationOptional<number>;
 }
 
 GameModel.init(
@@ -39,6 +41,11 @@ GameModel.init(
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
+    },
+    difficulty: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 0,
     },
   },
   {

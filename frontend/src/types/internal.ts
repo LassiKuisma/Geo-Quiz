@@ -1,4 +1,4 @@
-import { Country, GameMove, Hints, MoveResult } from './shared';
+import { Country, Difficulty, GameMove, Hints, MoveResult } from './shared';
 
 export type Err = { k: 'error'; message: string };
 export type Ok<T> = { k: 'ok'; value: T };
@@ -17,6 +17,7 @@ export interface GameObject {
   isSubmittingMove: boolean;
   hints: Hints;
   gameOver: boolean;
+  difficulty: Difficulty;
 }
 
 type GameLoading = { k: 'loading' };

@@ -54,6 +54,7 @@ const GamesTable = ({ games, gameStatus, hasSmallDevice }: Props) => {
       gameOver: game.isGameOver,
       hints: game.hints,
       countries: game.countries,
+      difficulty: game.difficulty,
     };
 
     gameStatus.setGameObject(gameObject);
@@ -75,6 +76,7 @@ const GamesTable = ({ games, gameStatus, hasSmallDevice }: Props) => {
             <TableRow>
               <TableCell></TableCell>
               <StatusHeaderCell />
+              <TableCell>Difficulty</TableCell>
               <TableCell>Date</TableCell>
               <TableCell>Guesses</TableCell>
               <TableCell>Last guess</TableCell>
@@ -134,6 +136,7 @@ const GameRow = ({ game, playGame, hasSmallDevice }: GameRowProps) => {
       <TableCell>
         <GameResultIcon result={game.result} />
       </TableCell>
+      <TableCell>{game.difficulty}</TableCell>
       <TableCell>{date}</TableCell>
       <TableCell>{game.guessCount}</TableCell>
       <TableCell>

@@ -1,5 +1,5 @@
 import { Err, Ok } from '../types/internal';
-import { Side } from '../types/shared';
+import { Difficulty, Side } from '../types/shared';
 
 /**
  * Helper function for Result type.
@@ -42,4 +42,35 @@ export const isSide = (param: unknown): param is Side => {
 const EPSILON = 0.1;
 export const approxEqual = (n1: number, n2: number): boolean => {
   return Math.abs(n1 - n2) <= EPSILON;
+};
+
+export const isDifficulty = (param: unknown): param is Difficulty => {
+  if (!param || !isString(param)) {
+    return false;
+  }
+
+  return param === 'easy' || param === 'medium' || param === 'hard';
+};
+
+export const difficultyAsNumber = (difficulty: Difficulty): number => {
+  switch (difficulty) {
+    case 'easy':
+      return 0;
+    case 'medium':
+      return 1;
+    case 'hard':
+      return 2;
+  }
+};
+
+export const difficultyFromNumber = (num: number): Difficulty | undefined => {
+  switch (num) {
+    case 0:
+      return 'easy';
+    case 1:
+      return 'medium';
+    case 2:
+      return 'hard';
+  }
+  return undefined;
 };
