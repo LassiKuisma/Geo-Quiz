@@ -50,9 +50,10 @@ const StyledCell = styled(TableCell)(({ theme }) => ({
 
 interface Props {
   moves: Array<GameMove>;
+  directionVisible: boolean;
 }
 
-const MoveList = ({ moves }: Props) => {
+const MoveList = ({ moves, directionVisible }: Props) => {
   return (
     <Box display="contents">
       <Typography variant="h5" marginY="0.5em">
@@ -75,12 +76,16 @@ const MoveList = ({ moves }: Props) => {
               <TooltipHeader type="population">Population</TooltipHeader>
               <HeaderCell>Common neighbours</HeaderCell>
               <HeaderCell>Same languages</HeaderCell>
-              <HeaderCell>Direction</HeaderCell>
+              {directionVisible && <HeaderCell>Direction</HeaderCell>}
             </TableRow>
           </TableHead>
           <TableBody>
             {moves.map((move) => (
-              <ResultRow key={move.guessedCountry.id} move={move} />
+              <ResultRow
+                key={move.guessedCountry.id}
+                move={move}
+                directionVisible={directionVisible}
+              />
             ))}
           </TableBody>
         </Table>
@@ -89,7 +94,12 @@ const MoveList = ({ moves }: Props) => {
   );
 };
 
-const ResultRow = ({ move }: { move: GameMove }) => {
+interface RowProps {
+  move: GameMove;
+  directionVisible: boolean;
+}
+
+const ResultRow = ({ move, directionVisible }: RowProps) => {
   // the icon I'm using is right-facing arrow. The angle returned by server
   // is 0=up, 90=right(east)
   const ARROW_ROTATION_OFFSET = -90;
@@ -136,16 +146,18 @@ const ResultRow = ({ move }: { move: GameMove }) => {
           ? comp.sameLanguages.join(', ')
           : 'None'}
       </Cell>
-      <Cell>
-        {angle && (
-          <Arrow
-            fontSize="large"
-            sx={{
-              rotate: angle + 'deg',
-            }}
-          />
-        )}
-      </Cell>
+      {directionVisible && (
+        <Cell>
+          {angle && (
+            <Arrow
+              fontSize="large"
+              sx={{
+                rotate: angle + 'deg',
+              }}
+            />
+          )}
+        </Cell>
+      )}
     </TableRow>
   );
 };

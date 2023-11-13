@@ -159,7 +159,10 @@ const GameView = ({
         startNewGame={startNewGame}
         difficulty={gameObj.difficulty}
       />
-      <MoveList moves={gameObj.guesses} />
+      <MoveList
+        moves={gameObj.guesses}
+        directionVisible={gameObj.difficulty !== 'hard'}
+      />
     </Box>
   );
 };
