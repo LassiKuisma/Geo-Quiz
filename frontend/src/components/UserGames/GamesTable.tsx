@@ -54,6 +54,7 @@ const GamesTable = ({ games, gameStatus, hasSmallDevice }: Props) => {
       gameOver: game.isGameOver,
       hints: game.hints,
       countries: game.countries,
+      difficulty: game.difficulty,
     };
 
     gameStatus.setGameObject(gameObject);

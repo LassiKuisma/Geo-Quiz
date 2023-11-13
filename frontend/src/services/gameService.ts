@@ -4,15 +4,21 @@ import { apiBaseUrl } from '../constants';
 import { error, ok } from '../util/utils';
 
 import { Result } from '../types/internal';
-import { GameLoaded, GameSummary, MoveResult } from '../types/shared';
+import {
+  Difficulty,
+  GameLoaded,
+  GameSummary,
+  MoveResult,
+} from '../types/shared';
 
 export const startNewGame = async (
-  token?: string
+  token: string | undefined,
+  difficulty: Difficulty
 ): Promise<Result<GameLoaded>> => {
   try {
     const { data } = await axios.post<GameLoaded>(
       `${apiBaseUrl}/game/newgame`,
-      {},
+      { difficulty },
       config(token)
     );
 
