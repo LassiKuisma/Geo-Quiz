@@ -8,14 +8,15 @@ import {
 } from 'react-simple-maps';
 import { Tooltip } from 'react-tooltip';
 
-import { Country, GameMove } from '../../types/shared';
+import { Country, Difficulty, GameMove } from '../../types/shared';
 
 interface WorldMapProps {
   countries: Array<Country>;
   guessed: Array<GameMove>;
+  difficulty: Difficulty;
 }
 
-const WorldMap = ({ countries, guessed }: WorldMapProps) => {
+const WorldMap = ({ countries, guessed, difficulty }: WorldMapProps) => {
   const colorScheme = makeColorScheme();
 
   const countryCodes = countryCodesFromMoves(guessed, countries);
@@ -30,10 +31,13 @@ const WorldMap = ({ countries, guessed }: WorldMapProps) => {
             {({ geographies }) =>
               geographies.map((geo) => {
                 const code = geo.properties.ISO_A3_EH;
+                const name = geo.properties.NAME_EN;
 
                 const color = getColors(colorScheme, code, countryCodes);
-
-                const name = geo.properties.NAME_EN;
+                const showTooltip =
+                  difficulty === 'hard' ? countryCodes.guessed.has(code) : true;
+                const isGameOver = !!countryCodes.correctAnswer;
+                const tooltip = showTooltip || isGameOver ? name : '???';
 
                 return (
                   <Geography
@@ -44,7 +48,7 @@ const WorldMap = ({ countries, guessed }: WorldMapProps) => {
                       hover: { fill: color.hover },
                     }}
                     data-tooltip-id="country-tooltip"
-                    data-tooltip-content={name}
+                    data-tooltip-content={tooltip}
                     data-tooltip-float={true}
                   />
                 );

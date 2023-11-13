@@ -34,7 +34,11 @@ const MobileWorldMap = ({ gameStatus }: MobileWorldMapProps) => {
       >
         Back
       </Button>
-      <WorldMap countries={game.countries} guessed={game.guesses} />
+      <WorldMap
+        countries={game.countries}
+        guessed={game.guesses}
+        difficulty={game.difficulty}
+      />
     </>
   );
 };

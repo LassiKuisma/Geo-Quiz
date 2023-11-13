@@ -35,7 +35,7 @@ const HomePage = ({
           sx={{ borderRadius: 5 }}
           onClick={() => startNewGame('easy')}
         >
-          New game
+          New game (easy)
         </Button>
         <Button
           variant="contained"
