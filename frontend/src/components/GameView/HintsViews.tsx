@@ -31,14 +31,28 @@ const HintsView = ({ hints }: Props) => {
           <Table size="small">
             <TableBody>
               <HintRow
+                name="Driving side"
+                hint={hints.drivingSide}
+                hintToStr={(s) => s}
+              />
+              <HintRow
                 name="Landlocked"
                 hint={hints.landlocked}
                 hintToStr={(hint) => boolToStr(hint)}
               />
               <HintRow
-                name="Driving side"
-                hint={hints.drivingSide}
-                hintToStr={(s) => s}
+                name="Amount of neighbours"
+                hint={hints.neighbourCount}
+                hintToStr={(count) =>
+                  count === 1 ? `${count} neighbour` : `${count} neighbours`
+                }
+              />
+              <HintRow
+                name="Amount of languages"
+                hint={hints.languageCount}
+                hintToStr={(count) =>
+                  count === 1 ? `${count} language` : `${count} languages`
+                }
               />
               <HintRow
                 name="Capital city"
@@ -74,7 +88,7 @@ const HintRow = <T,>({ name, hint, hintToStr }: HintRowProps<T>) => {
       <TableCell sx={{ fontSize: 'medium' }}>{name}</TableCell>
       <TableCell>
         {revealed ? (
-          <Box>{hintText}</Box>
+          <Box whiteSpace="nowrap">{hintText}</Box>
         ) : (
           <Button
             size="small"

@@ -12,6 +12,8 @@ export interface HintThresholds {
   landlocked: number;
   drivingSide: number;
   capital: number;
+  neighbourCount: number;
+  languageCount: number;
 }
 
 export interface Game {

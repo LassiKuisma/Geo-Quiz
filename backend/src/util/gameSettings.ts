@@ -1,7 +1,9 @@
 import { HintThresholds } from '../types/internal';
 
 export const defaultThresholds: HintThresholds = {
+  drivingSide: 1,
   landlocked: 2,
-  drivingSide: 4,
-  capital: 9,
+  neighbourCount: 4,
+  languageCount: 4,
+  capital: 6,
 };
