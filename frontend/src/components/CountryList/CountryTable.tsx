@@ -107,8 +107,12 @@ const CountryTable = ({ countries }: Props) => {
               <TableCell>{country.Country}</TableCell>
               <TableCell>{country.Region}</TableCell>
               <TableCell>{country.Subregion}</TableCell>
-              <TableCell>{prefixNumber(country.Area, 0)} km²</TableCell>
-              <TableCell>{prefixNumber(country.Population, 0)}</TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                {prefixNumber(country.Area, 0)} km²
+              </TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                {prefixNumber(country.Population, 0)}
+              </TableCell>
               <TableCell>{country.Neighbours}</TableCell>
               <TableCell>{country.Languages}</TableCell>
               <TableCell>
