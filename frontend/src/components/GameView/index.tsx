@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { loadGame, postMove } from '../../services/gameService';
+import { hasUnlockedHints } from '../../util/gameUtil';
 import CountrySelect from './CountrySelect';
 import GameOver from './GameOver';
 import HintsView from './HintsViews';
@@ -32,6 +33,7 @@ const GameView = ({
   hasSmallDevice,
 }: Props) => {
   const [error, setError] = useState<string | undefined>(undefined);
+  const [newHintsUnlocked, setNewHintsUnlocked] = useState(false);
 
   useEffect(() => {
     if (game?.k !== 'load-from-id') {
@@ -95,6 +97,10 @@ const GameView = ({
     const result = moveResult.value;
     const move = result.move;
 
+    if (hasUnlockedHints(gameObj.hints, result.hints)) {
+      setNewHintsUnlocked(true);
+    }
+
     gameStatus.setGameObject({
       gameId: gameObj.gameId,
       countries: gameObj.countries.filter((c) => c.id !== country.id),
@@ -143,6 +149,8 @@ const GameView = ({
           <HintsContainer
             hasSmallDevice={hasSmallDevice}
             hints={gameObj.hints}
+            newHintsUnlocked={newHintsUnlocked}
+            clearAnimation={() => setNewHintsUnlocked(false)}
           />
         </Box>
         {!hasSmallDevice && (
@@ -188,20 +196,35 @@ const Loading = () => {
 interface HintsContainerProps {
   hasSmallDevice: boolean;
   hints: Hints;
+  newHintsUnlocked: boolean;
+  clearAnimation: () => void;
 }
 
-const HintsContainer = ({ hasSmallDevice, hints }: HintsContainerProps) => {
+const HintsContainer = ({
+  hasSmallDevice,
+  hints,
+  newHintsUnlocked,
+  clearAnimation,
+}: HintsContainerProps) => {
   if (!hasSmallDevice) {
     return (
       <Box marginTop="1em">
-        <HintsView hints={hints} />
+        <HintsView
+          hints={hints}
+          newHintsUnlocked={newHintsUnlocked}
+          clearAnimation={clearAnimation}
+        />
       </Box>
     );
   }
 
   return (
     <Box display="flex" flexDirection="row" marginTop="1em" columnGap="1em">
-      <HintsView hints={hints} />
+      <HintsView
+        hints={hints}
+        newHintsUnlocked={newHintsUnlocked}
+        clearAnimation={clearAnimation}
+      />
       <Box>
         <Button variant="contained" component={Link} to="/game/map">
           Open map

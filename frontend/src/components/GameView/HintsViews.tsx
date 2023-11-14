@@ -12,6 +12,7 @@ import {
   TableRow,
   Tooltip,
   Typography,
+  keyframes,
 } from '@mui/material';
 import { useState } from 'react';
 
@@ -19,12 +20,46 @@ import { Hint, Hints } from '../../types/shared';
 
 interface Props {
   hints: Hints;
+  newHintsUnlocked: boolean;
+  clearAnimation: () => void;
 }
 
-const HintsView = ({ hints }: Props) => {
+const expandAnimation = keyframes`
+  30%, 70% {
+    scale: 1;
+  }
+  50% {
+    scale: 1.5;
+  }
+`;
+
+const HintsView = ({ hints, newHintsUnlocked, clearAnimation }: Props) => {
+  const [expanded, setExpanded] = useState<boolean>(false);
+
   return (
-    <Accordion sx={{ width: '400px', maxWidth: '100%' }}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+    <Accordion
+      sx={{ width: '400px', maxWidth: '100%' }}
+      expanded={expanded}
+      onChange={(_event, isOpening) => {
+        setExpanded(isOpening);
+
+        if (isOpening) {
+          clearAnimation();
+        }
+      }}
+    >
+      <AccordionSummary
+        expandIcon={
+          <ExpandMoreIcon
+            sx={{
+              animation:
+                newHintsUnlocked && !expanded
+                  ? `${expandAnimation} 2s linear infinite`
+                  : 'none',
+            }}
+          />
+        }
+      >
         <Typography>Hints</Typography>
       </AccordionSummary>
       <AccordionDetails>
