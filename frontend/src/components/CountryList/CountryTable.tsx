@@ -35,9 +35,14 @@ const getComparator = <Key extends SortableColumn>(
   a: { [key in Key]: number | string },
   b: { [key in Key]: number | string }
 ) => number) => {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
+  const orderMult = order === 'desc' ? 1 : -1;
+  // direction should be reversed if comparing numeric values:
+  // "A" < "Z" => true ("A" should be at top when desc)
+  // 999 < 1 => false (999 should be at top when desc -> reverse)
+  const numericMult = orderBy === 'Area' || orderBy === 'Population' ? -1 : 1;
+  const direction = orderMult * numericMult;
+
+  return (a, b) => direction * descendingComparator(a, b, orderBy);
 };
 
 interface CountryRow {
@@ -51,10 +56,18 @@ interface CountryRow {
   Location: { lat: number; lng: number };
 }
 
-type SortableColumn = keyof Omit<
-  CountryRow,
-  'Neighbours' | 'Languages' | 'Location'
->;
+type SortableColumn =
+  | 'Country'
+  | 'Region'
+  | 'Subregion'
+  | 'Area'
+  | 'Population';
+
+const isSortable = (param: string): param is SortableColumn => {
+  return ['Country', 'Region', 'Subregion', 'Area', 'Population'].includes(
+    param
+  );
+};
 
 interface Props {
   countries: Array<Country>;
@@ -192,12 +205,6 @@ const HeaderCell = ({
     (property: SortableColumn) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
-
-  const isSortable = (param: string): param is SortableColumn => {
-    return ['Country', 'Region', 'Subregion', 'Area', 'Population'].includes(
-      param
-    );
-  };
 
   const sortable = isSortable(name);
 
