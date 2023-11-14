@@ -34,6 +34,8 @@ export interface Hints {
   landlocked: Hint<boolean>;
   drivingSide: Hint<Side>;
   capital: Hint<string | null>;
+  neighbourCount: Hint<number>;
+  languageCount: Hint<number>;
 }
 
 export type Difference = 'more' | 'less' | 'equal';

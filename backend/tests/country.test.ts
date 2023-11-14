@@ -132,6 +132,8 @@ describe('generating hints', () => {
       landlocked: 2,
       drivingSide: 4,
       capital: 9,
+      neighbourCount: 999,
+      languageCount: 999,
     };
 
     const country: Country = {
@@ -172,6 +174,8 @@ describe('generating hints', () => {
       landlocked: 2,
       drivingSide: 400,
       capital: 900,
+      neighbourCount: 999,
+      languageCount: 999,
     };
 
     const country: Country = {
@@ -212,6 +216,8 @@ describe('generating hints', () => {
       landlocked: 10,
       drivingSide: 10,
       capital: 10,
+      neighbourCount: 999,
+      languageCount: 999,
     };
 
     const country: Country = {
@@ -252,6 +258,8 @@ describe('generating hints', () => {
       landlocked: 20,
       drivingSide: 21,
       capital: 22,
+      neighbourCount: 999,
+      languageCount: 999,
     };
 
     const country: Country = {

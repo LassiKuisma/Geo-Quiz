@@ -101,10 +101,20 @@ export const getHints = (
   country: Country,
   thresholds: HintThresholds
 ): Hints => {
-  const hints = {
+  const hints: Hints = {
     landlocked: getHint(guesses, thresholds.landlocked, country.landlocked),
     drivingSide: getHint(guesses, thresholds.drivingSide, country.drivingSide),
     capital: getHint(guesses, thresholds.capital, country.capital),
+    neighbourCount: getHint(
+      guesses,
+      thresholds.neighbourCount,
+      country.neighbours.length
+    ),
+    languageCount: getHint(
+      guesses,
+      thresholds.languageCount,
+      country.languages.length
+    ),
   };
 
   return hints;

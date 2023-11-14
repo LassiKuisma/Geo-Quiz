@@ -1,5 +1,6 @@
 import { CURRENT_GAME_ID } from '../constants';
 import { GameObject, GameStatus, GameStatusManager } from '../types/internal';
+import { Hints } from '../types/shared';
 
 export const createStatusManager = (
   setGame: (newStatus: GameStatus) => void
@@ -41,4 +42,28 @@ export const createStatusManager = (
     clear,
     setLoadableFromId,
   };
+};
+
+export const hasUnlockedHints = (oldHints: Hints, newHints: Hints): boolean => {
+  const previouslyLocked = new Set<string>();
+
+  Object.entries(oldHints).forEach(([hintName, value]) => {
+    if (
+      'locked' in value &&
+      typeof value.locked === 'boolean' &&
+      value.locked === true
+    ) {
+      previouslyLocked.add(hintName);
+    }
+  });
+
+  const hasUnlocked = Object.entries(newHints).some(([hintName, value]) => {
+    if (!('locked' in value) || typeof value.locked !== 'boolean') {
+      return false;
+    }
+
+    return value.locked === false && previouslyLocked.has(hintName);
+  });
+
+  return hasUnlocked;
 };

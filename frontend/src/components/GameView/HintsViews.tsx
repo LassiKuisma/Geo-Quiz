@@ -10,7 +10,9 @@ import {
   TableCell,
   TableContainer,
   TableRow,
+  Tooltip,
   Typography,
+  keyframes,
 } from '@mui/material';
 import { useState } from 'react';
 
@@ -18,12 +20,46 @@ import { Hint, Hints } from '../../types/shared';
 
 interface Props {
   hints: Hints;
+  newHintsUnlocked: boolean;
+  clearAnimation: () => void;
 }
 
-const HintsView = ({ hints }: Props) => {
+const expandAnimation = keyframes`
+  30%, 70% {
+    scale: 1;
+  }
+  50% {
+    scale: 1.5;
+  }
+`;
+
+const HintsView = ({ hints, newHintsUnlocked, clearAnimation }: Props) => {
+  const [expanded, setExpanded] = useState<boolean>(false);
+
   return (
-    <Accordion sx={{ width: '400px', maxWidth: '100%' }}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+    <Accordion
+      sx={{ width: '400px', maxWidth: '100%' }}
+      expanded={expanded}
+      onChange={(_event, isOpening) => {
+        setExpanded(isOpening);
+
+        if (isOpening) {
+          clearAnimation();
+        }
+      }}
+    >
+      <AccordionSummary
+        expandIcon={
+          <ExpandMoreIcon
+            sx={{
+              animation:
+                newHintsUnlocked && !expanded
+                  ? `${expandAnimation} 2s linear infinite`
+                  : 'none',
+            }}
+          />
+        }
+      >
         <Typography>Hints</Typography>
       </AccordionSummary>
       <AccordionDetails>
@@ -31,14 +67,29 @@ const HintsView = ({ hints }: Props) => {
           <Table size="small">
             <TableBody>
               <HintRow
+                name="Driving side"
+                hint={hints.drivingSide}
+                hintToStr={(s) => s}
+              />
+              <HintRow
                 name="Landlocked"
                 hint={hints.landlocked}
                 hintToStr={(hint) => boolToStr(hint)}
               />
               <HintRow
-                name="Driving side"
-                hint={hints.drivingSide}
-                hintToStr={(s) => s}
+                name="Amount of neighbours"
+                hint={hints.neighbourCount}
+                hintToStr={(count) =>
+                  count === 1 ? `${count} neighbour` : `${count} neighbours`
+                }
+                tooltip="Only includes independent countries"
+              />
+              <HintRow
+                name="Amount of languages"
+                hint={hints.languageCount}
+                hintToStr={(count) =>
+                  count === 1 ? `${count} language` : `${count} languages`
+                }
               />
               <HintRow
                 name="Capital city"
@@ -57,9 +108,10 @@ interface HintRowProps<T> {
   name: string;
   hint: Hint<T>;
   hintToStr: (hint: T) => string;
+  tooltip?: string;
 }
 
-const HintRow = <T,>({ name, hint, hintToStr }: HintRowProps<T>) => {
+const HintRow = <T,>({ name, hint, hintToStr, tooltip }: HintRowProps<T>) => {
   const [revealed, setRevealed] = useState(false);
 
   const answerAvailable = !hint.locked;
@@ -69,12 +121,28 @@ const HintRow = <T,>({ name, hint, hintToStr }: HintRowProps<T>) => {
     ? 'Click to reveal'
     : `Unlocks in ${hint.unlocksIn} guesses`;
 
+  const cell = tooltip ? (
+    <Tooltip title={<Box>{tooltip}</Box>}>
+      <TableCell
+        sx={{
+          fontSize: 'medium',
+          textDecorationStyle: 'dotted',
+          textDecorationLine: 'underline',
+        }}
+      >
+        {name}
+      </TableCell>
+    </Tooltip>
+  ) : (
+    <TableCell sx={{ fontSize: 'medium' }}>{name}</TableCell>
+  );
+
   return (
     <TableRow>
-      <TableCell sx={{ fontSize: 'medium' }}>{name}</TableCell>
+      {cell}
       <TableCell>
         {revealed ? (
-          <Box>{hintText}</Box>
+          <Box whiteSpace="nowrap">{hintText}</Box>
         ) : (
           <Button
             size="small"
