@@ -14,6 +14,7 @@ import { useMemo, useState } from 'react';
 
 import { locationToStr, prefixNumber } from '../../util/utils';
 
+import { FilterOptions } from '../../types/internal';
 import { Country } from '../../types/shared';
 
 type Order = 'asc' | 'desc';
@@ -71,9 +72,10 @@ const isSortable = (param: string): param is SortableColumn => {
 
 interface Props {
   countries: Array<Country>;
+  filters: FilterOptions;
 }
 
-const CountryTable = ({ countries }: Props) => {
+const CountryTable = ({ countries, filters }: Props) => {
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<SortableColumn>('Country');
 
@@ -106,6 +108,16 @@ const CountryTable = ({ countries }: Props) => {
     [order, orderBy]
   );
 
+  const subregionFilter = (row: CountryRow) => {
+    if (filters.shownSubregions.length === 0) {
+      return true;
+    }
+
+    return filters.shownSubregions.includes(row.Subregion);
+  };
+
+  const rowsFiltered = rowsSorted.filter(subregionFilter);
+
   return (
     <TableContainer sx={{ flexGrow: 1, flexShrink: 1, flexBasis: 'auto' }}>
       <Table stickyHeader>
@@ -115,7 +127,7 @@ const CountryTable = ({ countries }: Props) => {
           onRequestSort={handleRequestSort}
         />
         <TableBody>
-          {rowsSorted.map((country) => (
+          {rowsFiltered.map((country) => (
             <TableRow key={country.Country}>
               <TableCell>{country.Country}</TableCell>
               <TableCell>{country.Region}</TableCell>

@@ -5,31 +5,42 @@ import {
   TextField,
   createFilterOptions,
 } from '@mui/material';
-import { useState } from 'react';
 
 import { Subregion } from '../../types/internal';
 
 interface Props {
   subregions: Array<Subregion>;
+  selectedSubregions: Array<Subregion>;
+  setSelectedSubregions: (_: Array<Subregion>) => void;
 }
 
-const Filter = ({ subregions }: Props) => {
+const Filter = ({
+  subregions,
+  selectedSubregions,
+  setSelectedSubregions,
+}: Props) => {
   return (
     <Box>
-      <RegionFilter subregions={subregions} />
+      <RegionFilter
+        subregions={subregions}
+        selectedSubregions={selectedSubregions}
+        setSelectedSubregions={setSelectedSubregions}
+      />
     </Box>
   );
 };
 
 interface RegionProps {
   subregions: Array<Subregion>;
+  selectedSubregions: Array<Subregion>;
+  setSelectedSubregions: (_: Array<Subregion>) => void;
 }
 
-const RegionFilter = ({ subregions }: RegionProps) => {
-  const [selectedSubregions, setSelectedSubregions] = useState<
-    Array<Subregion>
-  >([]);
-
+const RegionFilter = ({
+  subregions,
+  selectedSubregions,
+  setSelectedSubregions,
+}: RegionProps) => {
   const checkedState = (
     region: string
   ): 'checked' | 'indeterminate' | 'unchecked' => {

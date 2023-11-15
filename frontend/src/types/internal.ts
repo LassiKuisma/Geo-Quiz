@@ -53,3 +53,7 @@ export interface GameStatusManager {
 }
 
 export type Subregion = { subregion: string; region: string };
+
+export interface FilterOptions {
+  shownSubregions: Array<string>;
+}

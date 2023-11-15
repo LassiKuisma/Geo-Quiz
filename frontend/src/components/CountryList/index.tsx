@@ -15,6 +15,9 @@ interface Props {
 
 const CountryList = ({ countries, setCountries }: Props) => {
   const [error, setError] = useState<string | undefined>(undefined);
+  const [selectedSubregions, setSelectedSubregions] = useState<
+    Array<Subregion>
+  >([]);
 
   useEffect(() => {
     if (countries) {
@@ -51,9 +54,18 @@ const CountryList = ({ countries, setCountries }: Props) => {
 
   return (
     <Box display="flex" flexDirection="column" height="100%">
-      <Filter subregions={subregions} />
+      <Filter
+        subregions={subregions}
+        selectedSubregions={selectedSubregions}
+        setSelectedSubregions={setSelectedSubregions}
+      />
       <Box display="contents">
-        <CountryTable countries={countries} />
+        <CountryTable
+          countries={countries}
+          filters={{
+            shownSubregions: selectedSubregions.map((sr) => sr.subregion),
+          }}
+        />
       </Box>
     </Box>
   );
