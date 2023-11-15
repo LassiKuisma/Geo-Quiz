@@ -5,7 +5,7 @@ import { getAllCountries } from '../../services/countryService';
 import CountryTable from './CountryTable';
 import Filter from './Filter';
 
-import { Regions } from '../../types/internal';
+import { Subregion } from '../../types/internal';
 import { Country } from '../../types/shared';
 
 interface Props {
@@ -47,11 +47,11 @@ const CountryList = ({ countries, setCountries }: Props) => {
     return <Box>Loading...</Box>;
   }
 
-  const regions = getRegionsAndSubregions(countries);
+  const subregions = getSubregions(countries);
 
   return (
     <Box display="flex" flexDirection="column" height="100%">
-      <Filter regions={regions} />
+      <Filter subregions={subregions} />
       <Box display="contents">
         <CountryTable countries={countries} />
       </Box>
@@ -59,36 +59,38 @@ const CountryList = ({ countries, setCountries }: Props) => {
   );
 };
 
-const getRegionsAndSubregions = (countries: Array<Country>): Array<Regions> => {
+const getSubregions = (countries: Array<Country>): Array<Subregion> => {
   const items = countries
     .map((country) => ({
       region: country.region,
       subregion: country.subregion,
     }))
     .reduce((result, { region, subregion }) => {
-      const subregions = result.get(region);
-      if (subregions) {
-        subregions.add(subregion);
+      const oldVal = result.get(region);
+      if (oldVal) {
+        oldVal.add(subregion);
       } else {
-        const s = new Set<string>();
-        s.add(subregion);
-        result.set(region, s);
+        const newSet = new Set<string>();
+        newSet.add(subregion);
+        result.set(region, newSet);
       }
 
       return result;
     }, new Map<string, Set<string>>());
 
-  const asArray = Array.from(items).map((item) => {
-    const subregionArray = Array.from(item[1]);
-    subregionArray.sort();
-
-    return {
+  const asArray = Array.from(items).flatMap((item) =>
+    Array.from(item[1]).map((subregion) => ({
       region: item[0],
-      subregions: subregionArray,
-    };
-  });
+      subregion: subregion,
+    }))
+  );
 
-  asArray.sort((a, b) => a.region.localeCompare(b.region));
+  asArray.sort((a, b) => {
+    const regionComp = a.region.localeCompare(b.region);
+    return regionComp === 0
+      ? a.subregion.localeCompare(b.subregion)
+      : regionComp;
+  });
 
   return asArray;
 };

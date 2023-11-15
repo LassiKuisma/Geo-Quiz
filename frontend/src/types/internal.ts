@@ -52,4 +52,4 @@ export interface GameStatusManager {
   setLoadableFromId: (id: number) => void;
 }
 
-export type Regions = { region: string; subregions: Array<string> };
+export type Subregion = { subregion: string; region: string };
