@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 
 import { getAllCountries } from '../../services/countryService';
 import CountryTable from './CountryTable';
@@ -18,6 +19,10 @@ const CountryList = ({ countries, setCountries }: Props) => {
   const [selectedSubregions, setSelectedSubregions] = useState<
     Array<Subregion>
   >([]);
+  const [nameFilter, setNameFilter] = useState('');
+  const debounced = useDebouncedCallback((value) => {
+    setNameFilter(value);
+  }, 500);
 
   useEffect(() => {
     if (countries) {
@@ -58,12 +63,14 @@ const CountryList = ({ countries, setCountries }: Props) => {
         subregions={subregions}
         selectedSubregions={selectedSubregions}
         setSelectedSubregions={setSelectedSubregions}
+        setNameFilter={debounced}
       />
       <Box display="contents">
         <CountryTable
           countries={countries}
           filters={{
             shownSubregions: selectedSubregions.map((sr) => sr.subregion),
+            nameFilter,
           }}
         />
       </Box>

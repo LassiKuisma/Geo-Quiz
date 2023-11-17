@@ -116,7 +116,16 @@ const CountryTable = ({ countries, filters }: Props) => {
     return filters.shownSubregions.includes(row.Subregion);
   };
 
-  const rowsFiltered = rowsSorted.filter(subregionFilter);
+  const nameFilter = (row: CountryRow) => {
+    if (filters.nameFilter.length === 0) {
+      return true;
+    }
+
+    const name = filters.nameFilter.trim().toLowerCase();
+    return row.Country.toLowerCase().includes(name);
+  };
+
+  const rowsFiltered = rowsSorted.filter(subregionFilter).filter(nameFilter);
 
   return (
     <TableContainer sx={{ flexGrow: 1, flexShrink: 1, flexBasis: 'auto' }}>

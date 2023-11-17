@@ -1,10 +1,14 @@
+import ClearIcon from '@mui/icons-material/Clear';
 import {
   Autocomplete,
   Box,
   Checkbox,
+  IconButton,
+  InputAdornment,
   TextField,
   createFilterOptions,
 } from '@mui/material';
+import { useState } from 'react';
 
 import { Subregion } from '../../types/internal';
 
@@ -12,21 +16,57 @@ interface Props {
   subregions: Array<Subregion>;
   selectedSubregions: Array<Subregion>;
   setSelectedSubregions: (_: Array<Subregion>) => void;
+  setNameFilter: (_: string) => void;
 }
 
 const Filter = ({
   subregions,
   selectedSubregions,
   setSelectedSubregions,
+  setNameFilter,
 }: Props) => {
   return (
     <Box>
+      <SearchByName setNameFilter={setNameFilter} />
       <RegionFilter
         subregions={subregions}
         selectedSubregions={selectedSubregions}
         setSelectedSubregions={setSelectedSubregions}
       />
     </Box>
+  );
+};
+
+interface SearchProps {
+  setNameFilter: (_: string) => void;
+}
+
+const SearchByName = ({ setNameFilter }: SearchProps) => {
+  const [value, setValue] = useState('');
+
+  return (
+    <TextField
+      label="Find by name"
+      value={value}
+      onChange={(event) => {
+        setValue(event.target.value);
+        setNameFilter(event.target.value);
+      }}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton
+              onClick={() => {
+                setValue('');
+                setNameFilter('');
+              }}
+            >
+              <ClearIcon />
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
+    />
   );
 };
 
