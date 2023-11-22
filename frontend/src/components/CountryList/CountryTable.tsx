@@ -113,7 +113,9 @@ const CountryTable = ({ countries, filters }: Props) => {
       return true;
     }
 
-    return filters.shownSubregions.includes(row.Subregion);
+    return filters.shownSubregions.some(
+      ({ subregion }) => subregion === row.Subregion
+    );
   };
 
   const nameFilter = (row: CountryRow) => {

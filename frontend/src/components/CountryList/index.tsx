@@ -1,12 +1,11 @@
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useDebouncedCallback } from 'use-debounce';
 
 import { getAllCountries } from '../../services/countryService';
 import CountryTable from './CountryTable';
 import Filter from './Filter';
 
-import { Subregion } from '../../types/internal';
+import { FilterOptions, Subregion } from '../../types/internal';
 import { Country } from '../../types/shared';
 
 interface Props {
@@ -16,13 +15,14 @@ interface Props {
 
 const CountryList = ({ countries, setCountries }: Props) => {
   const [error, setError] = useState<string | undefined>(undefined);
-  const [selectedSubregions, setSelectedSubregions] = useState<
-    Array<Subregion>
-  >([]);
-  const [nameFilter, setNameFilter] = useState('');
-  const debounced = useDebouncedCallback((value) => {
-    setNameFilter(value);
-  }, 500);
+
+  const emptyOptions: FilterOptions = {
+    shownSubregions: [],
+    nameFilter: '',
+  };
+
+  const [filterOptions, setFilterOptions] =
+    useState<FilterOptions>(emptyOptions);
 
   useEffect(() => {
     if (countries) {
@@ -61,18 +61,11 @@ const CountryList = ({ countries, setCountries }: Props) => {
     <Box display="flex" flexDirection="column" height="100%">
       <Filter
         subregions={subregions}
-        selectedSubregions={selectedSubregions}
-        setSelectedSubregions={setSelectedSubregions}
-        setNameFilter={debounced}
+        filterOptions={filterOptions}
+        setFilterOptions={setFilterOptions}
       />
       <Box display="contents">
-        <CountryTable
-          countries={countries}
-          filters={{
-            shownSubregions: selectedSubregions.map((sr) => sr.subregion),
-            nameFilter,
-          }}
-        />
+        <CountryTable countries={countries} filters={filterOptions} />
       </Box>
     </Box>
   );

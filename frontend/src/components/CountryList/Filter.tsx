@@ -9,31 +9,38 @@ import {
   createFilterOptions,
 } from '@mui/material';
 import { useState } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 
 import FilterByArea from './FilterByArea';
 
-import { Subregion } from '../../types/internal';
+import { FilterOptions, Subregion } from '../../types/internal';
 
 interface Props {
   subregions: Array<Subregion>;
-  selectedSubregions: Array<Subregion>;
-  setSelectedSubregions: (_: Array<Subregion>) => void;
-  setNameFilter: (_: string) => void;
+  filterOptions: FilterOptions;
+  setFilterOptions: (_: FilterOptions) => void;
 }
 
-const Filter = ({
-  subregions,
-  selectedSubregions,
-  setSelectedSubregions,
-  setNameFilter,
-}: Props) => {
+const Filter = ({ subregions, filterOptions, setFilterOptions }: Props) => {
   return (
     <Box>
-      <SearchByName setNameFilter={setNameFilter} />
+      <SearchByName
+        setNameFilter={(name) => {
+          setFilterOptions({
+            ...filterOptions,
+            nameFilter: name,
+          });
+        }}
+      />
       <RegionFilter
         subregions={subregions}
-        selectedSubregions={selectedSubregions}
-        setSelectedSubregions={setSelectedSubregions}
+        selectedSubregions={filterOptions.shownSubregions}
+        setSelectedSubregions={(selected) => {
+          setFilterOptions({
+            ...filterOptions,
+            shownSubregions: selected,
+          });
+        }}
       />
       <FilterByArea />
     </Box>
@@ -46,6 +53,9 @@ interface SearchProps {
 
 const SearchByName = ({ setNameFilter }: SearchProps) => {
   const [value, setValue] = useState('');
+  const debounced = useDebouncedCallback((newValue) => {
+    setNameFilter(newValue);
+  }, 500);
 
   return (
     <TextField
@@ -53,7 +63,7 @@ const SearchByName = ({ setNameFilter }: SearchProps) => {
       value={value}
       onChange={(event) => {
         setValue(event.target.value);
-        setNameFilter(event.target.value);
+        debounced(event.target.value);
       }}
       InputProps={{
         endAdornment: (
@@ -61,7 +71,7 @@ const SearchByName = ({ setNameFilter }: SearchProps) => {
             <IconButton
               onClick={() => {
                 setValue('');
-                setNameFilter('');
+                debounced('');
               }}
             >
               <ClearIcon />
@@ -88,7 +98,9 @@ const RegionFilter = ({
     region: string
   ): 'checked' | 'indeterminate' | 'unchecked' => {
     const sameRegion = subregions.filter((sr) => sr.region === region);
-    const selected = sameRegion.filter((sr) => selectedSubregions.includes(sr));
+    const selected = sameRegion.filter((sr) =>
+      selectedSubregions.some((s) => s.subregion === sr.subregion)
+    );
 
     if (selected.length === 0) {
       return 'unchecked';
