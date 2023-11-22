@@ -10,6 +10,8 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 
+import FilterByArea from './FilterByArea';
+
 import { Subregion } from '../../types/internal';
 
 interface Props {
@@ -33,6 +35,7 @@ const Filter = ({
         selectedSubregions={selectedSubregions}
         setSelectedSubregions={setSelectedSubregions}
       />
+      <FilterByArea />
     </Box>
   );
 };
