@@ -14,7 +14,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import FilterByArea from './FilterByArea';
 import FilterByPopulation from './FilterByPopulation';
 
-import { FilterOptions, Subregion } from '../../types/internal';
+import { FilterOptions, Subregion } from '../../../types/internal';
 
 interface Props {
   subregions: Array<Subregion>;
@@ -22,7 +22,11 @@ interface Props {
   setFilterOptions: (_: FilterOptions) => void;
 }
 
-const Filter = ({ subregions, filterOptions, setFilterOptions }: Props) => {
+const CountryFilter = ({
+  subregions,
+  filterOptions,
+  setFilterOptions,
+}: Props) => {
   return (
     <Box>
       <SearchByName
@@ -192,4 +196,4 @@ const filterOptions = createFilterOptions({
   stringify: (option: Subregion) => `${option.region} ${option.subregion}`,
 });
 
-export default Filter;
+export default CountryFilter;

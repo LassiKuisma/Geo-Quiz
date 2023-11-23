@@ -1,9 +1,9 @@
 import { Slider } from '@mui/material';
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-import { prefixNumber } from '../../util/utils';
+import { prefixNumber } from '../../../util/utils';
 
-import { FilterOptions } from '../../types/internal';
+import { FilterOptions } from '../../../types/internal';
 
 const marks = [
   0,

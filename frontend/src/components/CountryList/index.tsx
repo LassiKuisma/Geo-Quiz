@@ -2,8 +2,8 @@ import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { getAllCountries } from '../../services/countryService';
+import CountryFilter from './CountryFilter';
 import CountryTable from './CountryTable';
-import Filter from './Filter';
 
 import { FilterOptions, Subregion } from '../../types/internal';
 import { Country } from '../../types/shared';
@@ -61,7 +61,7 @@ const CountryList = ({ countries, setCountries }: Props) => {
 
   return (
     <Box display="flex" flexDirection="column" height="100%">
-      <Filter
+      <CountryFilter
         subregions={subregions}
         filterOptions={filterOptions}
         setFilterOptions={setFilterOptions}
