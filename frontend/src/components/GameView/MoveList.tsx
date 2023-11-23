@@ -128,9 +128,9 @@ const ResultRow = ({ move, directionVisible }: RowProps) => {
         subregion={country.subregion}
         subregionCorrect={comp.subregionEqual}
       />
-      <Cell>
+      <Cell rightAlign>
         <DiffAsIcon diff={comp.areaDifference} />
-        {prefixNumber(country.area, 0)} km²
+        {country.area.toLocaleString()} km²
       </Cell>
       <Cell>
         <DiffAsIcon diff={comp.populationDifference} />
@@ -166,9 +166,10 @@ interface CellProps {
   children?: React.ReactNode;
   fontSize?: 'small' | 'medium' | 'large';
   wrapText?: boolean;
+  rightAlign?: boolean;
 }
 
-const Cell = ({ children, fontSize, wrapText }: CellProps) => {
+const Cell = ({ children, fontSize, wrapText, rightAlign }: CellProps) => {
   return (
     <StyledCell
       sx={{
@@ -176,7 +177,11 @@ const Cell = ({ children, fontSize, wrapText }: CellProps) => {
         fontSize,
       }}
     >
-      <Box display="flex" alignItems="center">
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent={rightAlign ? 'right' : undefined}
+      >
         {children}
       </Box>
     </StyledCell>
