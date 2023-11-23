@@ -127,7 +127,22 @@ const CountryTable = ({ countries, filters }: Props) => {
     return row.Country.toLowerCase().includes(name);
   };
 
-  const rowsFiltered = rowsSorted.filter(subregionFilter).filter(nameFilter);
+  const areaFilter = (row: CountryRow) => {
+    const largerThanMin = filters.area.minimum
+      ? row.Area >= filters.area.minimum
+      : true;
+
+    const smallerThanMax = filters.area.maximum
+      ? row.Area <= filters.area.maximum
+      : true;
+
+    return largerThanMin && smallerThanMax;
+  };
+
+  const rowsFiltered = rowsSorted
+    .filter(subregionFilter)
+    .filter(areaFilter)
+    .filter(nameFilter);
 
   return (
     <TableContainer sx={{ flexGrow: 1, flexShrink: 1, flexBasis: 'auto' }}>

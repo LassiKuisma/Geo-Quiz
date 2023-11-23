@@ -42,7 +42,10 @@ const Filter = ({ subregions, filterOptions, setFilterOptions }: Props) => {
           });
         }}
       />
-      <FilterByArea />
+      <FilterByArea
+        filterOptions={filterOptions}
+        setFilterOptions={setFilterOptions}
+      />
     </Box>
   );
 };

@@ -19,6 +19,7 @@ const CountryList = ({ countries, setCountries }: Props) => {
   const emptyOptions: FilterOptions = {
     shownSubregions: [],
     nameFilter: '',
+    area: { minimum: undefined, maximum: undefined },
   };
 
   const [filterOptions, setFilterOptions] =
