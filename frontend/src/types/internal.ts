@@ -63,4 +63,5 @@ export interface FilterOptions {
   shownSubregions: Array<Subregion>;
   nameFilter: string;
   area: Range;
+  population: Range;
 }

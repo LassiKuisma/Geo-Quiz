@@ -139,9 +139,22 @@ const CountryTable = ({ countries, filters }: Props) => {
     return largerThanMin && smallerThanMax;
   };
 
+  const populationFilter = (row: CountryRow) => {
+    const moreThanMin = filters.population.minimum
+      ? row.Population >= filters.population.minimum
+      : true;
+
+    const lessThanMax = filters.population.maximum
+      ? row.Population <= filters.population.maximum
+      : true;
+
+    return moreThanMin && lessThanMax;
+  };
+
   const rowsFiltered = rowsSorted
     .filter(subregionFilter)
     .filter(areaFilter)
+    .filter(populationFilter)
     .filter(nameFilter);
 
   return (

@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 import FilterByArea from './FilterByArea';
+import FilterByPopulation from './FilterByPopulation';
 
 import { FilterOptions, Subregion } from '../../types/internal';
 
@@ -43,6 +44,10 @@ const Filter = ({ subregions, filterOptions, setFilterOptions }: Props) => {
         }}
       />
       <FilterByArea
+        filterOptions={filterOptions}
+        setFilterOptions={setFilterOptions}
+      />
+      <FilterByPopulation
         filterOptions={filterOptions}
         setFilterOptions={setFilterOptions}
       />
