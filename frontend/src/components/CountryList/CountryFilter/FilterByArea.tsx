@@ -20,9 +20,14 @@ const marks = [0, 500, 1_000, 50_000, 100_000, 500_000, 1_000_000, 'All'].map(
 interface Props {
   filterOptions: FilterOptions;
   setFilterOptions: (_: FilterOptions) => void;
+  hasSmallDevice: boolean;
 }
 
-const FilterByArea = ({ filterOptions, setFilterOptions }: Props) => {
+const FilterByArea = ({
+  filterOptions,
+  setFilterOptions,
+  hasSmallDevice,
+}: Props) => {
   const minValue = marks.reduce((p, { value }) => Math.min(p, value), 0);
   const maxValue = marks.reduce((p, { value }) => Math.max(p, value), 0);
 
@@ -45,6 +50,21 @@ const FilterByArea = ({ filterOptions, setFilterOptions }: Props) => {
     debounced(value as number[]);
   };
 
+  const marksToShow = marks.map((mark, index) => {
+    if (!hasSmallDevice) {
+      return mark;
+    }
+
+    const isFirst = index === 0;
+    const isLast = index === marks.length - 1;
+    const showLabel = isFirst || isLast;
+
+    return {
+      value: mark.value,
+      label: showLabel ? mark.label : '',
+    };
+  });
+
   return (
     <Box marginX="1em">
       <Slider
@@ -58,8 +78,8 @@ const FilterByArea = ({ filterOptions, setFilterOptions }: Props) => {
         min={minValue}
         max={maxValue}
         step={null}
-        valueLabelDisplay="auto"
-        marks={marks}
+        valueLabelDisplay={hasSmallDevice ? 'on' : 'auto'}
+        marks={marksToShow}
       />
     </Box>
   );

@@ -21,20 +21,24 @@ interface Props {
   subregions: Array<Subregion>;
   filterOptions: FilterOptions;
   setFilterOptions: (_: FilterOptions) => void;
+  hasSmallDevice: boolean;
 }
 
 const CountryFilter = ({
   subregions,
   filterOptions,
   setFilterOptions,
+  hasSmallDevice,
 }: Props) => {
+  const cellPadding = hasSmallDevice ? 'none' : 'normal';
+
   return (
     <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         Filters
       </AccordionSummary>
       <AccordionDetails>
-        <Box width="50%">
+        <Box width={hasSmallDevice ? '100%' : '50%'}>
           <FilterByName
             setNameFilter={(name) => {
               setFilterOptions({
@@ -57,20 +61,22 @@ const CountryFilter = ({
         <Table size="small" sx={{ marginTop: '0.75em' }}>
           <TableBody>
             <TableRow>
-              <TableCell>Area</TableCell>
-              <TableCell width="100%">
+              <TableCell padding={cellPadding}>Area</TableCell>
+              <TableCell width="100%" padding={cellPadding}>
                 <FilterByArea
                   filterOptions={filterOptions}
                   setFilterOptions={setFilterOptions}
+                  hasSmallDevice={hasSmallDevice}
                 />
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Population</TableCell>
-              <TableCell width="100%">
+              <TableCell padding={cellPadding}>Population</TableCell>
+              <TableCell width="100%" padding={cellPadding}>
                 <FilterByPopulation
                   filterOptions={filterOptions}
                   setFilterOptions={setFilterOptions}
+                  hasSmallDevice={hasSmallDevice}
                 />
               </TableCell>
             </TableRow>

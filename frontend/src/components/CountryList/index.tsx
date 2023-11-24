@@ -11,9 +11,10 @@ import { Country } from '../../types/shared';
 interface Props {
   countries: undefined | Array<Country>;
   setCountries: (countries: Array<Country>) => void;
+  hasSmallDevice: boolean;
 }
 
-const CountryList = ({ countries, setCountries }: Props) => {
+const CountryList = ({ countries, setCountries, hasSmallDevice }: Props) => {
   const [error, setError] = useState<string | undefined>(undefined);
 
   const emptyOptions: FilterOptions = {
@@ -65,6 +66,7 @@ const CountryList = ({ countries, setCountries }: Props) => {
         subregions={subregions}
         filterOptions={filterOptions}
         setFilterOptions={setFilterOptions}
+        hasSmallDevice={hasSmallDevice}
       />
       <Box display="contents">
         <CountryTable countries={countries} filters={filterOptions} />

@@ -29,9 +29,14 @@ const marks = [
 interface Props {
   filterOptions: FilterOptions;
   setFilterOptions: (_: FilterOptions) => void;
+  hasSmallDevice: boolean;
 }
 
-const FilterByPopulation = ({ filterOptions, setFilterOptions }: Props) => {
+const FilterByPopulation = ({
+  filterOptions,
+  setFilterOptions,
+  hasSmallDevice,
+}: Props) => {
   const minValue = marks.reduce((p, { value }) => Math.min(p, value), 0);
   const maxValue = marks.reduce((p, { value }) => Math.max(p, value), 0);
 
@@ -54,6 +59,21 @@ const FilterByPopulation = ({ filterOptions, setFilterOptions }: Props) => {
     debounced(value as number[]);
   };
 
+  const marksToShow = marks.map((mark, index) => {
+    if (!hasSmallDevice) {
+      return mark;
+    }
+
+    const isFirst = index === 0;
+    const isLast = index === marks.length - 1;
+    const showLabel = isFirst || isLast;
+
+    return {
+      value: mark.value,
+      label: showLabel ? mark.label : '',
+    };
+  });
+
   return (
     <Box marginX="1em">
       <Slider
@@ -67,8 +87,8 @@ const FilterByPopulation = ({ filterOptions, setFilterOptions }: Props) => {
         min={minValue}
         max={maxValue}
         step={null}
-        valueLabelDisplay="auto"
-        marks={marks}
+        valueLabelDisplay={hasSmallDevice ? 'on' : 'auto'}
+        marks={marksToShow}
       />
     </Box>
   );
