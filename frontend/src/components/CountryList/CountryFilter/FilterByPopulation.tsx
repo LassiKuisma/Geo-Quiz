@@ -1,4 +1,4 @@
-import { Slider } from '@mui/material';
+import { Box, Slider } from '@mui/material';
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { prefixNumber } from '../../../util/utils';
@@ -55,20 +55,22 @@ const FilterByPopulation = ({ filterOptions, setFilterOptions }: Props) => {
   };
 
   return (
-    <Slider
-      value={value}
-      onChange={handleValueChange}
-      defaultValue={0}
-      valueLabelFormat={(value) => {
-        // value = index (see mapping of labels to marks)
-        return marks[value]?.label;
-      }}
-      min={minValue}
-      max={maxValue}
-      step={null}
-      valueLabelDisplay="auto"
-      marks={marks}
-    />
+    <Box marginX="1em">
+      <Slider
+        value={value}
+        onChange={handleValueChange}
+        defaultValue={0}
+        valueLabelFormat={(value) => {
+          // value = index (see mapping of labels to marks)
+          return marks[value]?.label;
+        }}
+        min={minValue}
+        max={maxValue}
+        step={null}
+        valueLabelDisplay="auto"
+        marks={marks}
+      />
+    </Box>
   );
 };
 

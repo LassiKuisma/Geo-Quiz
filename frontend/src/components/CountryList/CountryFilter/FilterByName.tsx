@@ -15,7 +15,8 @@ const FilterByName = ({ setNameFilter }: SearchProps) => {
 
   return (
     <TextField
-      label="Find by name"
+      label="Filter by name"
+      fullWidth
       value={value}
       onChange={(event) => {
         setValue(event.target.value);

@@ -98,6 +98,10 @@ const FilterByRegion = ({
         <TextField {...params} label="Filter by region" placeholder="Regions" />
       )}
       filterOptions={filterOptions}
+      sx={{
+        marginTop: '0.75em',
+      }}
+      fullWidth
     />
   );
 };

@@ -158,7 +158,14 @@ const CountryTable = ({ countries, filters }: Props) => {
     .filter(nameFilter);
 
   return (
-    <TableContainer sx={{ flexGrow: 1, flexShrink: 1, flexBasis: 'auto' }}>
+    <TableContainer
+      sx={{
+        flexGrow: 1,
+        flexShrink: 1,
+        flexBasis: 'auto',
+        marginTop: '1em',
+      }}
+    >
       <Table stickyHeader>
         <HeaderRow
           order={order}

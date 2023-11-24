@@ -1,4 +1,14 @@
-import { Box } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from '@mui/material';
 
 import FilterByArea from './FilterByArea';
 import FilterByName from './FilterByName';
@@ -19,34 +29,55 @@ const CountryFilter = ({
   setFilterOptions,
 }: Props) => {
   return (
-    <Box>
-      <FilterByName
-        setNameFilter={(name) => {
-          setFilterOptions({
-            ...filterOptions,
-            nameFilter: name,
-          });
-        }}
-      />
-      <FilterByRegion
-        subregions={subregions}
-        selectedSubregions={filterOptions.shownSubregions}
-        setSelectedSubregions={(selected) => {
-          setFilterOptions({
-            ...filterOptions,
-            shownSubregions: selected,
-          });
-        }}
-      />
-      <FilterByArea
-        filterOptions={filterOptions}
-        setFilterOptions={setFilterOptions}
-      />
-      <FilterByPopulation
-        filterOptions={filterOptions}
-        setFilterOptions={setFilterOptions}
-      />
-    </Box>
+    <Accordion>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        Filters
+      </AccordionSummary>
+      <AccordionDetails>
+        <Box width="50%">
+          <FilterByName
+            setNameFilter={(name) => {
+              setFilterOptions({
+                ...filterOptions,
+                nameFilter: name,
+              });
+            }}
+          />
+          <FilterByRegion
+            subregions={subregions}
+            selectedSubregions={filterOptions.shownSubregions}
+            setSelectedSubregions={(selected) => {
+              setFilterOptions({
+                ...filterOptions,
+                shownSubregions: selected,
+              });
+            }}
+          />
+        </Box>
+        <Table size="small" sx={{ marginTop: '0.75em' }}>
+          <TableBody>
+            <TableRow>
+              <TableCell>Area</TableCell>
+              <TableCell width="100%">
+                <FilterByArea
+                  filterOptions={filterOptions}
+                  setFilterOptions={setFilterOptions}
+                />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Population</TableCell>
+              <TableCell width="100%">
+                <FilterByPopulation
+                  filterOptions={filterOptions}
+                  setFilterOptions={setFilterOptions}
+                />
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </AccordionDetails>
+    </Accordion>
   );
 };
 
