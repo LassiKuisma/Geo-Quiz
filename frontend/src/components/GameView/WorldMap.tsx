@@ -22,8 +22,8 @@ const WorldMap = ({ countries, guessed, difficulty }: WorldMapProps) => {
   const countryCodes = countryCodesFromMoves(guessed, countries);
 
   return (
-    <Box width="100%">
-      <ComposableMap>
+    <Box width="100%" height="100%">
+      <ComposableMap style={{ width: '100%', height: '100%' }}>
         <ZoomableGroup>
           <Geographies
             geography={require('../../ne_110m_admin_0_countries_minified.geojson')}

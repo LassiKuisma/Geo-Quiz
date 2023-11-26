@@ -1,7 +1,8 @@
-import { Box } from '@mui/material';
+import { Box, Tab, Tabs } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { getAllCountries } from '../../services/countryService';
+import WorldMap from '../GameView/WorldMap';
 import CountryFilter from './CountryFilter';
 import CountryTable from './CountryTable';
 
@@ -16,6 +17,7 @@ interface Props {
 
 const CountryList = ({ countries, setCountries, hasSmallDevice }: Props) => {
   const [error, setError] = useState<string | undefined>(undefined);
+  const [selectedTab, setSelectedTab] = useState(0);
 
   const emptyOptions: FilterOptions = {
     shownSubregions: [],
@@ -61,16 +63,32 @@ const CountryList = ({ countries, setCountries, hasSmallDevice }: Props) => {
   const subregions = getSubregions(countries);
 
   return (
-    <Box display="flex" flexDirection="column" height="100%">
+    <Box height="85%">
       <CountryFilter
         subregions={subregions}
         filterOptions={filterOptions}
         setFilterOptions={setFilterOptions}
         hasSmallDevice={hasSmallDevice}
       />
-      <Box display="contents">
-        <CountryTable countries={countries} filters={filterOptions} />
+      <Box>
+        <Tabs
+          value={selectedTab}
+          onChange={(_, newValue) => setSelectedTab(newValue)}
+        >
+          <Tab label="Countries" />
+          <Tab label="Map" />
+        </Tabs>
       </Box>
+      <TabPanel value={selectedTab} index={0}>
+        <Box display="flex" flexDirection="column" height="100%">
+          <CountryTable countries={countries} filters={filterOptions} />
+        </Box>
+      </TabPanel>
+      <TabPanel value={selectedTab} index={1}>
+        <Box height="85%">
+          <WorldMap countries={countries} guessed={[]} difficulty={'easy'} />
+        </Box>
+      </TabPanel>
     </Box>
   );
 };
@@ -109,6 +127,25 @@ const getSubregions = (countries: Array<Country>): Array<Subregion> => {
   });
 
   return asArray;
+};
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+const TabPanel = ({ children, value, index }: TabPanelProps) => {
+  return (
+    <Box
+      role="tabpanel"
+      hidden={value !== index}
+      id={`tabpanel-${index}`}
+      height="100%"
+    >
+      {value === index && <Box height="100%">{children}</Box>}
+    </Box>
+  );
 };
 
 export default CountryList;
