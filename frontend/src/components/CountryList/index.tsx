@@ -2,7 +2,7 @@ import { Box, Tab, Tabs } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { getAllCountries } from '../../services/countryService';
-import WorldMap from '../GameView/WorldMap';
+import WorldMap from '../WorldMap';
 import CountryFilter from './CountryFilter';
 import CountryTable from './CountryTable';
 

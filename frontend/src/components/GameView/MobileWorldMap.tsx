@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import WorldMap from './WorldMap';
+import WorldMap from '../WorldMap';
 
 import { GameStatus } from '../../types/internal';
 
