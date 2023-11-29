@@ -156,8 +156,11 @@ const GameView = ({
         {!hasSmallDevice && (
           <WorldMap
             countries={gameObj.countries}
-            guessed={gameObj.guesses}
-            difficulty={gameObj.difficulty}
+            mapArgs={{
+              k: 'game',
+              guesses: gameObj.guesses,
+              difficulty: gameObj.difficulty,
+            }}
           />
         )}
       </Box>

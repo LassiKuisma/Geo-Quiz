@@ -36,8 +36,11 @@ const MobileWorldMap = ({ gameStatus }: MobileWorldMapProps) => {
       </Button>
       <WorldMap
         countries={game.countries}
-        guessed={game.guesses}
-        difficulty={game.difficulty}
+        mapArgs={{
+          k: 'game',
+          guesses: game.guesses,
+          difficulty: game.difficulty,
+        }}
       />
     </>
   );

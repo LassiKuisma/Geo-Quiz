@@ -86,7 +86,10 @@ const CountryList = ({ countries, setCountries, hasSmallDevice }: Props) => {
       </TabPanel>
       <TabPanel value={selectedTab} index={1}>
         <Box height="85%">
-          <WorldMap countries={countries} guessed={[]} difficulty={'easy'} />
+          <WorldMap
+            countries={countries}
+            mapArgs={{ k: 'info', filters: filterOptions }}
+          />
         </Box>
       </TabPanel>
     </Box>
