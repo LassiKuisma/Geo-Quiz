@@ -7,6 +7,7 @@ import {
   ZoomableGroup,
 } from 'react-simple-maps';
 import { Tooltip } from 'react-tooltip';
+import { isFilterEmpty, passesFilters } from '../../util/filters';
 import { prefixNumber } from '../../util/utils';
 
 import { FilterOptions } from '../../types/internal';
@@ -260,78 +261,15 @@ const infoMap = (
       return colorScheme.nonIndependent;
     }
 
-    if (filterIsEmpty()) {
+    if (isFilterEmpty(filters)) {
       return colorScheme.default;
     }
 
-    if (passesFilters(country)) {
+    if (passesFilters(filters, country)) {
       return colorScheme.correctAnswer;
     } else {
       return colorScheme.guessed;
     }
-  };
-
-  const filterIsEmpty = () => {
-    return (
-      filters.shownSubregions.length === 0 &&
-      !filters.area.minimum &&
-      !filters.area.maximum &&
-      !filters.population.minimum &&
-      !filters.population.maximum &&
-      filters.nameFilter.length === 0
-    );
-  };
-
-  const passesFilters = (country: Country) => {
-    const subregionPasses = (country: Country) => {
-      if (filters.shownSubregions.length === 0) {
-        return true;
-      }
-
-      return filters.shownSubregions.some(
-        ({ subregion }) => subregion === country.subregion
-      );
-    };
-
-    const namePasses = (country: Country) => {
-      if (filters.nameFilter.length === 0) {
-        return true;
-      }
-
-      const name = filters.nameFilter.trim().toLowerCase();
-      return country.name.toLowerCase().includes(name);
-    };
-
-    const areaPasses = (country: Country) => {
-      const largerThanMin = filters.area.minimum
-        ? country.area >= filters.area.minimum
-        : true;
-
-      const smallerThanMax = filters.area.maximum
-        ? country.area <= filters.area.maximum
-        : true;
-
-      return largerThanMin && smallerThanMax;
-    };
-
-    const populationPasses = (country: Country) => {
-      const moreThanMin = filters.population.minimum
-        ? country.population >= filters.population.minimum
-        : true;
-
-      const lessThanMax = filters.population.maximum
-        ? country.population <= filters.population.maximum
-        : true;
-
-      return moreThanMin && lessThanMax;
-    };
-
-    return (
-      areaPasses(country) &&
-      populationPasses(country) &&
-      subregionPasses(country) &&
-      namePasses(country)
-    );
   };
 
   return geographies.map((geo) => {
