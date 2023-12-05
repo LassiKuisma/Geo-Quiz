@@ -1,4 +1,7 @@
+import CircleIcon from '@mui/icons-material/Circle';
+import { Box, Typography } from '@mui/material';
 import { Geography } from 'react-simple-maps';
+import { Tooltip } from 'react-tooltip';
 import { isFilterEmpty, passesFilters } from '../../util/filters';
 import { prefixNumber } from '../../util/utils';
 
@@ -41,9 +44,9 @@ const InfoMap = ({ geographies, countries, filters }: Props) => {
     }
 
     if (passesFilters(filters, country)) {
-      return colorScheme.correctAnswer;
+      return colorScheme.passesFilters;
     } else {
-      return colorScheme.guessed;
+      return colorScheme.filteredOut;
     }
   };
 
@@ -81,10 +84,9 @@ type Colors = { default: string; hover: string };
 
 interface ColorScheme {
   nonIndependent: Colors;
-  guessed: Colors;
+  filteredOut: Colors;
   default: Colors;
-  correctAnswer: Colors;
-  neighbour: Colors;
+  passesFilters: Colors;
 }
 
 const makeColorScheme = (): ColorScheme => {
@@ -93,7 +95,7 @@ const makeColorScheme = (): ColorScheme => {
       default: '#444444',
       hover: '#333333',
     },
-    guessed: {
+    filteredOut: {
       default: '#730A00',
       hover: '#450600',
     },
@@ -101,15 +103,62 @@ const makeColorScheme = (): ColorScheme => {
       default: '#0066FF',
       hover: '#0044DD',
     },
-    correctAnswer: {
+    passesFilters: {
       default: '#004f08',
       hover: '#003605',
-    },
-    neighbour: {
-      default: '#9b9e00',
-      hover: '#5a5c00',
     },
   };
 };
 
-export { InfoMap };
+const InfoMapLegend = () => {
+  const colorScheme = makeColorScheme();
+
+  return (
+    <Box
+      display="flex"
+      flexDirection="row"
+      columnGap="20px"
+      alignItems="center"
+    >
+      <Tooltip id="info-map-legend" />
+      <Typography>Colors:</Typography>
+      <CircleIcon
+        fontSize="large"
+        sx={{ color: colorScheme.default.default }}
+        data-tooltip-id="info-map-legend"
+        data-tooltip-content="Country"
+      />
+      <CircleIcon
+        fontSize="large"
+        sx={{ color: colorScheme.nonIndependent.default }}
+        data-tooltip-id="info-map-legend"
+        data-tooltip-content="Non-independent country or region"
+      />
+      <CircleIcon
+        fontSize="large"
+        sx={{ color: colorScheme.passesFilters.default }}
+        data-tooltip-id="info-map-legend"
+        data-tooltip-content="Country matching filters"
+      />
+      <CircleIcon
+        fontSize="large"
+        sx={{ color: colorScheme.filteredOut.default }}
+        data-tooltip-id="info-map-legend"
+        data-tooltip-content="Country not matching filters"
+      />
+      <Box fontSize="small" marginLeft="auto">
+        Map source:
+        <br />
+        <a
+          href="https://www.naturalearthdata.com/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Natural Earth
+        </a>
+      </Box>
+    </Box>
+  );
+};
+
+export { InfoMap, InfoMapLegend };

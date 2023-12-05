@@ -3,7 +3,7 @@ import { ComposableMap, Geographies, ZoomableGroup } from 'react-simple-maps';
 import { Tooltip } from 'react-tooltip';
 
 import { GameMap, GameMapLegend } from './GameMap';
-import { InfoMap } from './InfoMap';
+import { InfoMap, InfoMapLegend } from './InfoMap';
 
 import { FilterOptions } from '../../types/internal';
 import { Country, Difficulty, GameMove } from '../../types/shared';
@@ -47,7 +47,7 @@ const WorldMap = ({ countries, mapArgs }: WorldMapProps) => {
           </Geographies>
         </ZoomableGroup>
       </ComposableMap>
-      {mapArgs.k === 'game' ? <GameMapLegend /> : null}
+      {mapArgs.k === 'game' ? <GameMapLegend /> : <InfoMapLegend />}
       <Tooltip id="country-tooltip" />
     </Box>
   );
