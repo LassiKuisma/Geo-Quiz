@@ -12,7 +12,7 @@ import {
 import { visuallyHidden } from '@mui/utils';
 import { useMemo, useState } from 'react';
 
-import { locationToStr, prefixNumber } from '../../util/utils';
+import { prefixNumber } from '../../util/utils';
 
 import { FilterOptions } from '../../types/internal';
 import { Country } from '../../types/shared';
@@ -186,9 +186,6 @@ const CountryTable = ({ countries, filters }: Props) => {
               </TableCell>
               <TableCell>{country.Neighbours}</TableCell>
               <TableCell>{country.Languages}</TableCell>
-              <TableCell>
-                {locationToStr(country.Location.lat, country.Location.lng)}
-              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -215,7 +212,6 @@ const HeaderRow = ({ order, orderBy, onRequestSort }: HeaderRowProps) => {
     'Population',
     'Neighbours',
     'Languages',
-    'Location',
   ];
 
   return (
