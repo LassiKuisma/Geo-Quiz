@@ -2,6 +2,7 @@ import { col, where } from 'sequelize';
 import { CountryModel, GameModel, MoveModel, UserModel } from '../models';
 import { compareCountries, getHints } from '../util/country';
 import { defaultThresholds } from '../util/gameSettings';
+import logger from '../util/logger';
 import { CountryJoined, countryOptions, modelToCountry } from '../util/models';
 import {
   difficultyAsNumber,
@@ -33,8 +34,8 @@ export const generateGame = async (
 
   const countries = countriesResult.value;
   if (countries.length === 0) {
-    console.log('Error creating game: no countries found');
-    const msg = 'no countries found';
+    logger.error('Error creating game: no country data in db');
+    const msg = 'database error';
     return error(msg);
   }
 
@@ -105,8 +106,8 @@ export const getGame = async (id: number): Promise<ResultGame<Game>> => {
 
     const country = modelToCountry(result.country);
     if (!country) {
-      console.log(
-        `Error fetching game id=${id}: query returned faulty sql model.`
+      logger.error(
+        `Error loading game ${id}: query returned faulty sql model.`
       );
 
       return dbError();
@@ -121,8 +122,8 @@ export const getGame = async (id: number): Promise<ResultGame<Game>> => {
 
     let difficulty = difficultyFromNumber(result.difficulty);
     if (!difficulty) {
-      console.log(
-        `Error in game ${id}, invalid difficulty: '${result.difficulty}'. Defaulting to easy difficulty.`
+      logger.error(
+        `Error loading game ${id}, invalid difficulty: '${result.difficulty}'. Defaulting to easy difficulty.`
       );
       difficulty = 'easy';
     }
@@ -137,7 +138,7 @@ export const getGame = async (id: number): Promise<ResultGame<Game>> => {
 
     return ok(game);
   } catch (err) {
-    console.log(`Error fetching game id=${id}:`, err);
+    logger.error(`Error loading game ${id}:`, err);
 
     return dbError();
   }
@@ -195,8 +196,8 @@ export const loadGame = async (
 
     let difficulty = difficultyFromNumber(model.difficulty);
     if (!difficulty) {
-      console.log(
-        `Error in game ${gameId}, invalid difficulty: '${model.difficulty}'. Defaulting to easy difficulty.`
+      logger.error(
+        `Error loading game ${gameId}, invalid difficulty: '${model.difficulty}'. Defaulting to easy difficulty.`
       );
       difficulty = 'easy';
     }
@@ -291,8 +292,8 @@ export const getGamesFromUser = async (
 
       let difficulty = difficultyFromNumber(game.difficulty);
       if (!difficulty) {
-        console.log(
-          `Error in game ${game.gameId}, invalid difficulty: '${game.difficulty}'. Defaulting to easy difficulty.`
+        logger.error(
+          `Error loading game ${game.gameId}, invalid difficulty: '${game.difficulty}'. Defaulting to easy difficulty.`
         );
         difficulty = 'easy';
       }

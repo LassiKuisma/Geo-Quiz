@@ -16,6 +16,7 @@ import usersRouter from './routes/usersRouter';
 
 import { PORT } from './util/config';
 import { connectToDatabase } from './util/db';
+import logger from './util/logger';
 
 const app = express();
 
@@ -44,7 +45,7 @@ const start = async () => {
   await connectToDatabase();
 
   app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    logger.info(`Server running on port ${PORT}`);
   });
 };
 

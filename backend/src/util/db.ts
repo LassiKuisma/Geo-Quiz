@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize';
 import { SequelizeStorage, Umzug } from 'umzug';
 
 import { DATABASE_URL } from './config';
+import logger from './logger';
 
 export const sequelize = new Sequelize(DATABASE_URL, {
   define: {
@@ -17,9 +18,9 @@ export const connectToDatabase = async () => {
   try {
     await sequelize.authenticate();
     await runMigrations();
-    console.log('connected to database');
+    logger.info('connected to database');
   } catch (err) {
-    console.log('failed to connect to database:', err);
+    logger.error('failed to connect to database:', err);
     return process.exit(1);
   }
 };
@@ -38,7 +39,7 @@ export type Migration = typeof migrator._types.migration;
 
 const runMigrations = async () => {
   const migrations = await migrator.up();
-  console.log('Migrations up to date', {
+  logger.info('Migrations up to date', {
     files: migrations.map((mig) => mig.name),
   });
 };
