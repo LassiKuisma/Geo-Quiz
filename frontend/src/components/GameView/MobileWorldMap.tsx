@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import WorldMap from './WorldMap';
+import WorldMap from '../WorldMap';
 
 import { GameStatus } from '../../types/internal';
 
@@ -36,8 +36,11 @@ const MobileWorldMap = ({ gameStatus }: MobileWorldMapProps) => {
       </Button>
       <WorldMap
         countries={game.countries}
-        guessed={game.guesses}
-        difficulty={game.difficulty}
+        mapArgs={{
+          k: 'game',
+          guesses: game.guesses,
+          difficulty: game.difficulty,
+        }}
       />
     </>
   );

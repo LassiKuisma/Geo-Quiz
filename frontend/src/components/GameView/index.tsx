@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { loadGame, postMove } from '../../services/gameService';
 import { hasUnlockedHints } from '../../util/gameUtil';
+import WorldMap from '../WorldMap';
 import CountrySelect from './CountrySelect';
 import GameOver from './GameOver';
 import HintsView from './HintsViews';
@@ -15,7 +16,6 @@ import {
   GameStatusManager,
 } from '../../types/internal';
 import { Country, Difficulty, Hints, UserWithToken } from '../../types/shared';
-import WorldMap from './WorldMap';
 
 interface Props {
   game: GameStatus;
@@ -156,8 +156,11 @@ const GameView = ({
         {!hasSmallDevice && (
           <WorldMap
             countries={gameObj.countries}
-            guessed={gameObj.guesses}
-            difficulty={gameObj.difficulty}
+            mapArgs={{
+              k: 'game',
+              guesses: gameObj.guesses,
+              difficulty: gameObj.difficulty,
+            }}
           />
         )}
       </Box>

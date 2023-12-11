@@ -207,7 +207,11 @@ const App = () => {
           <Route
             path="countries"
             element={
-              <CountryList countries={countries} setCountries={setCountries} />
+              <CountryList
+                countries={countries}
+                setCountries={setCountries}
+                hasSmallDevice={hasSmallDevice}
+              />
             }
           />
           <Route path="login" element={<LoginPage setUser={handleLogin} />} />

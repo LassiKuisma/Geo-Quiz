@@ -12,8 +12,9 @@ import {
 import { visuallyHidden } from '@mui/utils';
 import { useMemo, useState } from 'react';
 
-import { locationToStr, prefixNumber } from '../../util/utils';
+import { prefixNumber } from '../../util/utils';
 
+import { FilterOptions } from '../../types/internal';
 import { Country } from '../../types/shared';
 
 type Order = 'asc' | 'desc';
@@ -35,9 +36,14 @@ const getComparator = <Key extends SortableColumn>(
   a: { [key in Key]: number | string },
   b: { [key in Key]: number | string }
 ) => number) => {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
+  const orderMult = order === 'desc' ? 1 : -1;
+  // direction should be reversed if comparing numeric values:
+  // "A" < "Z" => true ("A" should be at top when desc)
+  // 999 < 1 => false (999 should be at top when desc -> reverse)
+  const numericMult = orderBy === 'Area' || orderBy === 'Population' ? -1 : 1;
+  const direction = orderMult * numericMult;
+
+  return (a, b) => direction * descendingComparator(a, b, orderBy);
 };
 
 interface CountryRow {
@@ -51,16 +57,25 @@ interface CountryRow {
   Location: { lat: number; lng: number };
 }
 
-type SortableColumn = keyof Omit<
-  CountryRow,
-  'Neighbours' | 'Languages' | 'Location'
->;
+type SortableColumn =
+  | 'Country'
+  | 'Region'
+  | 'Subregion'
+  | 'Area'
+  | 'Population';
+
+const isSortable = (param: string): param is SortableColumn => {
+  return ['Country', 'Region', 'Subregion', 'Area', 'Population'].includes(
+    param
+  );
+};
 
 interface Props {
   countries: Array<Country>;
+  filters: FilterOptions;
 }
 
-const CountryTable = ({ countries }: Props) => {
+const CountryTable = ({ countries, filters }: Props) => {
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<SortableColumn>('Country');
 
@@ -93,8 +108,64 @@ const CountryTable = ({ countries }: Props) => {
     [order, orderBy]
   );
 
+  const subregionFilter = (row: CountryRow) => {
+    if (filters.shownSubregions.length === 0) {
+      return true;
+    }
+
+    return filters.shownSubregions.some(
+      ({ subregion }) => subregion === row.Subregion
+    );
+  };
+
+  const nameFilter = (row: CountryRow) => {
+    if (filters.nameFilter.length === 0) {
+      return true;
+    }
+
+    const name = filters.nameFilter.trim().toLowerCase();
+    return row.Country.toLowerCase().includes(name);
+  };
+
+  const areaFilter = (row: CountryRow) => {
+    const largerThanMin = filters.area.minimum
+      ? row.Area >= filters.area.minimum
+      : true;
+
+    const smallerThanMax = filters.area.maximum
+      ? row.Area <= filters.area.maximum
+      : true;
+
+    return largerThanMin && smallerThanMax;
+  };
+
+  const populationFilter = (row: CountryRow) => {
+    const moreThanMin = filters.population.minimum
+      ? row.Population >= filters.population.minimum
+      : true;
+
+    const lessThanMax = filters.population.maximum
+      ? row.Population <= filters.population.maximum
+      : true;
+
+    return moreThanMin && lessThanMax;
+  };
+
+  const rowsFiltered = rowsSorted
+    .filter(subregionFilter)
+    .filter(areaFilter)
+    .filter(populationFilter)
+    .filter(nameFilter);
+
   return (
-    <TableContainer sx={{ flexGrow: 1, flexShrink: 1, flexBasis: 'auto' }}>
+    <TableContainer
+      sx={{
+        flexGrow: 1,
+        flexShrink: 1,
+        flexBasis: 'auto',
+        marginTop: '1em',
+      }}
+    >
       <Table stickyHeader>
         <HeaderRow
           order={order}
@@ -102,18 +173,19 @@ const CountryTable = ({ countries }: Props) => {
           onRequestSort={handleRequestSort}
         />
         <TableBody>
-          {rowsSorted.map((country) => (
+          {rowsFiltered.map((country) => (
             <TableRow key={country.Country}>
               <TableCell>{country.Country}</TableCell>
               <TableCell>{country.Region}</TableCell>
               <TableCell>{country.Subregion}</TableCell>
-              <TableCell>{prefixNumber(country.Area, 0)} km²</TableCell>
-              <TableCell>{prefixNumber(country.Population, 0)}</TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }} align="right">
+                {country.Area.toLocaleString()} km²
+              </TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                {prefixNumber(country.Population, 0)}
+              </TableCell>
               <TableCell>{country.Neighbours}</TableCell>
               <TableCell>{country.Languages}</TableCell>
-              <TableCell>
-                {locationToStr(country.Location.lat, country.Location.lng)}
-              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -140,7 +212,6 @@ const HeaderRow = ({ order, orderBy, onRequestSort }: HeaderRowProps) => {
     'Population',
     'Neighbours',
     'Languages',
-    'Location',
   ];
 
   return (
@@ -188,12 +259,6 @@ const HeaderCell = ({
     (property: SortableColumn) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
-
-  const isSortable = (param: string): param is SortableColumn => {
-    return ['Country', 'Region', 'Subregion', 'Area', 'Population'].includes(
-      param
-    );
-  };
 
   const sortable = isSortable(name);
 

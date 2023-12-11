@@ -16,12 +16,12 @@ export const ok = <T>(value: T): Ok<T> => {
 };
 
 export const prefixNumber = (number: number, digits: number): string => {
-  if (number > 1_000_000) {
+  if (number >= 1_000_000) {
     const m = (number / 1_000_000).toFixed(digits);
     return `${m} million`;
   }
 
-  if (number > 1_000) {
+  if (number >= 1_000) {
     const k = (number / 1_000).toFixed(digits);
     return `${k} thousand`;
   }
