@@ -8,6 +8,7 @@ import {
   difficultyAsNumber,
   difficultyFromNumber,
   error,
+  getErrorMessage,
   ok,
 } from '../util/utils';
 import { getAllCountries } from './countryService';
@@ -64,6 +65,9 @@ export const generateGame = async (
 
     return ok(newGame);
   } catch (err) {
+    const msg = getErrorMessage(err);
+    logger.error('error creating game: ', msg);
+
     return dbError();
   }
 };
@@ -138,7 +142,8 @@ export const getGame = async (id: number): Promise<ResultGame<Game>> => {
 
     return ok(game);
   } catch (err) {
-    logger.error(`Error loading game ${id}:`, err);
+    const msg = getErrorMessage(err);
+    logger.error(`Error loading game ${id}:`, msg);
 
     return dbError();
   }
@@ -156,6 +161,9 @@ export const saveMove = async (
 
     return ok(undefined);
   } catch (err) {
+    const msg = getErrorMessage(err);
+    logger.error(`Error saving move ${countryId} in game ${gameId}:`, msg);
+
     return dbError();
   }
 };
@@ -191,6 +199,10 @@ export const loadGame = async (
 
     const correctAnswer = modelToCountry(model.country);
     if (!correctAnswer) {
+      logger.error(
+        `Error loading game ${gameId}: query returned faulty sql model.`
+      );
+
       return dbError();
     }
 
@@ -211,6 +223,9 @@ export const loadGame = async (
 
     const countriesLoaded = await getAllCountries();
     if (countriesLoaded.k === 'error') {
+      logger.error(
+        `Error loading game ${gameId}: can't fetch country data: ${countriesLoaded.message}`
+      );
       return dbError();
     }
 
@@ -232,6 +247,9 @@ export const loadGame = async (
 
     return ok(gameWithMoves);
   } catch (err) {
+    const msg = getErrorMessage(err);
+    logger.error(`Error loading game ${gameId}:`, msg);
+
     return dbError();
   }
 };
@@ -310,6 +328,9 @@ export const getGamesFromUser = async (
 
     return ok(gamesWithMoveCount);
   } catch (err) {
+    const msg = getErrorMessage(err);
+    logger.error(`error loading user ${userId} games:`, msg);
+
     return dbError();
   }
 };

@@ -1,5 +1,6 @@
 import { UserModel } from '../models';
-import { error, ok } from '../util/utils';
+import logger from '../util/logger';
+import { error, getErrorMessage, ok } from '../util/utils';
 
 import { Result, User } from '../types/internal';
 
@@ -18,6 +19,9 @@ export const createUser = async (
       id: saved.id,
     });
   } catch (err) {
+    const msg = getErrorMessage(err);
+    logger.error(`error creating user '${username}':`, msg);
+
     return error('Db error');
   }
 };
@@ -34,6 +38,9 @@ export const findUser = async (
 
     return ok(user);
   } catch (err) {
+    const msg = getErrorMessage(err);
+    logger.error(`error loading user ${username}:`, msg);
+
     return error('Db error');
   }
 };
