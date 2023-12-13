@@ -45,7 +45,6 @@ const GamesTable = ({ games, gameStatus, hasSmallDevice }: Props) => {
     }
 
     const game = gameLoaded.value;
-    game.countries.sort((a, b) => a.name.localeCompare(b.name));
 
     const gameObject: GameObject = {
       gameId: game.gameId,

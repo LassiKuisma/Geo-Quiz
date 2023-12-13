@@ -79,7 +79,18 @@ export const loadGame = async (gameId: number): Promise<Result<GameLoaded>> => {
       `${apiBaseUrl}/game/load/${gameId}`
     );
 
-    return ok(data);
+    const game = data;
+
+    game.countries.sort((a, b) => a.name.localeCompare(b.name));
+    game.moves.sort((a, b) => {
+      if (a.timestamp === undefined || b.timestamp === undefined) {
+        return 0;
+      }
+
+      return b.timestamp - a.timestamp;
+    });
+
+    return ok(game);
   } catch (err) {
     if (err instanceof AxiosError) {
       if (err.code === 'ERR_NETWORK') {
