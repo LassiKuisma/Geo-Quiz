@@ -384,6 +384,7 @@ describe('comparing locations', () => {
     locations.set('Switzerland', [47, 8]);
     locations.set('Poland', [52, 20]);
     locations.set('Sweden', [62, 15]);
+    locations.set('Lithuania', [56, 24]);
 
     type Direction =
       | 'north'
@@ -439,6 +440,9 @@ describe('comparing locations', () => {
     countryDirections.push(['Finland', 'west', 'Sweden']);
     countryDirections.push(['Sweden', 'east', 'Finland']);
 
+    countryDirections.push(['Lithuania', 'south', 'South Africa']);
+    countryDirections.push(['South Africa', 'north', 'Lithuania']);
+
     test.each(countryDirections)(
       'going from %s %s leads to %s',
       (name1, expectedDirection, name2) => {
@@ -451,7 +455,7 @@ describe('comparing locations', () => {
         const country2 = country(loc2[0], loc2[1]);
 
         const angle = compareCountries(country1, country2, 'easy').direction;
-        if (!angle) {
+        if (angle === undefined) {
           throw new Error(`angle is undefined between ${name1} and ${name2}`);
         }
 

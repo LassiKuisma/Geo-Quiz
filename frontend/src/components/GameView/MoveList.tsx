@@ -108,7 +108,8 @@ const ResultRow = ({ move, directionVisible }: RowProps) => {
   const comp = move.comparison;
   const correctAnswer = move.correct;
   const direction = move.comparison.direction;
-  const angle = !direction ? undefined : direction + ARROW_ROTATION_OFFSET;
+  const angle =
+    direction === undefined ? undefined : direction + ARROW_ROTATION_OFFSET;
 
   const fontWeight = correctAnswer === true ? 'bold' : undefined;
 
@@ -148,7 +149,7 @@ const ResultRow = ({ move, directionVisible }: RowProps) => {
       </Cell>
       {directionVisible && (
         <Cell>
-          {angle && (
+          {angle !== undefined && (
             <Arrow
               fontSize="large"
               sx={{
