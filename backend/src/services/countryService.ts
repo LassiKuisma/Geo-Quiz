@@ -1,6 +1,7 @@
 import { CountryModel } from '../models';
+import logger from '../util/logger';
 import { CountryJoined, countryOptions, modelToCountry } from '../util/models';
-import { error, ok } from '../util/utils';
+import { error, getErrorMessage, ok } from '../util/utils';
 
 import { Result } from '../types/internal';
 import { Country } from '../types/shared';
@@ -21,6 +22,9 @@ export const getAllCountries = async (): Promise<Result<Country[]>> => {
 
     return ok(countries);
   } catch (err) {
+    const msg = getErrorMessage(err);
+    logger.error('error loading countries:', msg);
+
     return error('error fetching data');
   }
 };
@@ -39,6 +43,9 @@ export const getCountry = async (
 
     return ok(modelToCountry(country));
   } catch (err) {
+    const msg = getErrorMessage(err);
+    logger.error(`error fetching country ${id}:`, msg);
+
     return error('error fetching data');
   }
 };

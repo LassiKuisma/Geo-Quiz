@@ -28,3 +28,5 @@ export interface User {
   username: string;
   id: number;
 }
+
+export type LoggingLevel = 'info' | 'error';

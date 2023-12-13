@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { Err, Ok } from '../types/internal';
 import { Difficulty, Side } from '../types/shared';
 
@@ -73,4 +74,11 @@ export const difficultyFromNumber = (num: number): Difficulty | undefined => {
       return 'hard';
   }
   return undefined;
+};
+
+export const getErrorMessage = (err: unknown): string => {
+  if (err instanceof AxiosError || err instanceof Error) {
+    return err.message;
+  }
+  return 'unknown error';
 };
