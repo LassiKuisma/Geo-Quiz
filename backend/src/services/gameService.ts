@@ -299,7 +299,8 @@ export const getGamesFromUser = async (
 
       let mostRecent = undefined;
       if (game.moves.length > 0) {
-        const country = modelToCountry(game.moves[0].country);
+        const lastIndex = game.moves.length - 1;
+        const country = modelToCountry(game.moves[lastIndex].country);
         if (country) {
           mostRecent = country;
         }

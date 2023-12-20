@@ -43,7 +43,9 @@ router.post('/newgame', async (req, res) => {
   }
 
   if (userResult.k === 'invalid-token' || userResult.k === 'user-not-found') {
-    return res.status(400).send('Invalid token');
+    return res
+      .status(400)
+      .send('Invalid token. Please log out and try to re-login.');
   }
 
   const user = userResult.k === 'ok' ? userResult.value : undefined;
@@ -81,7 +83,9 @@ router.post('/move', async (req, res) => {
     return res.status(500).send(userResult.message);
   }
   if (userResult.k === 'invalid-token' || userResult.k === 'user-not-found') {
-    return res.status(400).send('Invalid token');
+    return res
+      .status(400)
+      .send('Invalid token. Please log out and try to re-login.');
   }
   const user = userResult.k === 'ok' ? userResult.value : undefined;
 
@@ -144,7 +148,9 @@ router.get('/mygames', async (req, res) => {
     return res.status(500).send(userResult.message);
   }
   if (userResult.k === 'invalid-token' || userResult.k === 'user-not-found') {
-    return res.status(400).send('Invalid token');
+    return res
+      .status(400)
+      .send('Invalid token. Please log out and try to re-login.');
   }
   if (userResult.k === 'token-missing') {
     return res.status(403).send('Not logged in');

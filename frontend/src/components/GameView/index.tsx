@@ -51,7 +51,6 @@ const GameView = ({
       }
 
       const loaded = loadResult.value;
-      loaded.countries.sort((a, b) => a.name.localeCompare(b.name));
 
       const gameObject: GameObject = {
         gameId: loaded.gameId,
