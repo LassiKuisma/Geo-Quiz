@@ -1,5 +1,3 @@
-// shared types between front and back (such as data sent via API)
-
 export type Side = 'left' | 'right';
 
 export interface Neighbour {

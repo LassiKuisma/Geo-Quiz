@@ -29,7 +29,7 @@ import { createStatusManager } from './util/gameUtil';
 import { userFromJson } from './util/utils';
 
 import { AppTheme, GameObject, GameStatus } from './types/internal';
-import { Country, Difficulty, UserWithToken } from './types/shared';
+import { Country, Difficulty, UserWithToken } from '../../common/api';
 
 const typography = {
   fontFamily: 'Roboto, Helvetica, Arial, sans-serif',

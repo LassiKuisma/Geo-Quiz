@@ -11,7 +11,7 @@ import { getUserGames } from '../../services/gameService';
 import GamesTable from './GamesTable';
 
 import { GameStatusManager } from '../../types/internal';
-import { GameSummary, UserWithToken } from '../../types/shared';
+import { GameSummary, UserWithToken } from '../../../../common/api';
 
 interface Props {
   user: UserWithToken | undefined;

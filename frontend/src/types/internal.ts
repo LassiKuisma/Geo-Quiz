@@ -1,4 +1,10 @@
-import { Country, Difficulty, GameMove, Hints, MoveResult } from './shared';
+import type {
+  Country,
+  Difficulty,
+  GameMove,
+  Hints,
+  MoveResult,
+} from '../../../common/api';
 
 export type Err = { k: 'error'; message: string };
 export type Ok<T> = { k: 'ok'; value: T };

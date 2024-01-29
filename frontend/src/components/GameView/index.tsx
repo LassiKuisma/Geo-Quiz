@@ -15,7 +15,7 @@ import {
   GameStatus,
   GameStatusManager,
 } from '../../types/internal';
-import { Country, Difficulty, Hints, UserWithToken } from '../../types/shared';
+import { Country, Difficulty, Hints, UserWithToken } from '../../../../common/api';
 
 interface Props {
   game: GameStatus;

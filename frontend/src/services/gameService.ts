@@ -9,7 +9,7 @@ import {
   GameLoaded,
   GameSummary,
   MoveResult,
-} from '../types/shared';
+} from '../../../common/api';
 
 export const startNewGame = async (
   token: string | undefined,

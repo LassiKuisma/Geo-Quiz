@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { tryLogin } from '../services/loginService';
 
-import { UserWithToken } from '../types/shared';
+import { UserWithToken } from '../../../common/api';
 
 interface Props {
   setUser: (uwt: UserWithToken) => void;

@@ -9,7 +9,7 @@ import {
 import { useState } from 'react';
 
 import { GameObject } from '../../types/internal';
-import { Country } from '../../types/shared';
+import { Country } from '../../../../common/api';
 
 interface Props {
   game: GameObject;

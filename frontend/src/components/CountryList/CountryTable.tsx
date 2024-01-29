@@ -15,7 +15,7 @@ import { useMemo, useState } from 'react';
 import { prefixNumber } from '../../util/utils';
 
 import { FilterOptions } from '../../types/internal';
-import { Country } from '../../types/shared';
+import { Country } from '../../../../common/api';
 
 type Order = 'asc' | 'desc';
 

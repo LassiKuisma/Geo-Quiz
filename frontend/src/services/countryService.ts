@@ -4,7 +4,7 @@ import { apiBaseUrl } from '../constants';
 import { error, ok } from '../util/utils';
 
 import { Result } from '../types/internal';
-import { Country } from '../types/shared';
+import { Country } from '../../../common/api';
 
 export const getAllCountries = async (): Promise<Result<Country[]>> => {
   try {

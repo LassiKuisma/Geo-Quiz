@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { loadGame } from '../../services/gameService';
 
 import { GameObject, GameStatusManager } from '../../types/internal';
-import { Country, GameResult, GameSummary } from '../../types/shared';
+import { Country, GameResult, GameSummary } from '../../../../common/api';
 
 interface Props {
   games: Array<GameSummary>;

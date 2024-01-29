@@ -1,5 +1,5 @@
 import { Err, Ok, Result } from '../types/internal';
-import { UserWithToken } from '../types/shared';
+import { UserWithToken } from '../../../common/api';
 
 /**
  * Helper function for Result type.
