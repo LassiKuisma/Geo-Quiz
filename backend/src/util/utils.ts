@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import { Err, Ok } from '../types/internal';
-import { Difficulty, Side } from '../types/shared';
+import { Difficulty, Side } from '../../../common/api';
 
 /**
  * Helper function for Result type.

@@ -6,7 +6,7 @@ import { JWT_SECRET } from './config';
 import { error, isNumber, ok } from './utils';
 
 import { Err, Ok } from '../types/internal';
-import { UserWithToken } from '../types/shared';
+import { UserWithToken } from '../../../common/api';
 
 type TokenMissing = { k: 'token-missing' };
 type InvalidToken = { k: 'invalid-token' };

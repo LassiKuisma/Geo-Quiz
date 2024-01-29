@@ -12,5 +12,6 @@
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true
-  }
+  },
+  "references": [{ "path": "../common/" }]
 }

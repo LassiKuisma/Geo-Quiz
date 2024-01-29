@@ -21,7 +21,7 @@ import {
   isStringArray,
 } from './src/util/utils';
 
-import { Country, Side } from './src/types/shared';
+import { Country, Side } from '../common/api';
 
 const url = 'https://restcountries.com/v3.1/all';
 

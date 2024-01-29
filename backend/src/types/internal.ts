@@ -1,4 +1,4 @@
-import { Country, Difficulty } from './shared';
+import { Country, Difficulty } from '../../../common/api';
 
 // types that are used internally by backend. These should not be sent across
 // the API as they can contain secrets

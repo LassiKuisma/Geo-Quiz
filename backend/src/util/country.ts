@@ -8,7 +8,7 @@ import {
   Difficulty,
   Hint,
   Hints,
-} from '../types/shared';
+} from '../../../common/api';
 
 export const compareCountries = (
   playerGuess: Country,

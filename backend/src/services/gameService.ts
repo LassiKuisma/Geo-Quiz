@@ -21,7 +21,7 @@ import {
   GameMove,
   GameResult,
   GameSummary,
-} from '../types/shared';
+} from '../../../common/api';
 
 export const generateGame = async (
   user: UserModel | undefined,
