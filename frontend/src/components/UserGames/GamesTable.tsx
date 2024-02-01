@@ -19,8 +19,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { loadGame } from '../../services/gameService';
 
-import { GameObject, GameStatusManager } from '../../types/internal';
 import { Country, GameResult, GameSummary } from '../../../../common/api';
+import { GameObject, GameStatusManager } from '../../types/game';
 
 interface Props {
   games: Array<GameSummary>;

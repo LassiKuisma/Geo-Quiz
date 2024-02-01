@@ -11,11 +11,12 @@ import HintsView from './HintsViews';
 import MoveList from './MoveList';
 
 import {
-  GameObject,
-  GameStatus,
-  GameStatusManager,
-} from '../../types/internal';
-import { Country, Difficulty, Hints, UserWithToken } from '../../../../common/api';
+  Country,
+  Difficulty,
+  Hints,
+  UserWithToken,
+} from '../../../../common/api';
+import { GameObject, GameStatus, GameStatusManager } from '../../types/game';
 
 interface Props {
   game: GameStatus;

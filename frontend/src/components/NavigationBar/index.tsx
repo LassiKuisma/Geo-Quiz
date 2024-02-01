@@ -1,7 +1,7 @@
 import DesktopNavBar from './DesktopNavBar';
 import MobileNavBar from './MobileNavBar';
 
-import { AppTheme, Page } from '../../types/internal';
+import { AppTheme, Page } from '../../types/app';
 
 const pages: Array<Page> = [
   {

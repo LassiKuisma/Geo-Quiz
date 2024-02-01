@@ -6,7 +6,7 @@ import WorldMap from '../WorldMap';
 import CountryFilter from './CountryFilter';
 import CountryTable from './CountryTable';
 
-import { FilterOptions, Subregion } from '../../types/internal';
+import { FilterOptions, Subregion } from '../../types/filter';
 import { Country } from '../../../../common/api';
 
 interface Props {

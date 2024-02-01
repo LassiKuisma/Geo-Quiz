@@ -5,7 +5,7 @@ import { Tooltip } from 'react-tooltip';
 import { GameMap, GameMapLegend } from './GameMap';
 import { InfoMap, InfoMapLegend } from './InfoMap';
 
-import { FilterOptions } from '../../types/internal';
+import { FilterOptions } from '../../types/filter';
 import { Country, Difficulty, GameMove } from '../../../../common/api';
 
 import Map from '../../ne_110m_admin_0_countries_minified.json';

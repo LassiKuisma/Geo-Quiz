@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import { AppTheme, Page } from '../../types/internal';
+import { AppTheme, Page } from '../../types/app';
 
 interface Props {
   pages: Array<Page>;

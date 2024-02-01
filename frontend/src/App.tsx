@@ -28,8 +28,9 @@ import { startNewGame } from './services/gameService';
 import { createStatusManager } from './util/gameUtil';
 import { userFromJson } from './util/utils';
 
-import { AppTheme, GameObject, GameStatus } from './types/internal';
 import { Country, Difficulty, UserWithToken } from '../../common/api';
+import { AppTheme } from './types/app';
+import { GameObject, GameStatus } from './types/game';
 
 const typography = {
   fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
