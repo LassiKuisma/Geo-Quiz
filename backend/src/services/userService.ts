@@ -1,8 +1,9 @@
 import { UserModel } from '../models';
 import logger from '../util/logger';
-import { error, getErrorMessage, ok } from '../util/utils';
+import { getErrorMessage } from '../util/utils';
 
-import { Result, User } from '../types/internal';
+import { Result, error, ok } from '../../../common/result';
+import { User } from '../types/internal';
 
 export const createUser = async (
   username: string,

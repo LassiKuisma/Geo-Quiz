@@ -7,13 +7,10 @@ import { CountryJoined, countryOptions, modelToCountry } from '../util/models';
 import {
   difficultyAsNumber,
   difficultyFromNumber,
-  error,
   getErrorMessage,
-  ok,
 } from '../util/utils';
 import { getAllCountries } from './countryService';
 
-import { Game, Ok, Result, User } from '../types/internal';
 import {
   Country,
   Difficulty,
@@ -22,6 +19,8 @@ import {
   GameResult,
   GameSummary,
 } from '../../../common/api';
+import { Ok, Result, error, ok } from '../../../common/result';
+import { Game, User } from '../types/internal';
 
 export const generateGame = async (
   user: UserModel | undefined,

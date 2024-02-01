@@ -1,19 +1,5 @@
-import { Err, Ok, Result } from '../types/internal';
 import { UserWithToken } from '../../../common/api';
-
-/**
- * Helper function for Result type.
- */
-export const error = (message: string): Err => {
-  return { k: 'error', message };
-};
-
-/**
- * Helper function for Result type.
- */
-export const ok = <T>(value: T): Ok<T> => {
-  return { k: 'ok', value };
-};
+import { Result, error, ok } from '../../../common/result';
 
 export const prefixNumber = (number: number, digits: number): string => {
   if (number >= 1_000_000) {

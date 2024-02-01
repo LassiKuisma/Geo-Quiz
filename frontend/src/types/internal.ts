@@ -6,11 +6,6 @@ import type {
   MoveResult,
 } from '../../../common/api';
 
-export type Err = { k: 'error'; message: string };
-export type Ok<T> = { k: 'ok'; value: T };
-
-export type Result<T> = Ok<T> | Err;
-
 export interface Move {
   guessedCountry: Country;
   result: MoveResult;
