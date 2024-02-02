@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 import { Country, Difficulty } from '../../../common/api';
 
 export interface HintThresholds {
@@ -15,10 +17,3 @@ export interface Game {
   owner?: User;
   difficulty: Difficulty;
 }
-
-export interface User {
-  username: string;
-  id: number;
-}
-
-export type LoggingLevel = 'info' | 'error';

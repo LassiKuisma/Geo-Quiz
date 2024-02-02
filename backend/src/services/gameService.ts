@@ -20,7 +20,8 @@ import {
   GameSummary,
 } from '../../../common/api';
 import { Ok, Result, error, ok } from '../../../common/result';
-import { Game, User } from '../types/internal';
+import { Game } from '../types/game';
+import { User } from '../types/user';
 
 export const generateGame = async (
   user: UserModel | undefined,

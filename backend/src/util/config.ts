@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 import 'dotenv/config';
-import { LoggingLevel } from '../types/internal';
+import { LoggingLevel } from '../types/logging';
 
 const dbUrl =
   process.env.NODE_ENV === 'production'
