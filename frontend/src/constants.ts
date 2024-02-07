@@ -1,4 +1,4 @@
-const envUrl = import.meta.env.REACT_APP_LOCAL_BACKEND_URL;
+const envUrl = import.meta.env.VITE_LOCAL_BACKEND_URL;
 
 const isProd = import.meta.env.PROD === true;
 export const apiBaseUrl = isProd ? '/api' : envUrl;
