@@ -12,7 +12,7 @@ const { writeFile } = require('fs');
 
 const downloadUrl =
   'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson';
-const outputFile = './src/ne_110m_admin_0_countries_minified.geojson';
+const outputFile = './src/ne_110m_admin_0_countries_minified.json';
 
 const downloadAndSave = async () => {
   const content = await axios.get(downloadUrl);
