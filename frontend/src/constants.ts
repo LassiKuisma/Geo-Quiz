@@ -1,7 +1,7 @@
-const envUrl = process.env.REACT_APP_LOCAL_BACKEND_URL;
+const envUrl = import.meta.env.VITE_LOCAL_BACKEND_URL;
 
-export const apiBaseUrl =
-  process.env.NODE_ENV === 'production' ? '/api' : envUrl;
+const isProd = import.meta.env.PROD === true;
+export const apiBaseUrl = isProd ? '/api' : envUrl;
 
 export const USER_STORAGE_PATH = 'geo-quiz-app-user';
 export const PREFERRED_THEME_PATH = 'geo-quiz-theme';

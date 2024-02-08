@@ -31,7 +31,7 @@ Frontend can be run separately from backend _(development mode)_ or backend can 
 2. Frontend
    1. `cd frontend`
    2. change backend url in `.env` to match port set in `../backend/.env`
-   3. `npm start`
+   3. `npm run dev`
    4. open <http://localhost:3000/> in browser
 
 ### Run in production mode
@@ -54,3 +54,5 @@ Currently I'm not accepting any pull requests as this is my personal project. Ho
 [restcountries.com](https://restcountries.com/) - for providing country data
 
 [Natural Earth](https://www.naturalearthdata.com/) - world map
+
+[SVG Repo](https://www.svgrepo.com/svg/513568/globe-2) - app icon

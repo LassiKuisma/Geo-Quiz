@@ -6,10 +6,11 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended"
   ],
-  "plugins": ["react", "@typescript-eslint"],
+  "ignorePatterns": ["build"],
+  "plugins": ["react-refresh"],
   "settings": {
     "react": {
       "pragma": "React",
@@ -27,6 +28,7 @@
         "varsIgnorePattern": "^_"
       }
     ],
-    "react/react-in-jsx-scope": 0
+    "react/react-in-jsx-scope": 0,
+    "react-hooks/exhaustive-deps": 0
   }
 }

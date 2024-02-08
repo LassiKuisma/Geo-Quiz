@@ -8,6 +8,8 @@ import { InfoMap, InfoMapLegend } from './InfoMap';
 import { FilterOptions } from '../../types/internal';
 import { Country, Difficulty, GameMove } from '../../types/shared';
 
+import Map from '../../ne_110m_admin_0_countries_minified.json';
+
 type GameMapArgs = {
   k: 'game';
   guesses: Array<GameMove>;
@@ -25,9 +27,7 @@ const WorldMap = ({ countries, mapArgs }: WorldMapProps) => {
     <Box width="100%" height="100%" display="flex" flexDirection="column">
       <ComposableMap style={{ width: '100%', height: '100%' }}>
         <ZoomableGroup>
-          <Geographies
-            geography={require('../../ne_110m_admin_0_countries_minified.geojson')}
-          >
+          <Geographies geography={Map}>
             {({ geographies }) =>
               mapArgs.k === 'game' ? (
                 <GameMap
