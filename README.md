@@ -54,3 +54,5 @@ Currently I'm not accepting any pull requests as this is my personal project. Ho
 [restcountries.com](https://restcountries.com/) - for providing country data
 
 [Natural Earth](https://www.naturalearthdata.com/) - world map
+
+[SVG Repo](https://www.svgrepo.com/svg/513568/globe-2) - app icon
