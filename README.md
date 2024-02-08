@@ -31,7 +31,7 @@ Frontend can be run separately from backend _(development mode)_ or backend can 
 2. Frontend
    1. `cd frontend`
    2. change backend url in `.env` to match port set in `../backend/.env`
-   3. `npm start`
+   3. `npm run dev`
    4. open <http://localhost:3000/> in browser
 
 ### Run in production mode
