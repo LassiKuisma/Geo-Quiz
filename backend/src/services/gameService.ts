@@ -18,8 +18,8 @@ import {
   GameMove,
   GameResult,
   GameSummary,
-} from '../../../common/api';
-import { Ok, Result, error, ok } from '../../../common/result';
+} from '@common/api';
+import { Ok, Result, error, ok } from '@common/result';
 import { Game } from '../types/game';
 import { User } from '../types/user';
 

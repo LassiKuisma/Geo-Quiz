@@ -2,7 +2,7 @@ import { UserModel } from '../models';
 import logger from '../util/logger';
 import { getErrorMessage } from '../util/utils';
 
-import { Result, error, ok } from '../../../common/result';
+import { Result, error, ok } from '@common/result';
 import { User } from '../types/user';
 
 export const createUser = async (

@@ -3,8 +3,8 @@ import logger from '../util/logger';
 import { CountryJoined, countryOptions, modelToCountry } from '../util/models';
 import { getErrorMessage } from '../util/utils';
 
-import { Result, error, ok } from '../../../common/result';
-import { Country } from '../../../common/api';
+import { Result, error, ok } from '@common/result';
+import { Country } from '@common/api';
 
 export const getAllCountries = async (): Promise<Result<Country[]>> => {
   try {

@@ -6,7 +6,7 @@ import { createToken } from '../util/authentication';
 import { validateUserInfo } from '../util/newUser';
 import { isString } from '../util/utils';
 
-import { UserWithToken } from '../../../common/api';
+import { UserWithToken } from '@common/api';
 
 const router = express.Router();
 

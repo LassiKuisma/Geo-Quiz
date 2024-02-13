@@ -18,7 +18,7 @@ import {
   GameLoaded,
   GameSummary,
   MoveResult,
-} from '../../../common/api';
+} from '@common/api';
 
 const router = express.Router();
 

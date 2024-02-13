@@ -1,7 +1,7 @@
 import express from 'express';
 import { getAllCountries, getCountry } from '../services/countryService';
 
-import { Country } from '../../../common/api';
+import { Country } from '@common/api';
 
 const router = express.Router();
 

@@ -5,8 +5,8 @@ import { UserModel } from '../models';
 import { JWT_SECRET } from './config';
 import { isNumber } from './utils';
 
-import { Err, Ok, error, ok } from '../../../common/result';
-import { UserWithToken } from '../../../common/api';
+import { Err, Ok, error, ok } from '@common/result';
+import { UserWithToken } from '@common/api';
 
 type TokenMissing = { k: 'token-missing' };
 type InvalidToken = { k: 'invalid-token' };

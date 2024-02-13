@@ -1,6 +1,6 @@
 import { User } from "./user";
 
-import { Country, Difficulty } from '../../../common/api';
+import { Country, Difficulty } from '@common/api';
 
 export interface HintThresholds {
   landlocked: number;

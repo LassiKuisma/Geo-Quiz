@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { Difficulty, Side } from '../../../common/api';
+import { Difficulty, Side } from '@common/api';
 
 export const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;

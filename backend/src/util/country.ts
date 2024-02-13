@@ -7,7 +7,7 @@ import {
   Difficulty,
   Hint,
   Hints,
-} from '../../../common/api';
+} from '@common/api';
 import { HintThresholds } from '../types/game';
 
 export const compareCountries = (
