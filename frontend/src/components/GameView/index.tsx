@@ -15,7 +15,7 @@ import {
   Difficulty,
   Hints,
   UserWithToken,
-} from '../../../../common/api';
+} from '@common/api';
 import { GameObject, GameStatus, GameStatusManager } from '../../types/game';
 
 interface Props {

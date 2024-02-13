@@ -2,8 +2,8 @@ import axios, { AxiosError } from 'axios';
 
 import { apiBaseUrl } from '../constants';
 
-import { Result, error, ok } from '../../../common/result';
-import { UserWithToken } from '../../../common/api';
+import { Result, error, ok } from '@common/result';
+import { UserWithToken } from '@common/api';
 
 export const tryCreateAccount = async (
   username: string,

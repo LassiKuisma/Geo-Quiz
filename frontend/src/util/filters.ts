@@ -1,5 +1,5 @@
 import { FilterOptions } from '../types/filter';
-import { Country } from '../../../common/api';
+import { Country } from '@common/api';
 
 export const isFilterEmpty = (filters: FilterOptions): boolean => {
   return (

@@ -4,7 +4,7 @@ import {
   GameMove,
   Hints,
   Difficulty,
-} from '../../../common/api';
+} from '@common/api';
 
 export interface Move {
   guessedCountry: Country;

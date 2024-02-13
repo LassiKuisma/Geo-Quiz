@@ -20,7 +20,7 @@ import React from 'react';
 
 import { prefixNumber } from '../../util/utils';
 
-import { Difference, GameMove } from '../../../../common/api';
+import { Difference, GameMove } from '@common/api';
 
 const HeaderCell = styled(TableCell)(({ theme }) => ({
   fontSize: 'large',
