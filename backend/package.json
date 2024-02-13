@@ -13,7 +13,7 @@
     "setup:dev": "cross-env NODE_ENV=development ts-node setupData.ts",
     "migration:down": "ts-node src/util/rollback.ts",
     "build:front": "rm -rf build/frontend && mkdir -p build/frontend && cd ../frontend && npm run build && cp -r build/* ../backend/build/frontend",
-    "import:common": "rm -rf build/common && mkdir -p build/common && cd ../common && cp -r build/* ../backend/build/common"
+    "build:common": "rm -rf build/common && mkdir -p build/common && cd ../common && npm run build && cp -r build/* ../backend/build/common"
   },
   "author": "Lassi Kuisma",
   "license": "ISC",
