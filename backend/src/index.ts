@@ -20,7 +20,7 @@ import logger from './util/logger';
 
 const app = express();
 
-app.use(express.static('build'));
+app.use(express.static('build/frontend'));
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 app.use(cors());
@@ -39,7 +39,7 @@ app.get('/health', (_req, res) => {
   res.status(200).send('ok');
 });
 
-app.use('/*', express.static('build'));
+app.use('/*', express.static('build/frontend'));
 
 const start = async () => {
   await connectToDatabase();

@@ -5,14 +5,15 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development ts-node-dev src/index.ts",
-    "start": "cross-env NODE_ENV=production node build/src/index.js",
+    "start": "cross-env NODE_ENV=production node build/backend/src/index.js",
     "test": "jest --verbose --runInBand ./tests ",
-    "tsc": "tsc -b",
+    "tsc": "tsc --build",
     "lint": "eslint --ext .ts .",
     "setup:prod": "cross-env NODE_ENV=production ts-node setupData.ts",
     "setup:dev": "cross-env NODE_ENV=development ts-node setupData.ts",
     "migration:down": "ts-node src/util/rollback.ts",
-    "build:front": "rm -rf build && cd ../frontend && npm run build && cp -r build ../backend"
+    "build:front": "rm -rf build/frontend && mkdir -p build/frontend && cd ../frontend && npm run build && cp -r build/* ../backend/build/frontend",
+    "import:common": "rm -rf build/common && mkdir -p build/common && cd ../common && cp -r build/* ../backend/build/common"
   },
   "author": "Lassi Kuisma",
   "license": "ISC",
