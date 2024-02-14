@@ -5,7 +5,7 @@ import { findUser } from '../services/userService';
 import { createToken } from '../util/authentication';
 import { isString } from '../util/utils';
 
-import { UserWithToken } from '../types/shared';
+import { UserWithToken } from '@common/api';
 
 const router = express.Router();
 

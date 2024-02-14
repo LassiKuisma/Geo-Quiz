@@ -15,7 +15,7 @@ import FilterByName from './FilterByName';
 import FilterByPopulation from './FilterByPopulation';
 import FilterByRegion from './FilterByRegion';
 
-import { FilterOptions, Subregion } from '../../../types/internal';
+import { FilterOptions, Subregion } from '../../../types/filter';
 
 interface Props {
   subregions: Array<Subregion>;

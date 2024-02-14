@@ -2,7 +2,7 @@ import { Box, Slider } from '@mui/material';
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
-import { FilterOptions } from '../../../types/internal';
+import { FilterOptions } from '../../../types/filter';
 
 const marks = [0, 500, 1_000, 50_000, 100_000, 500_000, 1_000_000, 'All'].map(
   (label, index) => {

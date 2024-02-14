@@ -5,8 +5,8 @@ import { Tooltip } from 'react-tooltip';
 import { isFilterEmpty, passesFilters } from '../../util/filters';
 import { prefixNumber } from '../../util/utils';
 
-import { FilterOptions } from '../../types/internal';
-import { Country } from '../../types/shared';
+import { FilterOptions } from '../../types/filter';
+import { Country } from '@common/api';
 
 interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

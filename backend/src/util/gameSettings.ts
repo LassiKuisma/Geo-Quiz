@@ -1,4 +1,4 @@
-import { HintThresholds } from '../types/internal';
+import { HintThresholds } from '../types/game';
 
 export const defaultThresholds: HintThresholds = {
   drivingSide: 1,

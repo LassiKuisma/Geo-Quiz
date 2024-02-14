@@ -1,10 +1,10 @@
 import { CountryModel } from '../models';
 import logger from '../util/logger';
 import { CountryJoined, countryOptions, modelToCountry } from '../util/models';
-import { error, getErrorMessage, ok } from '../util/utils';
+import { getErrorMessage } from '../util/utils';
 
-import { Result } from '../types/internal';
-import { Country } from '../types/shared';
+import { Result, error, ok } from '@common/result';
+import { Country } from '@common/api';
 
 export const getAllCountries = async (): Promise<Result<Country[]>> => {
   try {

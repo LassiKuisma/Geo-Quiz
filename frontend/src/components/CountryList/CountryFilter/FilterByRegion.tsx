@@ -5,7 +5,7 @@ import {
   createFilterOptions,
 } from '@mui/material';
 
-import { Subregion } from '../../../types/internal';
+import { Subregion } from '../../../types/filter';
 
 interface RegionProps {
   subregions: Array<Subregion>;

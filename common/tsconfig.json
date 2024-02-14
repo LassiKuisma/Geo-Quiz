@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "target": "es5",
+    "module": "commonjs",
+    "strict": true,
+    "outDir": "./build/"
+  }
+}

@@ -1,9 +1,10 @@
-import { Country, Difficulty, GameMove, Hints, MoveResult } from './shared';
-
-export type Err = { k: 'error'; message: string };
-export type Ok<T> = { k: 'ok'; value: T };
-
-export type Result<T> = Ok<T> | Err;
+import {
+  Country,
+  MoveResult,
+  GameMove,
+  Hints,
+  Difficulty,
+} from '@common/api';
 
 export interface Move {
   guessedCountry: Country;
@@ -24,20 +25,13 @@ type GameLoading = { k: 'loading' };
 type GameOk = { k: 'ok'; game: GameObject };
 type GameLoadError = { k: 'error'; message: string };
 type LoadFromId = { k: 'load-from-id'; gameId: number };
+
 export type GameStatus =
   | undefined
   | GameLoading
   | GameOk
   | GameLoadError
   | LoadFromId;
-
-export type AppTheme = 'dark' | 'light';
-
-export interface Page {
-  name: string;
-  to: string;
-  loginRequired?: boolean;
-}
 
 export interface GameStatusManager {
   setLoading: () => void;
@@ -50,18 +44,4 @@ export interface GameStatusManager {
    * you open the game view".
    */
   setLoadableFromId: (id: number) => void;
-}
-
-export type Subregion = { subregion: string; region: string };
-
-export type Range = {
-  minimum: number | undefined;
-  maximum: number | undefined;
-};
-
-export interface FilterOptions {
-  shownSubregions: Array<Subregion>;
-  nameFilter: string;
-  area: Range;
-  population: Range;
 }

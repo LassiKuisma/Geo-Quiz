@@ -8,7 +8,7 @@ import {
 } from '../models';
 import { isSide, isString } from './utils';
 
-import { Country } from '../types/shared';
+import { Country } from '@common/api';
 
 // country model with all fields joined. Use with countryOptions in queries
 export type CountryJoined = CountryModel & { driving_side: DrivingSide } & {

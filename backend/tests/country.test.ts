@@ -1,12 +1,6 @@
 import { compareCountries, getHints } from '../src/util/country';
 
-import {
-  Country,
-  Difference,
-  Hint,
-  Neighbour,
-  Side,
-} from '../src/types/shared';
+import { Country, Difference, Hint, Neighbour, Side } from '../../common/api';
 
 describe('comparing countries', () => {
   test('works with two completely different countries', () => {

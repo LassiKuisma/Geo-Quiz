@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2016",
     "module": "commonjs",
-    "outDir": "./build/",
+    "outDir": "./build/backend/",
     "strict": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
@@ -11,6 +11,14 @@
     "noImplicitReturns": true,
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@common/*": ["../../common/*"]
+    }
+  },
+  "references": [{ "path": "../common/" }],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
   }
 }

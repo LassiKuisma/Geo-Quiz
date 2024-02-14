@@ -1,15 +1,14 @@
 import axios, { AxiosError } from 'axios';
 
 import { apiBaseUrl } from '../constants';
-import { error, ok } from '../util/utils';
+import { Result, error, ok } from '@common/result';
 
-import { Result } from '../types/internal';
 import {
   Difficulty,
   GameLoaded,
   GameSummary,
   MoveResult,
-} from '../types/shared';
+} from '@common/api';
 
 export const startNewGame = async (
   token: string | undefined,

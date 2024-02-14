@@ -1,6 +1,6 @@
+import { Hints } from '@common/api';
 import { CURRENT_GAME_ID } from '../constants';
-import { GameObject, GameStatus, GameStatusManager } from '../types/internal';
-import { Hints } from '../types/shared';
+import { GameObject, GameStatus, GameStatusManager } from '../types/game';
 
 export const createStatusManager = (
   setGame: (newStatus: GameStatus) => void

@@ -8,8 +8,8 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 
-import { GameObject } from '../../types/internal';
-import { Country } from '../../types/shared';
+import { Country } from '@common/api';
+import { GameObject } from '../../types/game';
 
 interface Props {
   game: GameObject;

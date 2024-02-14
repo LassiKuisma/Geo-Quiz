@@ -17,7 +17,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { tryCreateAccount } from '../services/accountService';
 
-import { UserWithToken } from '../types/shared';
+import { UserWithToken } from '@common/api';
 
 const minLength = 3;
 const maxLength = 100;

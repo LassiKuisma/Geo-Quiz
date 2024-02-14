@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { prefixNumber } from '../../../util/utils';
 
-import { FilterOptions } from '../../../types/internal';
+import { FilterOptions } from '../../../types/filter';
 
 const marks = [
   0,
