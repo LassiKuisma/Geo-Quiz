@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from '@mui/material';
-import { Difficulty } from '@common/api';
+import { Difficulty } from '../../../common/api';
 
 interface Props {
   startNewGame: (difficulty: Difficulty) => void;

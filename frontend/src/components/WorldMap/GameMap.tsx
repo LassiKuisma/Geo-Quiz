@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 import { Geography } from 'react-simple-maps';
 import { Tooltip } from 'react-tooltip';
 
-import { Country, Difficulty, GameMove } from '@common/api';
+import { Country, Difficulty, GameMove } from '../../../../common/api';
 
 interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

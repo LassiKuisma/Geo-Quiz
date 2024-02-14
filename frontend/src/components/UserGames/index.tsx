@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { getUserGames } from '../../services/gameService';
 import GamesTable from './GamesTable';
 
-import { GameSummary, UserWithToken } from '@common/api';
+import { GameSummary, UserWithToken } from '../../../../common/api';
 import { GameStatusManager } from '../../types/game';
 
 interface Props {

@@ -6,7 +6,7 @@ import { isFilterEmpty, passesFilters } from '../../util/filters';
 import { prefixNumber } from '../../util/utils';
 
 import { FilterOptions } from '../../types/filter';
-import { Country } from '@common/api';
+import { Country } from '../../../../common/api';
 
 interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

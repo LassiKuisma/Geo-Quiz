@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 
-import { Country } from '@common/api';
+import { Country } from '../../../../common/api';
 import { GameObject } from '../../types/game';
 
 interface Props {

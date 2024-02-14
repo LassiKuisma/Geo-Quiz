@@ -28,7 +28,7 @@ import { startNewGame } from './services/gameService';
 import { createStatusManager } from './util/gameUtil';
 import { userFromJson } from './util/utils';
 
-import { Country, Difficulty, UserWithToken } from '@common/api';
+import { Country, Difficulty, UserWithToken } from '../../common/api';
 import { AppTheme } from './types/app';
 import { GameObject, GameStatus } from './types/game';
 

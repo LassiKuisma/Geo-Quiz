@@ -7,8 +7,5 @@ export default defineConfig({
   plugins: [react(), viteRequire()],
   build: {
     outDir: 'build',
-    rollupOptions: {
-      external: ['@common/result'],
-    },
   },
 });

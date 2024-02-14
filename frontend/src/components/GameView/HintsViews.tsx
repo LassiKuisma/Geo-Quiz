@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 
-import { Hint, Hints } from '@common/api';
+import { Hint, Hints } from '../../../../common/api';
 
 interface Props {
   hints: Hints;

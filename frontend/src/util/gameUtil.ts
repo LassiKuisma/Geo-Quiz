@@ -1,4 +1,4 @@
-import { Hints } from '@common/api';
+import { Hints } from '../../../common/api';
 import { CURRENT_GAME_ID } from '../constants';
 import { GameObject, GameStatus, GameStatusManager } from '../types/game';
 

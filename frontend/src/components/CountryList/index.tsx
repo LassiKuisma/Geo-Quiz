@@ -7,7 +7,7 @@ import CountryFilter from './CountryFilter';
 import CountryTable from './CountryTable';
 
 import { FilterOptions, Subregion } from '../../types/filter';
-import { Country } from '@common/api';
+import { Country } from '../../../../common/api';
 
 interface Props {
   countries: undefined | Array<Country>;
