@@ -5,7 +5,7 @@ import {
   CircularProgress,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { getUserGames } from '../../services/gameService';
 import GamesTable from './GamesTable';
@@ -35,7 +35,7 @@ type GamesStatus = undefined | GamesLoading | GamesError | GamesOk;
 const UserGamesView = ({ user, gameStatus, hasSmallDevice }: Props) => {
   const [myGames, setMyGames] = useState<GamesStatus>(undefined);
 
-  const loadGames = async () => {
+  const loadGames = useCallback(async () => {
     if (!user) {
       return;
     }
@@ -54,16 +54,14 @@ const UserGamesView = ({ user, gameStatus, hasSmallDevice }: Props) => {
       });
       setMyGames({ k: 'ok', value: list });
     }
-  };
+  }, [user]);
 
   useEffect(() => {
-    const shouldLoad = !myGames || myGames.k === 'error';
-    if (!shouldLoad) {
-      return;
+    const shouldLoad = !myGames;
+    if (shouldLoad) {
+      loadGames();
     }
-
-    loadGames();
-  }, [user]);
+  }, [user, myGames, loadGames]);
 
   if (!user) {
     return <Box>You need to be logged in to view your games.</Box>;
