@@ -6,7 +6,7 @@ import {
   responsiveFontSizes,
   useMediaQuery,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 
 import CountryList from './components/CountryList';
@@ -54,12 +54,44 @@ const darkTheme = responsiveFontSizes(
   })
 );
 
+const userFromLocalStorage = (): UserWithToken | undefined => {
+  const storedUser = window.localStorage.getItem(USER_STORAGE_PATH);
+  if (!storedUser) {
+    return undefined;
+  }
+
+  const parsed = userFromJson(storedUser);
+  if (parsed.k === 'error') {
+    console.log('Failed to get user from local storage:', parsed.message);
+    return undefined;
+  }
+
+  return parsed.value;
+};
+
+const gameIdFromLocalStorage = (): number | undefined => {
+  const activeGameId = window.localStorage.getItem(CURRENT_GAME_ID);
+  if (!activeGameId) {
+    return undefined;
+  }
+
+  const id = parseInt(activeGameId);
+  if (isNaN(id)) {
+    console.log(`Invalid game id in local storage: ${activeGameId}`);
+    return undefined;
+  }
+
+  return id;
+};
+
 const App = () => {
   const [game, setGame] = useState<GameStatus>(undefined);
   const [countries, setCountries] = useState<undefined | Array<Country>>(
     undefined
   );
-  const [user, setUser] = useState<UserWithToken | undefined>(undefined);
+  const [user, setUser] = useState<UserWithToken | undefined>(
+    userFromLocalStorage()
+  );
   const navigate = useNavigate();
 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -74,44 +106,14 @@ const App = () => {
 
   const hasSmallDevice = !useMediaQuery('(min-width: 768px)');
 
-  useEffect(() => {
-    const loadUser = () => {
-      const storedUser = window.localStorage.getItem(USER_STORAGE_PATH);
-      if (!storedUser) {
-        return;
-      }
-
-      const parsed = userFromJson(storedUser);
-      if (parsed.k === 'error') {
-        console.log('Failed to get user from local storage:', parsed.message);
-        return;
-      }
-
-      setUser(parsed.value);
-    };
-
-    const loadActiveGame = () => {
-      const activeGameId = window.localStorage.getItem(CURRENT_GAME_ID);
-      if (!activeGameId) {
-        return;
-      }
-
-      const id = parseInt(activeGameId);
-      if (isNaN(id)) {
-        console.log(`Invalid game id in local storage: ${activeGameId}`);
-        return;
-      }
-
-      if (!game) {
-        gameStatus.setLoadableFromId(id);
-      }
-    };
-
-    loadUser();
-    loadActiveGame();
-  }, []);
-
   const gameStatus = createStatusManager(setGame);
+
+  if (!game) {
+    const id = gameIdFromLocalStorage();
+    if (id) {
+      gameStatus.setLoadableFromId(id);
+    }
+  }
 
   const startNewGameClicked = async (difficulty: Difficulty) => {
     gameStatus.setLoading();
