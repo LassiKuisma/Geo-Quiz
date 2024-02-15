@@ -105,7 +105,7 @@ const CountryTable = ({ countries, filters }: Props) => {
 
   const rowsSorted = useMemo(
     () => countriesAsRows.sort(getComparator(order, orderBy)),
-    [order, orderBy]
+    [order, orderBy, countriesAsRows]
   );
 
   const subregionFilter = (row: CountryRow) => {
