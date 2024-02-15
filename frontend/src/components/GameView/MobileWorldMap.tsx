@@ -16,7 +16,7 @@ const MobileWorldMap = ({ gameStatus }: MobileWorldMapProps) => {
     if (gameStatus?.k !== 'ok') {
       navigate('/game');
     }
-  }, [gameStatus]);
+  }, [gameStatus, navigate]);
 
   if (gameStatus?.k !== 'ok') {
     return <></>;
