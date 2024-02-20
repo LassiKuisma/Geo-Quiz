@@ -6,7 +6,7 @@ import {
   responsiveFontSizes,
   useMediaQuery,
 } from '@mui/material';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 
 import CountryList from './components/CountryList';
@@ -106,7 +106,7 @@ const App = () => {
 
   const hasSmallDevice = !useMediaQuery('(min-width: 768px)');
 
-  const gameStatus = createStatusManager(setGame);
+  const gameStatus = useMemo(() => createStatusManager(setGame), []);
 
   if (!game) {
     const id = gameIdFromLocalStorage();
