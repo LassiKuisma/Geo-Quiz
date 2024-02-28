@@ -45,7 +45,7 @@ const CountryList = ({ countries, setCountries, hasSmallDevice }: Props) => {
     };
 
     updateCountries();
-  }, [countries]);
+  }, [countries, setCountries]);
 
   if (error) {
     return (

@@ -1,5 +1,5 @@
 import { Alert, Box, Button, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { loadGame, postMove } from '../../services/gameService';
@@ -36,38 +36,38 @@ const GameView = ({
   const [error, setError] = useState<string | undefined>(undefined);
   const [newHintsUnlocked, setNewHintsUnlocked] = useState(false);
 
-  useEffect(() => {
+  const doLoadGame = useCallback(async () => {
     if (game?.k !== 'load-from-id') {
       return;
     }
 
-    const doLoadGame = async () => {
-      const gameId = game.gameId;
-      gameStatus.setLoading();
+    const gameId = game.gameId;
+    gameStatus.setLoading();
 
-      const loadResult = await loadGame(gameId);
-      if (loadResult.k === 'error') {
-        gameStatus.setError(loadResult.message);
-        return;
-      }
+    const loadResult = await loadGame(gameId);
+    if (loadResult.k === 'error') {
+      gameStatus.setError(loadResult.message);
+      return;
+    }
 
-      const loaded = loadResult.value;
+    const loaded = loadResult.value;
 
-      const gameObject: GameObject = {
-        gameId: loaded.gameId,
-        guesses: loaded.moves,
-        isSubmittingMove: false,
-        gameOver: loaded.isGameOver,
-        hints: loaded.hints,
-        countries: loaded.countries,
-        difficulty: loaded.difficulty,
-      };
-
-      gameStatus.setGameObject(gameObject);
+    const gameObject: GameObject = {
+      gameId: loaded.gameId,
+      guesses: loaded.moves,
+      isSubmittingMove: false,
+      gameOver: loaded.isGameOver,
+      hints: loaded.hints,
+      countries: loaded.countries,
+      difficulty: loaded.difficulty,
     };
 
+    gameStatus.setGameObject(gameObject);
+  }, [game, gameStatus]);
+
+  useEffect(() => {
     doLoadGame();
-  }, [game?.k]);
+  }, [game?.k, doLoadGame]);
 
   const submitMove = async (country: Country) => {
     if (!game || game.k !== 'ok') {
