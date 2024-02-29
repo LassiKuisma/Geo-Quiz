@@ -1,14 +1,29 @@
 /* eslint-disable no-console */
+import fs from 'node:fs';
 
 import 'dotenv/config';
 import { LoggingLevel } from '../types/logging';
 
-const dbUrl =
-  process.env.NODE_ENV === 'production'
-    ? process.env.DATABASE_URL_PRODUCTION
-    : process.env.NODE_ENV === 'development'
-    ? process.env.DATABASE_URL_DEVELOPMENT
-    : process.env.DATABASE_URL_TEST;
+let dbUrl;
+// if the argument '--db-url-file=<file>' is given, load db url from that file
+// instead of .env
+const dbUrlFile = process.env.npm_config_db_url_file;
+if (dbUrlFile) {
+  try {
+    dbUrl = fs.readFileSync(dbUrlFile, 'utf-8').trim();
+  } catch (err) {
+    console.log(`Failed to load database url from '${dbUrlFile}'`);
+    if (err instanceof Error) {
+      console.log(err.message);
+    } else {
+      console.log(err);
+    }
+
+    process.exit(1);
+  }
+} else {
+  dbUrl = process.env.DATABASE_URL;
+}
 
 if (!dbUrl) {
   console.error('Database url missing');
