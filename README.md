@@ -12,7 +12,7 @@ How the game works: the server will pick a random country and the player has to 
    1. `cd backend`
    2. fill out values in `.env`
    3. `npm install`
-   4. `npm run setup:prod`
+   4. Populate database with country data
 4. Set up frontend
    1. `cd frontend`
    2. `npm install`
@@ -25,18 +25,19 @@ Frontend can be run separately from backend _(development mode)_ or backend can 
 
 1. Backend
    1. `cd backend`
-   2. `npm run setup:dev`
+   2. `npm run setup:import-country-data`
    3. `npm start dev`
    4. backend can be accessed in `localhost:<backend_port>/api/`
 2. Frontend
    1. `cd frontend`
    2. change backend url in `.env` to match port set in `../backend/.env`
    3. `npm run dev`
-   4. open <http://localhost:3000/> in browser
+   4. open <http://localhost:5173/> in browser
 
 ### Run in production mode
 
 1. `cd backend`
+2. `npm run build:common`
 2. `npm run build:front`
 3. `npm run tsc`
 4. `npm start`
