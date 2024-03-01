@@ -1,0 +1,20 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "report": "npx playwright show-report",
+    "install:playwright": "npx playwright install",
+    "test": "npx playwright test --project firefox",
+    "server:start": "cd ../backend && npm start",
+    "build:app": "cd ../ && ./build_step.sh"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.42.0",
+    "@types/node": "^20.11.24"
+  }
+}
