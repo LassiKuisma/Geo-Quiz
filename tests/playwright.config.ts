@@ -1,10 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
+import { loadConfig } from './config';
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
+const config = loadConfig();
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -69,9 +66,10 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://127.0.0.1:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  webServer: {
+    command: `DATABASE_URL=${config.dbUrl} npm run server:start`,
+    url: 'http://localhost:3003',
+    reuseExistingServer: !process.env.CI,
+    stdout: 'pipe',
+  },
 });
