@@ -1,5 +1,7 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
-test('Test #1', async () => {
-  console.log('Test 1');
+test('Has title', async ({ page }) => {
+  await page.goto('/');
+
+  await expect(page).toHaveTitle('Geo Quiz');
 });
