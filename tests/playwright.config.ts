@@ -11,7 +11,7 @@ export default defineConfig({
   workers: 1,
   reporter: 'html',
   use: {
-    // baseURL: 'http://127.0.0.1:3000',
+    baseURL: config.backendUrl,
   },
   projects: [
     {
@@ -32,7 +32,7 @@ export default defineConfig({
 
   webServer: {
     command: `DATABASE_URL=${config.dbUrl} npm run server:start`,
-    url: 'http://localhost:3003',
+    url: config.backendUrl,
     reuseExistingServer: !process.env.CI,
   },
 });
