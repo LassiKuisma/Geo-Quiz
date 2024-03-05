@@ -1,0 +1,13 @@
+TRUNCATE continents CASCADE;
+TRUNCATE countries CASCADE;
+TRUNCATE country_continents CASCADE;
+TRUNCATE country_languages CASCADE;
+TRUNCATE country_neighbours CASCADE;
+TRUNCATE driving_sides CASCADE;
+TRUNCATE games CASCADE;
+TRUNCATE languages CASCADE;
+TRUNCATE legacy_games CASCADE;
+TRUNCATE moves CASCADE;
+TRUNCATE regions CASCADE;
+TRUNCATE subregions CASCADE;
+TRUNCATE users CASCADE;
