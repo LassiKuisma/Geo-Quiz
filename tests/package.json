@@ -8,7 +8,8 @@
     "install:playwright": "npx playwright install",
     "test": "npx playwright test --project firefox",
     "server:start": "cd ../backend && npm start",
-    "build:app": "cd ../ && ./build_step.sh"
+    "build:app": "cd ../ && ./build_step.sh",
+    "lint": "eslint --ext .ts ."
   },
   "keywords": [],
   "author": "",
@@ -16,7 +17,10 @@
   "devDependencies": {
     "@playwright/test": "^1.42.0",
     "@types/node": "^20.11.24",
-    "@types/pg": "^8.11.2"
+    "@types/pg": "^8.11.2",
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
+    "@typescript-eslint/parser": "^7.1.1",
+    "eslint": "^8.57.0"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
