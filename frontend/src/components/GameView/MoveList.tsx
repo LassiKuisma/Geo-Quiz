@@ -67,7 +67,7 @@ const MoveList = ({ moves, directionVisible }: Props) => {
           minHeight: '40vh',
         }}
       >
-        <Table stickyHeader>
+        <Table stickyHeader id="moves-table">
           <TableHead>
             <TableRow>
               <HeaderCell>Country</HeaderCell>

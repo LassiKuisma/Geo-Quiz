@@ -28,6 +28,33 @@ export const clearDatabase = async () => {
   await client.end();
 };
 
+export const clearGames = async () => {
+  const config = loadConfig();
+  const client = new Client({
+    connectionString: config.dbUrl,
+  });
+
+  await client.connect();
+  const clear = loadString('util/clear_games.sql');
+  await client.query(clear);
+  await client.end();
+};
+
+/**
+ * Inserts a game into db with id=1, answer=97 (Finland)
+ */
+export const createGameWithKnownOutcome = async () => {
+  const config = loadConfig();
+  const client = new Client({
+    connectionString: config.dbUrl,
+  });
+
+  await client.connect();
+  const clear = loadString('util/create_game.sql');
+  await client.query(clear);
+  await client.end();
+};
+
 const loadString = (path: string): string => {
   return fs.readFileSync(path, 'utf-8');
 };
