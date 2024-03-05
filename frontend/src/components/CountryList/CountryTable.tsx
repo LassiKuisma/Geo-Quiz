@@ -166,7 +166,7 @@ const CountryTable = ({ countries, filters }: Props) => {
         marginTop: '1em',
       }}
     >
-      <Table stickyHeader>
+      <Table stickyHeader id="country-table">
         <HeaderRow
           order={order}
           orderBy={orderBy}
