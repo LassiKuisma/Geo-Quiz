@@ -6,7 +6,8 @@
   "scripts": {
     "report": "npx playwright show-report",
     "install:playwright": "npx playwright install",
-    "test": "npx playwright test --project firefox",
+    "test": "npx playwright test",
+    "test:f+c": "npx playwright test --project firefox --project chromium",
     "server:start": "cd ../backend && npm start",
     "build:app": "cd ../ && ./build_step.sh",
     "lint": "eslint --ext .ts ."
