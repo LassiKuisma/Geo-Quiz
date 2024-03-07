@@ -8,7 +8,9 @@
   "scripts": {
     "build": "npm run clear && npm run build --workspaces --if-present && npm run build:import",
     "build:import": "cp -r common/build backend/build/common && cp -r frontend/build backend/build/frontend",
-    "clear": "npm run clear --workspaces --if-present"
+    "clear": "npm run clear --workspaces --if-present",
+    "start-dev-env": "docker-compose -f docker-compose.yml up -d",
+    "stop-dev-env": "docker-compose -f docker-compose.yml down"
   },
   "workspaces": [
     "common",
