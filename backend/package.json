@@ -1,8 +1,7 @@
 {
   "name": "geo-quiz-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
     "start-dev-env": "docker-compose up -d",
@@ -10,15 +9,12 @@
     "start-test-env": "docker-compose -f docker-compose.test.yml up -d",
     "stop-test-env": "docker-compose -f docker-compose.test.yml down",
     "test": "jest --verbose --runInBand ./tests ",
-    "tsc": "tsc --build",
     "lint": "eslint --ext .ts .",
     "setup:import-country-data": "ts-node setupData.ts",
     "migration:down": "ts-node src/util/rollback.ts",
-    "build:front": "rm -rf build/frontend && mkdir -p build/frontend && cd ../frontend && npm run build && cp -r build/* ../backend/build/frontend",
-    "build:common": "rm -rf build/common && mkdir -p build/common && cd ../common && npm run build && cp -r build/* ../backend/build/common"
+    "clear": "rm -rf build",
+    "build": "tsc --build"
   },
-  "author": "Lassi Kuisma",
-  "license": "ISC",
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.14",
