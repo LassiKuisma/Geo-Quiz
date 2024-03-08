@@ -7,8 +7,7 @@
     "install:playwright": "npx playwright install",
     "test": "npx playwright test",
     "test:f+c": "npx playwright test --project firefox --project chromium",
-    "server:start": "cd ../backend && npm start",
-    "build:app": "cd ../ && ./build_step.sh",
+    "server:start": "cd .. && npm start",
     "start-test-env": "docker-compose -f docker-compose.test.yml up -d",
     "stop-test-env": "docker-compose -f docker-compose.test.yml down"
   },
