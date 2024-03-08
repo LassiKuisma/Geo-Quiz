@@ -14,7 +14,9 @@
     "clear": "npm run clear --workspaces --if-present",
     "start-dev-env": "docker-compose -f docker-compose.yml up -d",
     "stop-dev-env": "docker-compose -f docker-compose.yml down",
-    "lint": "eslint . --ext=.ts,.tsx,.js"
+    "lint": "eslint . --ext=.ts,.tsx,.js",
+    "test": "npm run test --workspace=backend",
+    "test:e2e": "npm run test --workspace=tests"
   },
   "workspaces": [
     "common",
