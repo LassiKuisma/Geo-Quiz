@@ -13,12 +13,22 @@
     "build:import": "cp -r common/build backend/build/common && cp -r frontend/build backend/build/frontend",
     "clear": "npm run clear --workspaces --if-present",
     "start-dev-env": "docker-compose -f docker-compose.yml up -d",
-    "stop-dev-env": "docker-compose -f docker-compose.yml down"
+    "stop-dev-env": "docker-compose -f docker-compose.yml down",
+    "lint": "eslint . --ext=.ts,.tsx,.js"
   },
   "workspaces": [
     "common",
     "frontend",
     "backend",
     "tests"
-  ]
+  ],
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5"
+  }
 }

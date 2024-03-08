@@ -1,15 +1,9 @@
 {
   "env": {
     "browser": true,
-    "es6": true,
     "jest": true
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:@typescript-eslint/recommended"
-  ],
-  "ignorePatterns": ["build"],
+  "extends": ["plugin:react-hooks/recommended"],
   "plugins": ["react-refresh"],
   "settings": {
     "react": {
@@ -18,16 +12,7 @@
     }
   },
   "rules": {
-    "@typescript-eslint/semi": ["error"],
-    "@typescript-eslint/explicit-function-return-type": 0,
-    "@typescript-eslint/explicit-module-boundary-types": 0,
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      {
-        "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_"
-      }
-    ],
-    "react/react-in-jsx-scope": 0
+    "react/react-in-jsx-scope": 0,
+    "no-console": "warn"
   }
 }
