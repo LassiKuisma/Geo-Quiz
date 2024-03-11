@@ -287,7 +287,7 @@ export const getGamesFromUser = async (
     })) as Array<GameJoined>;
 
     const gamesWithMoveCount = games.map((game) => {
-      const str = game.created_at ? game.created_at.toString() : undefined;
+      const str = game.created_at ? game.created_at.toString({}) : undefined;
       let date = undefined;
 
       if (str) {
@@ -364,7 +364,7 @@ const parseMoveModels = (
         return undefined;
       }
 
-      const str = move.created_at ? move.created_at.toString() : undefined;
+      const str = move.created_at ? move.created_at.toString({}) : undefined;
       let date = undefined;
 
       if (str) {

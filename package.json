@@ -1,0 +1,36 @@
+{
+  "name": "geo-quiz",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Country guessing game",
+  "author": "Lassi Kuisma",
+  "license": "ISC",
+  "scripts": {
+    "start": "npm run start --workspace=backend",
+    "dev:back": "npm run dev --workspace=backend",
+    "dev:front": "npm run dev --workspace=frontend",
+    "build": "npm run clear && npm run build --workspaces --if-present && npm run build:import",
+    "build:import": "cp -r common/build backend/build/common && cp -r frontend/build backend/build/frontend",
+    "clear": "npm run clear --workspaces --if-present",
+    "start-dev-env": "docker-compose -f docker-compose.yml up -d",
+    "stop-dev-env": "docker-compose -f docker-compose.yml down",
+    "lint": "eslint . --ext=.ts,.tsx,.js",
+    "test": "npm run test --workspace=backend",
+    "test:e2e": "npm run test --workspace=tests"
+  },
+  "workspaces": [
+    "common",
+    "frontend",
+    "backend",
+    "tests"
+  ],
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5"
+  }
+}

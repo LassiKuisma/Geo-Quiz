@@ -1,0 +1,7 @@
+{
+  "ignorePatterns": ["node_modules/", "playwright-report/", "test-results/"],
+  "rules": {
+    "no-console": "off",
+    "@typescript-eslint/no-floating-promises": "error"
+  }
+}

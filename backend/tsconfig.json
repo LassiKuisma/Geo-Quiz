@@ -1,17 +1,10 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "target": "es2016",
     "module": "commonjs",
     "outDir": "./build/backend/",
-    "strict": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noImplicitAny": true,
-    "noFallthroughCasesInSwitch": true,
-    "forceConsistentCasingInFileNames": true,
     "baseUrl": "./src",
     "paths": {
       "@common/*": ["../../common/*"]

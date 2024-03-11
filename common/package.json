@@ -1,8 +1,9 @@
 {
-  "name": "common",
+  "name": "geo-quiz-common",
   "version": "1.0.0",
-  "private": "true",
+  "private": true,
   "scripts": {
-    "build": "tsc --build"
+    "build": "tsc --build",
+    "clear": "rm -rf build"
   }
 }
