@@ -1,8 +1,17 @@
 # About this project
 
-This is a project for a country guessing game, using [restcountries](https://restcountries.com/) api for the country data.
+The game can be played at <https://geo-quiz-pv8j.onrender.com><br>
+_(note: the Render instance takes some time to wake up, give it a minute)_
 
-How the game works: the server will pick a random country and the player has to guess it. Each guess unlocks hints for the player about the country such as does it have more/less population than the guessed country, are they in the same region, etc.
+This is my final project for [Full Stack open](https://fullstackopen.com/en/). It is a game where you get to use your geography knowledge to try to guess a country.
+
+## How to play
+
+Click on "new game" button in main menu, then select a country and click on "guess". Your guess will appear in the list below, along with some additional information about the country _(region, population, area, etc)_. You need to use this info to figure out the correct answer.
+
+If your guess is in the same region as the correct answer, the game will display a green check mark next to it _(same for subregion)_. If the guess has larger area than the correct answer, a downward arrow will be displayed next to it _(upward arrow if it's smaller)_. You can think of this as "the area is too high, guess lower". Same goes for population.
+
+If your guess and the correct answer have any common neighbours or languages, they will be shown. For example if the correct answer is Germany and you guess Spain, France will be displayed in the "common neighbours" section.
 
 ## Setting up the project
 
