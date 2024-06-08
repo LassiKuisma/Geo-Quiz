@@ -1,8 +1,5 @@
 # About this project
 
-The game can be played at <https://geo-quiz-pv8j.onrender.com><br>
-_(note: the Render instance takes some time to wake up, give it a minute)_
-
 This is my final project for [Full Stack open](https://fullstackopen.com/en/). It is a game where you get to use your geography knowledge to try to guess a country.
 
 ## How to play
